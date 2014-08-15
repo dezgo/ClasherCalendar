@@ -9,6 +9,11 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        MySQLiteHelper db = new MySQLiteHelper(this);
+        db.createDB();
+//        Element element = db.getElement(1);
+
     }
 
 }
