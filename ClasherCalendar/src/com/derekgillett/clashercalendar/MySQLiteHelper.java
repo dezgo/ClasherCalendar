@@ -35,7 +35,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
 	  try {
 		  while (( line = buffreader.readLine()) != null) {
-			  if (!line.equals("")) {
+			  // skip empty lines, comment lines, and remove tabs and carriage returns
+			  if (!line.equals("") && !line.substring(0, 2).equals("--")) {
 				  line = line.replace("\t","");
 				  line = line.replace("\n","");
 				  text.append(line);
