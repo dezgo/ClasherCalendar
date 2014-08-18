@@ -9,10 +9,23 @@ CREATE TABLE tblElement (
 	PRIMARY KEY (ElementID));
 
 CREATE TABLE tblElementData (
-	ElementID INTEGER,
-	ElementLevel INTEGER,
+	ElementID INTEGER NOT NULL,
+	ElementLevel INTEGER NOT NULL,
 	HitPoints INTEGER NULL,
 	BuildCost INTEGER NULL,
 	BuildTime INTEGER NULL,
 	THMinLevel INTEGER NULL,
 	PRIMARY KEY (ElementID, ElementLevel));
+
+CREATE TABLE tblTHElement (
+	THLevel INTEGER NOT NULL,
+	ElementID INTEGER NOT NULL,
+	Quantity INTEGER NOT NULL,
+	PRIMARY KEY (THLevel, ElementID));
+
+CREATE TABLE tblPlayerElements (
+	PlayerElementID INTEGER NOT NULL,
+	ElementID INTEGER NOT NULL,
+	Level INTEGER NOT NULL,
+	PRIMARY KEY (PlayerElementID));
+	
