@@ -11,8 +11,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         
         MySQLiteHelper db = new MySQLiteHelper(this);
-        db.createDB();
-//        Element element = db.getElement(1);
+
+        Element element = new Element(this, 1);
 
     }
 

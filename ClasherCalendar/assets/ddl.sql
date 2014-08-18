@@ -1,13 +1,13 @@
 DROP TABLE IF EXISTS tblElementData;
-;
+
 DROP TABLE IF EXISTS tblElement;
-;
+
 CREATE TABLE tblElement (
-	ElementID INTEGER AUTOINCREMENT,
+	ElementID INTEGER NOT NULL,
 	ElementName TEXT NOT NULL,
 	CostType INTEGER NULL,
 	PRIMARY KEY (ElementID));
-;
+
 CREATE TABLE tblElementData (
 	ElementID INTEGER,
 	ElementLevel INTEGER,
@@ -16,5 +16,3 @@ CREATE TABLE tblElementData (
 	BuildTime INTEGER NULL,
 	THMinLevel INTEGER NULL,
 	PRIMARY KEY (ElementID, ElementLevel));
-;
-
