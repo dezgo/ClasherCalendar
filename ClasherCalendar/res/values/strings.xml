@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">ClasherCalendar</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="townhall_level">Town Hall Level</string>
     <string name="action_settings">Settings</string>
 
 </resources>

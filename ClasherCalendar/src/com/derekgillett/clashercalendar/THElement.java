@@ -6,45 +6,49 @@ import android.database.sqlite.SQLiteDatabase;
 public class THElement {
 	private SQLiteDatabase moDB;
 	
-	private int mTHLevel;
-	private int mElementID;
-	private int mQuantity;
+	private int mnTHLevel;
+	private Element moElement;
+	private int mnQuantity;
 
-	public THElement(int pTHLevel, int pElementID) {
+	public THElement(int pnTHLevel, int pnElementID, int pnQuantity) {
 		// 1. get reference to writable DB
 		MySQLiteHelper oMySQLiteHelper = new MySQLiteHelper();
 		moDB = oMySQLiteHelper.getWritableDatabase();
 		
-		mTHLevel = pTHLevel;
-		mElementID = pElementID;
+		mnTHLevel = pnTHLevel;
+		moElement = new Element(pnElementID);
+		mnQuantity = pnQuantity;
 		Load();
 	}
 	
 	public int getTHLevel() {
-		return mTHLevel;
+		return mnTHLevel;
 	}
 	
-	public int getElementID() {
-		return mElementID;
+	public Element getElement() {
+		return moElement;
 	}
 	
 	public int getQuantity() {
-		return mQuantity;
+		return mnQuantity;
 	}
 	
-	public void setQuantity(int pQuantity) {
-		mQuantity = pQuantity;
+	public void setQuantity(int pnQuantity) {
+		mnQuantity = pnQuantity;
 
 		moDB.rawQuery("UPDATE tblTHElement SET Quantity = ? WHERE THLevel = ? AND ElementID = ?", 
-				new String[] { String.valueOf(mQuantity), String.valueOf(mTHLevel), String.valueOf(mElementID) });
+				new String[] { String.valueOf(mnQuantity), String.valueOf(mnTHLevel), String.valueOf(moElement.getId()) });
 	}
 	
 	private void Load() {
 		Cursor cursor = moDB.rawQuery("SELECT Quantity FROM tblTHElement WHERE THLevel = ? AND ElementID = ?",
-				new String[] { String.valueOf(mTHLevel), String.valueOf(mElementID) }); 
+				new String[] { String.valueOf(mnTHLevel), String.valueOf(moElement.getId()) }); 
 		if (cursor != null) {
-			cursor.moveToFirst();
-			this.mQuantity = Integer.parseInt(cursor.getString(0));
+			if (cursor.getCount() > 0) {
+				cursor.moveToFirst();
+				this.mnQuantity = Integer.parseInt(cursor.getString(0));
+			} else
+				this.mnQuantity = 0;
 		}
 	}
 }

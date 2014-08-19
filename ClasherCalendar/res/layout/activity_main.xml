@@ -1,6 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layoutMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -8,11 +7,29 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.derekgillett.clashercalendar.MainActivity" >
-<!-- 
+
     <TextView
-        android:id="@+id/txtHelloWorld"
+        android:id="@+id/tvTHLevel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
- -->
+        android:textSize="20sp"
+        android:text="@string/townhall_level" />
+
+    <Spinner
+        android:id="@+id/spTHLevel"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tvTHLevel"
+        android:layout_marginLeft="58dp"
+        android:layout_toRightOf="@+id/tvTHLevel" />
+    
+    <RelativeLayout
+	    android:id="@+id/layoutMain"
+        android:layout_below="@+id/tvTHLevel"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent">
+        
+    </RelativeLayout>        
+
 </RelativeLayout>

@@ -9,8 +9,6 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.RelativeLayout.LayoutParams;
 
 public class MainActivity extends Activity {
 
@@ -18,7 +16,7 @@ public class MainActivity extends Activity {
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-		Log.d(MainActivity.class.getName(), "Constructor"); 
+		Log.d("MainActivity", "Constructor"); 
 
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -30,23 +28,11 @@ public class MainActivity extends Activity {
     }
 
     private void createTHSpinner(RelativeLayout vw) {
-		Log.d(MainActivity.class.getName(), "createTHSpinner"); 
+		Log.d("MainActivity", "createTHSpinner"); 
 
-		// add label
-    	TextView textView = new TextView(this);
-    	textView.setId(1001);
-    	textView.setText("Town Hall Level:");
-    	textView.setTextSize(20.0f);
-    	vw.addView(textView);
-    	
-        // add a spinner to select town hall level
-        Spinner spinner = new Spinner(this);
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-        		LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        lp.addRule(RelativeLayout.RIGHT_OF, 1001);
-        spinner.setLayoutParams(lp);
-        vw.addView(spinner);
-        
+        // get reference to spinner
+        Spinner spinner = (Spinner) this.findViewById(R.id.spTHLevel);
+
         List<String> list = new ArrayList<String>();
         for (int i=1; i<=10; i++) {
             list.add(String.valueOf(i));

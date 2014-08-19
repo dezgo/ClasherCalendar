@@ -22,7 +22,7 @@ public class Element {
 	private int mcostType;
 
 	public Element() {
-		Log.d(Element.class.getName(), "Constructor");
+		Log.d("Element", "Constructor");
 
 		// 1. get reference to writable DB
 		moDB = MyApplication.getDB();
@@ -62,7 +62,7 @@ public class Element {
 	}
 
 	public void updateElement(){
-		Log.d(Element.class.getName(), "updateElement"); 
+		Log.d("Element", "updateElement"); 
 
 		// 2. create ContentValues to add key "column"/value
 		ContentValues values = new ContentValues();
@@ -78,7 +78,7 @@ public class Element {
 	}
 
 	public void addElement() {		
-		Log.d(Element.class.getName(), "addElement"); 
+		Log.d("Element", "addElement"); 
 
 		// 2. create ContentValues to add key "column"/value
 		ContentValues values = new ContentValues();
@@ -93,7 +93,7 @@ public class Element {
 	}
 
 	public void loadElement(int id){
-		Log.d(Element.class.getName(), "loadElement");
+		Log.d("Element", "loadElement");
 		  
 		// 2. build query
 		Cursor cursor = 
@@ -121,7 +121,7 @@ public class Element {
 	}
 	
 	public int countElements() {
-		Log.d(Element.class.getName(), "countElements"); 
+		Log.d("Element", "countElements"); 
 		
 		Cursor cursor = moDB.rawQuery("SELECT count(*) FROM tblElement", null); 
 		if (cursor == null)
