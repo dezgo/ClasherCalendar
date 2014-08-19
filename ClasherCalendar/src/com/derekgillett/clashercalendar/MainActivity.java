@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.View.OnClickListener;
+import android.util.Log;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -16,35 +14,25 @@ import android.widget.RelativeLayout.LayoutParams;
 
 public class MainActivity extends Activity {
 
+	//private MyApplication moApp;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+		Log.d(MainActivity.class.getName(), "Constructor"); 
+
+		super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+        //moApp = (MyApplication) getApplication();
+        
         RelativeLayout vwMainLayout =  (RelativeLayout) this.findViewById(R.id.layoutMain);
-        
         createTHSpinner(vwMainLayout);
-        
-        RelativeLayout.LayoutParams lp;
-
-        Element element = new Element(this);
-        int countElement = element.countElements(); 
-        for (int i=1; i<=countElement; i++) {
-        	TextView tv = new TextView(this);
-        	tv.setId(1001+i);
-            lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-            lp.addRule(RelativeLayout.BELOW, 1000+i);
-            tv.setLayoutParams(lp);
-            
-        	element.loadElement(i);
-        	tv.setText(element.getName());
-        	//tv.setPadding(0, (i+3)*20,0,0);
-        	vwMainLayout.addView(tv);
-        }
     }
 
     private void createTHSpinner(RelativeLayout vw) {
-    	// add label
+		Log.d(MainActivity.class.getName(), "createTHSpinner"); 
+
+		// add label
     	TextView textView = new TextView(this);
     	textView.setId(1001);
     	textView.setText("Town Hall Level:");
@@ -71,7 +59,7 @@ public class MainActivity extends Activity {
         
         spinner.setAdapter(dataAdapter);
         
-        spinner.setOnItemSelectedListener(new CustomOnItemSelectedListener());
+        spinner.setOnItemSelectedListener(new THLevelOnItemSelectedListener(this));
 
     }
 

@@ -47,85 +47,85 @@ INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 14, 7);
 INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 11, 7);
  
 -- dark elixir drills
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (8, 22, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (9, 22, 2);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (10, 22, 3);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 22, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 22, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 22, 3);
 
 -- gold and elixir storage
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (1, 12, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (1, 15, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (2, 12, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (2, 15, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (3, 12, 2);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (3, 15, 2);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (4, 12, 2);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (4, 15, 2);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (5, 12, 2);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (5, 15, 2);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (6, 12, 2);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (6, 15, 2);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (7, 12, 2);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (7, 15, 2);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (8, 12, 3);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (8, 15, 3);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (9, 12, 4);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (9, 15, 4);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (10, 12, 4);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (10, 15, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (1, 12, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (1, 15, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (2, 12, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (2, 15, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (3, 12, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (3, 15, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (4, 12, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (4, 15, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (5, 12, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (5, 15, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (6, 12, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (6, 15, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 12, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 15, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 12, 3);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 15, 3);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 12, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 15, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 12, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 15, 4);
 
 -- dark elixir storage
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (7, 10, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (8, 10, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (9, 10, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (10, 10, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 10, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 10, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 10, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 10, 1);
 
 -- dark barracks
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (7, 9, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (8, 9, 2);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (9, 9, 2);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (10, 9, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 9, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 9, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 9, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 9, 2);
 
 -- barracks
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (1, 5, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (2, 5, 2);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (3, 5, 2);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (4, 5, 3);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (5, 5, 3);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (6, 5, 3);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (7, 5, 4);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (8, 5, 4);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (9, 5, 4);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (10, 5, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (1, 5, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (2, 5, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (3, 5, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (4, 5, 3);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (5, 5, 3);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (6, 5, 3);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 5, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 5, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 5, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 5, 4);
 
 -- army camps
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (1, 4, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (2, 4, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (3, 4, 2);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (4, 4, 2);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (5, 4, 3);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (6, 4, 3);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (7, 4, 4);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (8, 4, 4);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (9, 4, 4);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (10, 4, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (1, 4, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (2, 4, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (3, 4, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (4, 4, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (5, 4, 3);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (6, 4, 3);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 4, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 4, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 4, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 4, 4);
 
 -- laboratory
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (3, 17, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (4, 17, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (5, 17, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (6, 17, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (7, 17, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (8, 17, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (9, 17, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (10, 17, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (3, 17, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (4, 17, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (5, 17, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (6, 17, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 17, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 17, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 17, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 17, 1);
 
 -- spell factory
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (5, 20, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (6, 20, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (7, 20, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (8, 20, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (9, 20, 1);
-INSERT INTO tblTH (THLevel, ElementID, Quantity) VALUES (10, 20, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (5, 20, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (6, 20, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 20, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 20, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 20, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 20, 1);
 
 
 -- element data

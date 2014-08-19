@@ -1,22 +1,18 @@
 package com.derekgillett.clashercalendar;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 public class THElement {
-	private Context moContext;
 	private SQLiteDatabase moDB;
 	
 	private int mTHLevel;
 	private int mElementID;
 	private int mQuantity;
 
-	public THElement(Context poContext, int pTHLevel, int pElementID) {
-		moContext = poContext;
-
+	public THElement(int pTHLevel, int pElementID) {
 		// 1. get reference to writable DB
-		MySQLiteHelper oMySQLiteHelper = new MySQLiteHelper(moContext);
+		MySQLiteHelper oMySQLiteHelper = new MySQLiteHelper();
 		moDB = oMySQLiteHelper.getWritableDatabase();
 		
 		mTHLevel = pTHLevel;

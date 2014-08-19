@@ -1,7 +1,6 @@
 package com.derekgillett.clashercalendar;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -17,22 +16,20 @@ public class Element {
 
 	private static final String[] COLUMNS = {KEY_ID,KEY_NAME,KEY_COSTTYPE};
 	  
-	private Context moContext;
 	private SQLiteDatabase moDB;
 	private int mid;
 	private String melementName;
 	private int mcostType;
 
-	public Element(Context poContext) {
-		moContext = poContext;
+	public Element() {
+		Log.d(Element.class.getName(), "Constructor");
 
 		// 1. get reference to writable DB
-		MySQLiteHelper oMySQLiteHelper = new MySQLiteHelper(moContext);
-		moDB = oMySQLiteHelper.getWritableDatabase();
+		moDB = MyApplication.getDB();
 	}
 	
-	public Element(Context poContext, int id) {
-		this(poContext);
+	public Element(int id) {
+		this();
 		this.loadElement(id);
 	}
 	
@@ -65,9 +62,7 @@ public class Element {
 	}
 
 	public void updateElement(){
-		
-		//for logging
-		Log.d("addElement", this.toString()); 
+		Log.d(Element.class.getName(), "updateElement"); 
 
 		// 2. create ContentValues to add key "column"/value
 		ContentValues values = new ContentValues();
@@ -82,10 +77,8 @@ public class Element {
 
 	}
 
-	public void addElement(){
-		
-		//for logging
-		Log.d("addElement", this.toString()); 
+	public void addElement() {		
+		Log.d(Element.class.getName(), "addElement"); 
 
 		// 2. create ContentValues to add key "column"/value
 		ContentValues values = new ContentValues();
@@ -100,6 +93,7 @@ public class Element {
 	}
 
 	public void loadElement(int id){
+		Log.d(Element.class.getName(), "loadElement");
 		  
 		// 2. build query
 		Cursor cursor = 
@@ -127,6 +121,8 @@ public class Element {
 	}
 	
 	public int countElements() {
+		Log.d(Element.class.getName(), "countElements"); 
+		
 		Cursor cursor = moDB.rawQuery("SELECT count(*) FROM tblElement", null); 
 		if (cursor == null)
 			return 0;

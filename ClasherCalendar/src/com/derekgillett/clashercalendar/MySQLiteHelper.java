@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -16,12 +13,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
   private static final String DATABASE_NAME = "ClasherCalendar.db";
   private static final int DATABASE_VERSION = 1;
-  private Context mContext;
 
-  private static void execInitSQL(SQLiteDatabase database, Context ctx, String fileName) {
+  private static void execInitSQL(SQLiteDatabase database, String fileName) {
 	  InputStream inputStream;
 	  try {
-		  inputStream = ctx.getAssets().open(fileName);
+		  inputStream = MyApplication.getAppContext().getAssets().open(fileName);
 	  } catch (IOException e1) {
 		  // TODO Auto-generated catch block
 		  e1.printStackTrace();
@@ -36,9 +32,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	  try {
 		  while (( line = buffreader.readLine()) != null) {
 			  // skip empty lines, comment lines, and remove tabs and carriage returns
-			  if (!line.equals("") && !line.substring(0, 2).equals("--")) {
-				  line = line.replace("\t","");
-				  line = line.replace("\n","");
+			  line = line.replace("\t","");
+			  line = line.replace("\n","");
+			  if (line.equals("")) { }
+			  else if (line.length()<2) { }
+			  else if (line.substring(0, 2).equals("--")) { }
+			  else {
 				  text.append(line);
 				  if (line.charAt(line.length()-1) == ';') {
 					  database.execSQL(text.toString());
@@ -52,9 +51,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	  }
   }
   
-  public MySQLiteHelper(Context context) {
-	  super(context, DATABASE_NAME, null, DATABASE_VERSION);
-	  mContext = context;
+  public MySQLiteHelper() {
+	  super(MyApplication.getAppContext(), DATABASE_NAME, null, DATABASE_VERSION);
 	  SQLiteDatabase database = this.getWritableDatabase();
 	  this.onCreate(database);
   }
@@ -62,8 +60,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
   @Override
   public void onCreate(SQLiteDatabase database) {
     Log.w(MySQLiteHelper.class.getName(), "Creating database");
-    execInitSQL(database, mContext, "ddl.sql");
-    execInitSQL(database, mContext, "dml.sql");
+    execInitSQL(database, "ddl.sql");
+    Log.w(MySQLiteHelper.class.getName(), "Populating database");
+    execInitSQL(database, "dml.sql");
   }
 
   @Override

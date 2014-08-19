@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS tblElementData;
-
 DROP TABLE IF EXISTS tblElement;
+DROP TABLE IF EXISTS tblTHElement;
+DROP TABLE IF EXISTS tblPlayerElement;
 
 CREATE TABLE tblElement (
 	ElementID INTEGER NOT NULL,
@@ -23,9 +24,8 @@ CREATE TABLE tblTHElement (
 	Quantity INTEGER NOT NULL,
 	PRIMARY KEY (THLevel, ElementID));
 
-CREATE TABLE tblPlayerElements (
+CREATE TABLE tblPlayerElement (
 	PlayerElementID INTEGER NOT NULL,
 	ElementID INTEGER NOT NULL,
 	Level INTEGER NOT NULL,
 	PRIMARY KEY (PlayerElementID));
-	
