@@ -53,8 +53,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
   
   public MySQLiteHelper() {
 	  super(MyApplication.getAppContext(), DATABASE_NAME, null, DATABASE_VERSION);
-	  SQLiteDatabase database = this.getWritableDatabase();
-	  this.onCreate(database);
   }
 
   @Override

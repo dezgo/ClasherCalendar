@@ -1,6 +1,5 @@
 package com.derekgillett.clashercalendar;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -11,14 +10,16 @@ public class PlayerElement {
 	private int mElementID;
 	private int mLevel;
 
-	public PlayerElement(Context poContext, int pPlayerElementID) {
-
-		// 1. get reference to writable DB
-		MySQLiteHelper oMySQLiteHelper = new MySQLiteHelper();
-		moDB = oMySQLiteHelper.getWritableDatabase();
-		
+	public PlayerElement(int pPlayerElementID) {
+		this();
 		mPlayerElementID = pPlayerElementID;
 		Load();
+	}
+	
+	public PlayerElement() {
+		// 1. get reference to writable DB
+		MySQLiteHelper oMySQLiteHelper = new MySQLiteHelper();
+		moDB = oMySQLiteHelper.getWritableDatabase();		
 	}
 	
 	public int getPlayerElementID() {
