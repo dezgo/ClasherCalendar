@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
@@ -44,20 +45,44 @@ public class THLevelOnItemSelectedListener implements OnItemSelectedListener {
         // clear out previous stuff first
         vwMainLayout.removeAllViews();
         
-        TownHall townHall = new TownHall(mnTHLevel);
+        THElements townHall = new THElements(mnTHLevel);
         ArrayList<THElement> oTHElements = townHall.getTHElements();
 
         for (int i=0; i<oTHElements.size(); i++) {
-        	TextView tv = new TextView(MyApplication.getAppContext());
-        	tv.setId(1002+i);
-            lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-            lp.addRule(RelativeLayout.BELOW, 1001+i);
-            tv.setLayoutParams(lp);
-            
-        	tv.setText(oTHElements.get(i).getElement().getName() + " - " + 
-        			String.valueOf(oTHElements.get(i).getQuantity()));
-
-        	vwMainLayout.addView(tv);
+        	for (int j=0; j<oTHElements.get(i).getQuantity(); j++) {
+	        	TextView tv = new TextView(MyApplication.getAppContext());
+	        	tv.setId(1002+i);
+	            lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+	            lp.addRule(RelativeLayout.BELOW, 1001+i);
+	            tv.setLayoutParams(lp);
+	        	tv.setText(oTHElements.get(i).getElement().getName());
+	        	vwMainLayout.addView(tv);
+	
+	        	TextView tv1 = new TextView(MyApplication.getAppContext());
+	        	tv1.setId(1102+i);
+	            lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+	            lp.addRule(RelativeLayout.BELOW, 1001+i);
+	            tv1.setLayoutParams(lp);
+	        	tv1.setText(oTHElements.get(i).getElement().getMaxLevel(mnTHLevel));
+	        	vwMainLayout.addView(tv1);
+	
+	        	Button btn1 = new Button(MyApplication.getAppContext());
+	        	btn1.setId(1202+i);
+	            lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+	            lp.addRule(RelativeLayout.BELOW, 1001+i);
+	            lp.addRule(RelativeLayout.RIGHT_OF, 1102+i);
+	            btn1.setLayoutParams(lp);
+	        	btn1.setText("+");
+	        	vwMainLayout.addView(btn1);
+	
+	        	Button btn2 = new Button(MyApplication.getAppContext());
+	            lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+	            lp.addRule(RelativeLayout.BELOW, 1001+i);
+	            lp.addRule(RelativeLayout.RIGHT_OF, 1202+i);
+	            btn2.setLayoutParams(lp);
+	        	btn2.setText("-");
+	        	vwMainLayout.addView(btn2);
+        	}
         }
     }
  

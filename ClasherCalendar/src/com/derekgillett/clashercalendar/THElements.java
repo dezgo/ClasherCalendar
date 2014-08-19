@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class TownHall {
+public class THElements {
 	private SQLiteDatabase moDB;
 	private ArrayList<THElement> moTHElements = new ArrayList<THElement>();
 	
-	public TownHall(int pnLevel) {
+	public THElements(int pnLevel) {
 		THElement oTHElement;
 		int nElementID;
 		int nQuantity;

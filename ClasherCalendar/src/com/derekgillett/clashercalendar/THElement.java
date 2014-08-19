@@ -11,9 +11,7 @@ public class THElement {
 	private int mnQuantity;
 
 	public THElement(int pnTHLevel, int pnElementID, int pnQuantity) {
-		// 1. get reference to writable DB
-		MySQLiteHelper oMySQLiteHelper = new MySQLiteHelper();
-		moDB = oMySQLiteHelper.getWritableDatabase();
+		moDB = MyApplication.getDB();
 		
 		mnTHLevel = pnTHLevel;
 		moElement = new Element(pnElementID);

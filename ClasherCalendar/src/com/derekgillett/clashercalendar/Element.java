@@ -1,5 +1,7 @@
 package com.derekgillett.clashercalendar;
 
+import java.util.ArrayList;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -17,9 +19,11 @@ public class Element {
 	private static final String[] COLUMNS = {KEY_ID,KEY_NAME,KEY_COSTTYPE};
 	  
 	private SQLiteDatabase moDB;
-	private int mid;
-	private String melementName;
-	private int mcostType;
+	private int mnID;
+	private String msElementName;
+	private int mnCostType;
+	private int mnMaxLevel;
+	private ArrayList<ElementData> moElementData = new ArrayList<ElementData>();
 
 	public Element() {
 		Log.d("Element", "Constructor");
@@ -31,34 +35,75 @@ public class Element {
 	public Element(int id) {
 		this();
 		this.loadElement(id);
+		mnMaxLevel = getMaxLevel();
+		for (int i=0; i<mnMaxLevel; i++) {
+			ElementData oElementData = new ElementData(this,i+1);
+			moElementData.add(oElementData);
+		}
+	}
+	
+	// return the maximum level this element can be for the given TH level
+	public int getMaxLevel(int pnTHLevel) {
+		Log.d("Element", "getMaxLevel"); 
+		
+		Cursor cursor = moDB.rawQuery("SELECT Max(ElementLevel) FROM tblElementData WHERE ElementID = ? AND THMinLevel <= ?", 
+				new String[] { String.valueOf(mnID), String.valueOf(pnTHLevel) }); 
+		if (cursor == null)
+			return 0;
+		else if (cursor.getCount() < 1) 
+			return 0;
+		else {
+			cursor.moveToFirst();
+			return Integer.parseInt(cursor.getString(0));
+		}
+	}
+	
+	// maximum level this element can be
+	private int getMaxLevel() {
+		Log.d("Element", "getMaxLevel"); 
+		
+		Cursor cursor = moDB.rawQuery("SELECT Max(ElementLevel) FROM tblElementData WHERE ElementID = ?", 
+				new String[] { String.valueOf(mnID) }); 
+		if (cursor == null)
+			return 0;
+		else if (cursor.getCount() < 1) 
+			return 0;
+		else {
+			cursor.moveToFirst();
+			return Integer.parseInt(cursor.getString(0));
+		}
 	}
 	
 	public int getId() {
-		return mid;
+		return mnID;
 	}
 	
 	public void setId(int pid) {
-		mid = pid;
+		mnID = pid;
 	}
 	
 	public String getName() {
-		return melementName;
+		return msElementName;
 	}
 	
 	public void setName(String pelementName) {
-		melementName = pelementName;
+		msElementName = pelementName;
 	}
 	
 	public String toString() {
-		return melementName;
+		return msElementName;
 	}
 	
 	public int getCostType() {
-		return mcostType;
+		return mnCostType;
 	}
 	
 	public void setCostType(int pcostType) {
-		mcostType = pcostType;
+		mnCostType = pcostType;
+	}
+	
+	public ElementData getElementData(int pnLevel) {
+		return moElementData.get(pnLevel-1);
 	}
 
 	public void updateElement(){
