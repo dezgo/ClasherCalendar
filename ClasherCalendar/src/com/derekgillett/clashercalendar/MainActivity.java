@@ -7,13 +7,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 public class MainActivity extends Activity {
 
-	//private MyApplication moApp;
-	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 		Log.d("MainActivity", "Constructor"); 
@@ -21,13 +18,10 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        //moApp = (MyApplication) getApplication();
-        
-        RelativeLayout vwMainLayout =  (RelativeLayout) this.findViewById(R.id.layoutMain);
-        createTHSpinner(vwMainLayout);
+        createTHSpinner();
     }
 
-    private void createTHSpinner(RelativeLayout vw) {
+    private void createTHSpinner() {
 		Log.d("MainActivity", "createTHSpinner"); 
 
         // get reference to spinner

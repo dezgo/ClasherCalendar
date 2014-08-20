@@ -61,10 +61,10 @@ public class ElementData {
 		if (cursor != null) {
 			if (cursor.getCount() > 0) {
 				cursor.moveToFirst();
-				this.mnHitPoints = Integer.parseInt(cursor.getString(0));
-				this.mnBuildCost = Integer.parseInt(cursor.getString(1));
-				this.mnBuildTime = Integer.parseInt(cursor.getString(2));
-				this.mnTHMinLevel = Integer.parseInt(cursor.getString(3));
+				this.mnHitPoints = cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0));
+				this.mnBuildCost = cursor.getString(1) == null ? 0 : Integer.parseInt(cursor.getString(1));
+				this.mnBuildTime = cursor.getString(2) == null ? 0 : Integer.parseInt(cursor.getString(2));
+				this.mnTHMinLevel = cursor.getString(3) == null ? 0 : Integer.parseInt(cursor.getString(3));
 			}
 		}
 	}
