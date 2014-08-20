@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">ClasherCalendar</string>
+    <string name="app_name">Clasher Calendar</string>
     <string name="townhall_level">Town Hall Level</string>
     <string name="action_settings">Settings</string>
+    <string name="village_name">Village Name</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="button_next">>>></string>
 
 </resources>

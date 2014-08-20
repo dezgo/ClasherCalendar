@@ -7,13 +7,15 @@ import android.database.sqlite.SQLiteDatabase;
 public class PlayerElement {
 	private final String TABLE_NAME = "tblPlayerElement";
 	private final String COLUMN_ID = "PlayerElementID";
+	private final String COLUMN_PLAYERID = "PlayerID";
 	private final String COLUMN_ELEMENTID = "ElementID";
 	private final String COLUMN_LEVEL = "Level";
-	private final String[] ALL_COLUMNS = { this.COLUMN_ID, this.COLUMN_ELEMENTID, this.COLUMN_LEVEL };
+	private final String[] ALL_COLUMNS = { this.COLUMN_ID, this.COLUMN_PLAYERID, this.COLUMN_ELEMENTID, this.COLUMN_LEVEL };
 	
 	private SQLiteDatabase moDB;
 	
 	private long mnPlayerElementID;
+	private Player moPlayer;
 	private Element moElement;
 	private int mnLevel;
 
@@ -65,12 +67,12 @@ public class PlayerElement {
 	private void Load() {
 		Cursor cursor = moDB.query(this.TABLE_NAME, this.ALL_COLUMNS, "PlayerElementID = ?", 
 				new String[] { String.valueOf(mnPlayerElementID) }, null, null, null );
-		//Cursor cursor = moDB.rawQuery("SELECT ElementID, Level FROM tblPlayerElement WHERE PlayerElementID = ?",
-		//		new String[] { String.valueOf(mnPlayerElementID) }); 
+
 		if (cursor != null) {
 			cursor.moveToFirst();
-			this.moElement = cursor.getString(0) == null ? null : new Element(Integer.parseInt(cursor.getString(0)));
-			this.mnLevel = cursor.getString(1) == null ? 0 : Integer.parseInt(cursor.getString(1));
+			this.moPlayer = cursor.getString(1) == null ? null : new Player(Integer.parseInt(cursor.getString(1)));
+			this.moElement = cursor.getString(2) == null ? null : new Element(Integer.parseInt(cursor.getString(2)));
+			this.mnLevel = cursor.getString(3) == null ? 0 : Integer.parseInt(cursor.getString(3));
 		}
 	}
 	
