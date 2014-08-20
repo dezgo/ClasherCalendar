@@ -44,7 +44,7 @@ public class THElement {
 		if (cursor != null) {
 			if (cursor.getCount() > 0) {
 				cursor.moveToFirst();
-				this.mnQuantity = Integer.parseInt(cursor.getString(0));
+				this.mnQuantity = cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0));
 			} else
 				this.mnQuantity = 0;
 		}

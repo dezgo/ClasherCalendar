@@ -8,6 +8,7 @@ import android.util.Log;
 public class MyApplication extends Application{
 	private static Context context;
 	private static SQLiteDatabase db;
+	private static PlayerElements playerElements;
 
     public void onCreate(){
         Log.d(MyApplication.class.getName(), "onCreate");
@@ -25,5 +26,13 @@ public class MyApplication extends Application{
     
     public static SQLiteDatabase getDB() {
     	return db;
+    }
+    
+    public static PlayerElements getPlayerElements() {
+    	return playerElements;
+    }
+    
+    public static void setPlayerElements(PlayerElements poPlayerElements) {
+    	playerElements = poPlayerElements;
     }
 }

@@ -22,8 +22,8 @@ public class THElements {
 				cursor.moveToFirst();
 				while (!cursor.isAfterLast())
 				{
-					nElementID = Integer.parseInt(cursor.getString(0));
-					nQuantity = Integer.parseInt(cursor.getString(1));
+					nElementID = cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0));
+					nQuantity = cursor.getString(1) == null ? 0 : Integer.parseInt(cursor.getString(1));
 					oTHElement = new THElement(pnLevel, nElementID, nQuantity);
 					moTHElements.add(oTHElement);
 					cursor.moveToNext();

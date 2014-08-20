@@ -54,7 +54,10 @@ public class Element {
 			return 0;
 		else {
 			cursor.moveToFirst();
-			return Integer.parseInt(cursor.getString(0));
+			if (cursor.getString(0) == null)
+				return 0;
+			else
+				return Integer.parseInt(cursor.getString(0));
 		}
 	}
 	
@@ -70,7 +73,10 @@ public class Element {
 			return 0;
 		else {
 			cursor.moveToFirst();
-			return Integer.parseInt(cursor.getString(0));
+			if (cursor.getString(0) == null)
+				return 0;
+			else
+				return Integer.parseInt(cursor.getString(0));
 		}
 	}
 	
@@ -152,14 +158,16 @@ public class Element {
 						null); // h. limit
 		 
 		// 3. if we got results get the first one
-		if (cursor != null)
+		if (cursor == null) { }
+		else {
 			cursor.moveToFirst();
 		 
-		// 4. build element object
-		this.setId(Integer.parseInt(cursor.getString(0)));
-		this.setName(cursor.getString(1));
-		this.setCostType(Integer.parseInt(cursor.getString(2)));
-		 
+			// 4. build element object
+			this.setId(cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0)));
+			this.setName(cursor.getString(1) == null ? "" : cursor.getString(1));
+			this.setCostType(cursor.getString(2) == null ? 0 : Integer.parseInt(cursor.getString(2)));
+		}
+
 		//log 
 		Log.d("getElement("+id+")", this.toString());
 
