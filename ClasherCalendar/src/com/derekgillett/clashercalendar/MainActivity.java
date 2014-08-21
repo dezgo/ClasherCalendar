@@ -1,18 +1,42 @@
 package com.derekgillett.clashercalendar;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView.LayoutParams;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
 
-    @Override
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    // Inflate the menu items for use in the action bar
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.main, menu);
+	    return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle presses on the action bar items
+	    switch (item.getItemId()) {
+	        case R.id.action_delete:
+	            deletePlayer();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+	
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
 		Log.d("MainActivity", "Constructor"); 
 
@@ -21,12 +45,18 @@ public class MainActivity extends Activity {
         
         // set title
         TextView tvTitle = (TextView) this.findViewById(R.id.tvTitle);
-        Player player = MyApplication.getPlayerElements();
+        Player player = MyApplication.getPlayer();
         tvTitle.setText(player.getVillageName() + "'s Village");
         
         GetElements();
     }
 
+	private void deletePlayer() {
+        Toast.makeText(this, 
+                "Delete current player",
+                Toast.LENGTH_LONG).show();
+	}
+	
     private void GetElements() {
         GridLayout vwMainLayout =  (GridLayout) this.findViewById(R.id.layoutMain);
         GridLayout.LayoutParams lp;
@@ -35,8 +65,8 @@ public class MainActivity extends Activity {
         vwMainLayout.removeAllViews();
         
         // get player elements, and check it's not null
-        Player playerElements = MyApplication.getPlayerElements();
-        junit.framework.Assert.assertNotNull("MyApplication.getPlayerElements() global variable null!", playerElements);
+        Player player = MyApplication.getPlayer();
+        junit.framework.Assert.assertNotNull("MyApplication.getPlayerElements() global variable null!", player);
 
     	TextView tv_title = new TextView(MyApplication.getAppContext());
     	tv_title.setText( R.string.grid_title1);
@@ -54,8 +84,8 @@ public class MainActivity extends Activity {
         tv_title.setLayoutParams(lp);
     	vwMainLayout.addView(tv_title);
 
-    	for (int i=1; i<=playerElements.size(); i++) {
-        	final PlayerElement oPlayerElement = playerElements.getPlayerElement();
+    	for (int i=1; i<=player.size(); i++) {
+        	final PlayerElement oPlayerElement = player.getPlayerElement();
         	Element oElement = oPlayerElement.getElement();
         	
         	TextView tv = new TextView(MyApplication.getAppContext());
@@ -117,12 +147,12 @@ public class MainActivity extends Activity {
     	int nCurrentValue = Integer.parseInt(poTextview.getText().toString());
     	int nNewValue = nCurrentValue + pnIncrement;
     	
-        Player player = MyApplication.getPlayerElements();
+        Player player = MyApplication.getPlayer();
     	if (nNewValue >= 1 && nNewValue <= poPlayerElement.getElement().getMaxLevel(player.getTHLevel())) {
 	    	poTextview.setText(String.valueOf(nNewValue));
 	        PlayerElement playerElement = player.getPlayerElement(poPlayerElement.getID());
 	        playerElement.setLevel(nNewValue);
-	        MyApplication.setPlayerElements(player);
+	        MyApplication.setPlayer(player);
         }
     }
 

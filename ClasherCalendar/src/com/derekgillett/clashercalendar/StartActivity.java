@@ -3,10 +3,12 @@ package com.derekgillett.clashercalendar;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,8 +17,16 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class StartActivity extends Activity {
+public class StartActivity extends ActionBarActivity {
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    // Inflate the menu items for use in the action bar
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.start, menu);
+	    return super.onCreateOptionsMenu(menu);
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,7 +56,7 @@ public class StartActivity extends Activity {
 			button.setOnClickListener(new View.OnClickListener() {				
 				@Override
 				public void onClick(View v) {
-					MyApplication.setPlayerElements(player1);
+					MyApplication.setPlayer(player1);
 					GoToMain_();
 				}
 			});
@@ -71,7 +81,7 @@ public class StartActivity extends Activity {
 			// default position is 1, so probably happy with that
 			// wasn't sure how to pull selecteditem out
 			// so just hard-coded 1
-			if (MyApplication.getPlayerElements() == null) {
+			if (MyApplication.getPlayer() == null) {
 		        new Player( 1, et.getText().toString() );
 	        }
 	        GoToMain_();

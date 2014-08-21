@@ -23,7 +23,7 @@ public class Player {
 		mnPlayerID = pnPlayerID;
 		this.select();
 		this.LoadExisting();
-        MyApplication.setPlayerElements(this);
+        MyApplication.setPlayer(this);
 	}
 	
 	public Player(int pnTHLevel, String psVillageName) {
@@ -31,7 +31,7 @@ public class Player {
 		msVillageName = psVillageName;
 		this.insert();
 		LoadDefaults();
-        MyApplication.setPlayerElements(this);
+        MyApplication.setPlayer(this);
 	}
 	
 	public String getVillageName() {

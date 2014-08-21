@@ -11,22 +11,28 @@ public class THLevelOnItemSelectedListener implements OnItemSelectedListener {
  
 	private Activity moActivity;
 	private int mnTHLevel;
+	private boolean mbInitial = true;
 	
     public void onItemSelected(AdapterView<?> parent, View view, int pos,
             long id) {
     	
-    	Utils.startThinking(moActivity,"Thinking");
-    	mnTHLevel = Integer.parseInt(parent.getItemAtPosition(pos).toString());
-        Toast.makeText(parent.getContext(), 
-                "Change to Town Hall Level " + parent.getItemAtPosition(pos).toString(),
-                Toast.LENGTH_LONG).show();
-        
-        //GetElements();
-        EditText et = (EditText) moActivity.findViewById(R.id.etVillageName);
-        if (!et.getText().toString().equals("")) {
-	        new Player( mnTHLevel, et.getText().toString() );
+    	// little trick to avoid calling this code the first time it's drawn
+    	if (mbInitial)
+    		mbInitial = false;
+    	else {
+	    	Utils.startThinking(moActivity,"Thinking");
+	    	mnTHLevel = Integer.parseInt(parent.getItemAtPosition(pos).toString());
+	        Toast.makeText(parent.getContext(), 
+	                "Change to Town Hall Level " + parent.getItemAtPosition(pos).toString(),
+	                Toast.LENGTH_LONG).show();
+	        
+	        //GetElements();
+	        EditText et = (EditText) moActivity.findViewById(R.id.etVillageName);
+	        if (!et.getText().toString().equals("")) {
+		        new Player( mnTHLevel, et.getText().toString() );
+	        }
+	        Utils.stopThinking();
         }
-        Utils.stopThinking();
     }
  
     @Override
