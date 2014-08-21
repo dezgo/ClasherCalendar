@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class StartActivity extends Activity {
 
@@ -24,8 +26,24 @@ public class StartActivity extends Activity {
 	}
 
 	private void GoToMain() {
-		Intent intent = new Intent(this, MainActivity.class);
-		startActivity(intent);
+		EditText et = (EditText) this.findViewById(R.id.etVillageName);
+		if (et.getText().toString().equals("")) {
+	        Toast.makeText(this, 
+	                "But wait! What's your village name?",
+	                Toast.LENGTH_LONG).show();
+		} else {
+			// if his hasn't been set yet, it's because they didn't change
+			// the spinner
+			// default position is 1, so probably happy with that
+			// wasn't sure how to pull selecteditem out
+			// so just hard-coded 1
+			if (MyApplication.getPlayerElements() == null) {
+		        MyApplication.setPlayerElements(new Player( 1, et.getText().toString() ));
+	        }
+
+	        Intent intent = new Intent(this, MainActivity.class);
+			startActivity(intent);
+		}
 	}
 	
 	private void addNextButtonListener() {
@@ -56,6 +74,6 @@ public class StartActivity extends Activity {
         
         spinner.setAdapter(dataAdapter);
         
-        spinner.setOnItemSelectedListener(new THLevelOnItemSelectedListener());
+        spinner.setOnItemSelectedListener(new THLevelOnItemSelectedListener(this));
     }
 }

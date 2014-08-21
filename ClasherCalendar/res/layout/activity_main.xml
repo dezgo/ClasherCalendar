@@ -32,10 +32,8 @@
 	    <GridLayout
 		    android:id="@+id/layoutMain"
 	        android:layout_below="@+id/tvTHLevel1"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:paddingLeft="@dimen/grid_horizontal_padding"
-		    android:paddingRight="@dimen/grid_horizontal_padding"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
 		    android:columnCount="4">
 	        
 	    </GridLayout>

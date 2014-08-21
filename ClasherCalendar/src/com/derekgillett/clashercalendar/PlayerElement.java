@@ -11,9 +11,9 @@ public class PlayerElement {
 	private final String COLUMN_ELEMENTID = "ElementID";
 	private final String COLUMN_LEVEL = "Level";
 	private final String[] ALL_COLUMNS = { this.COLUMN_ID, this.COLUMN_PLAYERID, this.COLUMN_ELEMENTID, this.COLUMN_LEVEL };
-	
+
 	private SQLiteDatabase moDB;
-	
+
 	private long mnPlayerElementID;
 	private Player moPlayer;
 	private Element moElement;
@@ -22,7 +22,7 @@ public class PlayerElement {
 	private void init() {
 		// 1. get reference to writable DB
 		MySQLiteHelper oMySQLiteHelper = new MySQLiteHelper();
-		moDB = oMySQLiteHelper.getWritableDatabase();		
+		moDB = oMySQLiteHelper.getWritableDatabase();
 	}
 	
 	public PlayerElement(int pnPlayerElementID) {
@@ -31,10 +31,11 @@ public class PlayerElement {
 		Load();
 	}
 	
-	public PlayerElement(Element poElement, int pnLevel) {
+	public PlayerElement(Player poPlayer, Element poElement, int pnLevel) {
 		init();
 		moElement = poElement;
 		mnLevel = pnLevel;
+		moPlayer = poPlayer;
 		insert();
 	}
 	
@@ -65,7 +66,7 @@ public class PlayerElement {
 	}
 	
 	private void Load() {
-		Cursor cursor = moDB.query(this.TABLE_NAME, this.ALL_COLUMNS, "PlayerElementID = ?", 
+		Cursor cursor = moDB.query(this.TABLE_NAME, this.ALL_COLUMNS, this.COLUMN_ID + " = ?", 
 				new String[] { String.valueOf(mnPlayerElementID) }, null, null, null );
 
 		if (cursor != null) {
@@ -75,19 +76,20 @@ public class PlayerElement {
 			this.mnLevel = cursor.getString(3) == null ? 0 : Integer.parseInt(cursor.getString(3));
 		}
 	}
-	
+
 	private void update() {
 		ContentValues values = new ContentValues();
-		values.put("Level", mnLevel);
-		values.put("ElementID", moElement.getId());
+		values.put(this.COLUMN_LEVEL, mnLevel);
+		values.put(this.COLUMN_ELEMENTID, moElement.getId());
 		MyApplication.getDB().update(TABLE_NAME,values, 
 				COLUMN_ID + " = ?", new String[] { String.valueOf(mnPlayerElementID) });
 	}
 
 	private boolean insert() {
 		ContentValues values = new ContentValues();
-		values.put("Level", mnLevel);
-		values.put("ElementID", moElement.getId());
+		values.put(this.COLUMN_LEVEL, mnLevel);
+		values.put(this.COLUMN_ELEMENTID, moElement.getId());
+		values.put(this.COLUMN_PLAYERID, this.moPlayer.getid());
 		mnPlayerElementID = MyApplication.getDB().insert(TABLE_NAME,  null,  values);
 		return mnPlayerElementID != 0;
 	}
