@@ -33,7 +33,7 @@ CREATE TABLE tblPlayerElement (
 	Level INTEGER NOT NULL,
 	PRIMARY KEY (PlayerElementID));
 
-CREATE TABLE tblPlayer {
+CREATE TABLE tblPlayer (
 	PlayerID INTEGER NOT NULL,
 	VillageName TEXT NULL,
 	THLevel INTEGER NOT NULL,

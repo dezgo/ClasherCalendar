@@ -9,50 +9,67 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.derekgillett.clashercalendar.StartActivity" >
     
-    <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnCount="2" >
-        
-	    <TextView
-	        android:id="@+id/tvVillageName"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:textSize="20sp"
-	        android:text="@string/village_name" />
+    <LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+        >
 	    
-	    <EditText
-	        android:id="@+id/etVillageName"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:inputType="text"
-	        android:ems="10" >
-
-	        <requestFocus />
-	    </EditText>
-	    
-	    <TextView
-	        android:id="@+id/tvTHLevel"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:textSize="20sp"
-	        android:text="@string/townhall_level" />
-	    
-	    <Spinner
-	        android:id="@+id/spTHLevel"
-	        android:textSize="20sp"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_marginLeft="58dp" />
-	    
-	    <Button
-	        android:id="@+id/btnNext"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/button_next" />
+        <!--  this is where existing players will appear -->
+	    <LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+	        android:id="@+id/layout_existing_players"
+	        android:orientation="vertical"
+	        >
 	        
-
-    </GridLayout>
-    
-
+	    </LinearLayout>
+	    
+	    
+	    <GridLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:columnCount="2" >
+	        
+		    <TextView
+		        android:id="@+id/tvVillageName"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="20sp"
+		        android:text="@string/village_name" />
+		    
+		    <EditText
+		        android:id="@+id/etVillageName"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:inputType="text"
+		        android:ems="10" >
+	
+		        <requestFocus />
+		    </EditText>
+		    
+		    <TextView
+		        android:id="@+id/tvTHLevel"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="20sp"
+		        android:text="@string/townhall_level" />
+		    
+		    <Spinner
+		        android:id="@+id/spTHLevel"
+		        android:textSize="20sp"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="58dp" />
+		    
+		    <Button
+		        android:id="@+id/btnNext"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/button_next" />
+		        
+	
+	    </GridLayout>
+	    
+	</LinearLayout>
 </ScrollView>

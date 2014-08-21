@@ -5,7 +5,8 @@
     <string name="townhall_level">Town Hall Level</string>
     <string name="action_settings">Settings</string>
     <string name="village_name">Village Name</string>
-    <string name="hello_world">Hello world!</string>
     <string name="button_next">>>></string>
-
+    <string name="grid_title1">Building</string>
+    <string name="grid_title2">Level</string>
+    
 </resources>

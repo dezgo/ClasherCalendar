@@ -23,13 +23,23 @@ public class Player {
 		mnPlayerID = pnPlayerID;
 		this.select();
 		this.LoadExisting();
+        MyApplication.setPlayerElements(this);
 	}
 	
 	public Player(int pnTHLevel, String psVillageName) {
 		mnTHLevel = pnTHLevel;
 		msVillageName = psVillageName;
-		LoadDefaults();
 		this.insert();
+		LoadDefaults();
+        MyApplication.setPlayerElements(this);
+	}
+	
+	public String getVillageName() {
+		return this.msVillageName;
+	}
+	
+	public int getTHLevel() {
+		return mnTHLevel;
 	}
 	
 	public void setTHLevel(int pnTHLevel) {
@@ -37,8 +47,12 @@ public class Player {
 		this.update();
 	}
 	
+	public long getid() {
+		return this.mnPlayerID;
+	}
+	
 	public void addPlayerElement(Element poElement, int pnLevel) {
-		PlayerElement oPlayerElement = new PlayerElement(poElement, pnLevel);
+		PlayerElement oPlayerElement = new PlayerElement(this, poElement, pnLevel);
 		moPlayerElements.put(oPlayerElement.getID(),oPlayerElement);
 	}
 	
@@ -63,7 +77,7 @@ public class Player {
         for (int i=0; i<oTHElements.size(); i++) {
         	THElement thElement = oTHElements.get(i);
         	for (int j=0; j<thElement.getQuantity(); j++) {
-        		PlayerElement playerElement = new PlayerElement(
+        		PlayerElement playerElement = new PlayerElement(this,
         				thElement.getElement(), thElement.getElement().getMaxLevel(mnTHLevel));
         		moPlayerElements.put(playerElement.getID(),playerElement);
         	}
