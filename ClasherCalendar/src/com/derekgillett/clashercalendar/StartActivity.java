@@ -49,6 +49,7 @@ public class StartActivity extends ActionBarActivity {
 		Player player;
 		LinearLayout ll = (LinearLayout) this.findViewById(R.id.layout_existing_players);
 		ll.removeAllViews();
+		players.moveToFirst();
 		while ((player = players.getPlayer()) != null) {
 			final Player player1 = player;
 			Button button = new Button(this);

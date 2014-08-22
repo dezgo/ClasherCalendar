@@ -60,6 +60,10 @@ public class Player {
 		return moPlayerElements.get(pnPlayerElementID);
 	}
 	
+	public void moveToFirst() {
+		this.mnIndex = 0;
+	}
+	
 	public PlayerElement getPlayerElement() {
 		PlayerElement playerElement = null;
 		if (mnIndex <= moPlayerElements.size() ) {
@@ -108,6 +112,10 @@ public class Player {
 	}
 	
 	public void delete() {
+		// cheeky reference to PlayerElement table here
+		// didn't want to implement a delete method over there when it's only used here
+		MyApplication.getDB().delete("tblPlayerElement", 
+				COLUMN_ID + " = ?", new String[] { String.valueOf(mnPlayerID) });
 		MyApplication.getDB().delete(TABLE_NAME, 
 				COLUMN_ID + " = ?", new String[] { String.valueOf(mnPlayerID) });
 	}

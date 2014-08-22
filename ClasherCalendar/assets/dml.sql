@@ -1,29 +1,95 @@
+-- cost types
+INSERT INTO tblCostType (CostTypeID, CostTypeName) VALUES (1, 'Gold');
+INSERT INTO tblCostType (CostTypeID, CostTypeName) VALUES (2, 'Elixir');
+INSERT INTO tblCostType (CostTypeID, CostTypeName) VALUES (3, 'Dark Elixir');
+
 -- elements
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (1, 'Air Bomb', 1);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (2, 'Air Defence', 1);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (3, 'Archer Tower', 1);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (4, 'Army Camp', 2);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (5, 'Barracks', 2);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (6, 'Bomb', 1);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (7, 'Cannon', 1);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (8, 'Clan Castle', 1);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (9, 'Dark Barracks', 2);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (10, 'Dark Elixir Storage', 2);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (11, 'Elixir Collector', 1);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (12, 'Elixir Storage', 1);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (13, 'Giant Bomb', 1);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (14, 'Gold Mine', 2);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (15, 'Gold Storage', 2);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (16, 'Hidden Tesla', 1);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (17, 'Laboratory', 2);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (18, 'Mortar', 1);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (19, 'Seeking Air Mine', 1);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (20, 'Spell Factory', 2);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (21, 'Wizard Tower', 1);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (22, 'Dark Elixir Drill', 2);
-INSERT INTO tblElement (ElementID, ElementName, CostType) VALUES (23, 'Town Hall', 1);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (1, 'Air Bomb', 1, 5);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (2, 'Air Defence', 1, 1);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (3, 'Archer Tower', 1, 1);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (4, 'Army Camp', 2, 3);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (5, 'Barracks', 2, 3);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (6, 'Bomb', 1, 5);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (7, 'Cannon', 1, 1);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (8, 'Clan Castle', 1, 4);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (9, 'Dark Barracks', 2, 3);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (10, 'Dark Elixir Storage', 2, 2);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (11, 'Elixir Collector', 1, 2);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (12, 'Elixir Storage', 1, 2);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (13, 'Giant Bomb', 1, 5);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (14, 'Gold Mine', 2, 2);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (15, 'Gold Storage', 2, 2);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (16, 'Hidden Tesla', 1, 1);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (17, 'Laboratory', 2, 3);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (18, 'Mortar', 1, 1);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (19, 'Seeking Air Mine', 1, 5);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (20, 'Spell Factory', 2, 3);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (21, 'Wizard Tower', 1, 1);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (22, 'Dark Elixir Drill', 2, 2);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (23, 'Town Hall', 1, 4);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (24, 'X-Bow', 1, 1);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (25, 'Wall', 1, 1);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (26, 'Inferno Tower', 2, 1);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (27, 'Spring Trap', 1, 5);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (28, 'Builder''s Hut', 2, 2);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (29, 'Barbarian King Alter', 3, 3);
+INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (30, 'Archer Queen Alter', 3, 3);
 
 -- th element quantities
+-- bombs
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (3, 6, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (4, 6, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (5, 6, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (6, 6, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 6, 6);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 6, 6);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 6, 6);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 6, 6);
+
+-- mortars
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (3, 18, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (4, 18, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (5, 18, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (6, 18, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 18, 3);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 18, 3);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 18, 3);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 18, 3);
+
+-- cannons
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (1, 7, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (2, 7, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (3, 7, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (4, 7, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (5, 7, 3);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (6, 7, 3);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 7, 5);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 7, 5);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 7, 5);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 7, 6);
+
+-- archer towers
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (2, 3, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (3, 3, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (4, 3, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (5, 3, 3);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (6, 3, 3);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 3, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 3, 5);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 3, 6);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 3, 7);
+
+-- walls
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (2, 25, 25);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (3, 25, 50);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (4, 25, 75);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (5, 25, 100);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (6, 25, 125);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 25, 175);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 25, 225);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 25, 250);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 25, 250);
+
 -- gold mines and elixir collectors
 INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (1, 14, 1);
 INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (1, 11, 1);
@@ -330,3 +396,16 @@ INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, Build
 INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (21, 6, 800, 2680000,432000,8);
 INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (21, 7, 840, 5360000,604800,9);
 INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (21, 8, 880, 6480000,864000,10);
+
+-- wall
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (25, 1, 300, 200, 0, 2);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (25, 2, 500, 1000, 0, 2);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (25, 3, 700, 5000, 0, 3);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (25, 4, 900, 10000, 0, 4);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (25, 5, 1400, 30000, 0, 5);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (25, 6, 2000, 75000, 0, 6);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (25, 7, 2500, 200000, 0, 7);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (25, 8, 3000, 500000, 0, 8);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (25, 9, 4000, 1000000, 0, 9);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (25, 10, 5500, 3000000, 0, 9);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (25, 11, 7000, 4000000, 0, 10);

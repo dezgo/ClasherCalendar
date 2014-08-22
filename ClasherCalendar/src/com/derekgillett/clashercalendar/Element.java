@@ -1,10 +1,9 @@
 package com.derekgillett.clashercalendar;
 
-import java.util.ArrayList;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 
 public class Element {
@@ -12,18 +11,20 @@ public class Element {
 	private static final String TABLE_ELEMENT = "tblElement";
 
 	// Element Table Columns names
-	private static final String KEY_ID = "ElementID";
-	private static final String KEY_NAME = "ElementName";
-	private static final String KEY_COSTTYPE = "CostType";
+	private static final String COLUMN_ID = "ElementID";
+	private static final String COLUMN_NAME = "ElementName";
+	private static final String COLUMN_COSTTYPE = "CostType";
+	private static final String COLUMN_CATEGORY = "Category";
 
-	private static final String[] COLUMNS = {KEY_ID,KEY_NAME,KEY_COSTTYPE};
+	private static final String[] COLUMNS = {COLUMN_ID, COLUMN_NAME, COLUMN_COSTTYPE, COLUMN_CATEGORY};
 	  
 	private SQLiteDatabase moDB;
 	private int mnID;
 	private String msElementName;
 	private int mnCostType;
+	private int mnCategory;
 	private int mnMaxLevel;
-	private ArrayList<ElementData> moElementData = new ArrayList<ElementData>();
+	private LongSparseArray<ElementData> moElementData = new LongSparseArray<ElementData>();
 
 	public Element() {
 		Log.d("Element", "Constructor");
@@ -38,7 +39,7 @@ public class Element {
 		mnMaxLevel = getMaxLevel();
 		for (int i=0; i<mnMaxLevel; i++) {
 			ElementData oElementData = new ElementData(this,i+1);
-			moElementData.add(oElementData);
+			moElementData.put(i+1, oElementData);
 		}
 	}
 	
@@ -108,8 +109,16 @@ public class Element {
 		mnCostType = pcostType;
 	}
 	
+	public int getCategory() {
+		return mnCategory;
+	}
+	
+	public void setCategory(int pnCategory) {
+		mnCategory = pnCategory;
+	}
+	
 	public ElementData getElementData(int pnLevel) {
-		return moElementData.get(pnLevel-1);
+		return moElementData.get(pnLevel);
 	}
 
 	public void updateElement(){
@@ -117,13 +126,14 @@ public class Element {
 
 		// 2. create ContentValues to add key "column"/value
 		ContentValues values = new ContentValues();
-		values.put(KEY_NAME, this.getName()); 
-		values.put(KEY_COSTTYPE, this.getCostType());
+		values.put(Element.COLUMN_NAME, this.getName()); 
+		values.put(Element.COLUMN_COSTTYPE, this.getCostType());
+		values.put(Element.COLUMN_CATEGORY, this.getCategory());
 
 		// 3. insert
 		moDB.update(TABLE_ELEMENT, // table
 				values, // key/value -> keys = column names/ values = column values
-				" " + KEY_ID + " = ?", // c. selections 
+				" " + COLUMN_ID + " = ?", // c. selections 
 				new String[] { String.valueOf(this.getId()) }); // d. selections args
 
 	}
@@ -133,8 +143,9 @@ public class Element {
 
 		// 2. create ContentValues to add key "column"/value
 		ContentValues values = new ContentValues();
-		values.put(KEY_NAME, this.getName()); 
-		values.put(KEY_COSTTYPE, this.getCostType());
+		values.put(Element.COLUMN_NAME, this.getName()); 
+		values.put(Element.COLUMN_COSTTYPE, this.getCostType());
+		values.put(Element.COLUMN_CATEGORY,  this.getCategory());
 
 		// 3. insert
 		moDB.insert(TABLE_ELEMENT, // table
@@ -150,7 +161,7 @@ public class Element {
 		Cursor cursor = 
 				moDB.query(TABLE_ELEMENT, // a. table
 						COLUMNS, // b. column names
-						" " + KEY_ID + " = ?", // c. selections 
+						" " + COLUMN_ID + " = ?", // c. selections 
 						new String[] { String.valueOf(id) }, // d. selections args
 						null, // e. group by
 						null, // f. having
@@ -166,6 +177,7 @@ public class Element {
 			this.setId(cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0)));
 			this.setName(cursor.getString(1) == null ? "" : cursor.getString(1));
 			this.setCostType(cursor.getString(2) == null ? 0 : Integer.parseInt(cursor.getString(2)));
+			this.setCategory(cursor.getString(3) == null ? 0 : Integer.parseInt(cursor.getString(3)));
 		}
 
 		//log 

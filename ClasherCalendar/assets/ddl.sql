@@ -4,11 +4,18 @@ DROP TABLE IF EXISTS tblTHElement;
 DROP TABLE IF EXISTS tblPlayerElement;
 DROP TABLE IF EXISTS tblPlayer;
 DROP TABLE IF EXISTS tblPlayerElements;
+DROP TABLE IF EXISTS tblCostType;
+
+CREATE TABLE tblCostType (
+	CostTypeID INTEGER NOT NULL,
+	CostTypeName TEXT NOT NULL,
+	PRIMARY KEY (CostTypeID));
 
 CREATE TABLE tblElement (
 	ElementID INTEGER NOT NULL,
 	ElementName TEXT NOT NULL,
-	CostType INTEGER NULL,
+	CostType INTEGER NOT NULL,
+	Category INTEGER NOT NULL,
 	PRIMARY KEY (ElementID));
 
 CREATE TABLE tblElementData (

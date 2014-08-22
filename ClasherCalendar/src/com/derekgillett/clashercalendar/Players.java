@@ -30,6 +30,10 @@ public class Players {
 		moPlayers.remove(pnPlayerID);
 	}
 	
+	public void moveToFirst() {
+		mnIndex = 0;
+	}
+	
 	public Player getPlayer() {
 		Player player = null;
 		if (mnIndex <= moPlayers.size() ) {

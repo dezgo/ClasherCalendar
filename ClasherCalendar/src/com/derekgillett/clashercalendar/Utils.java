@@ -17,4 +17,56 @@ public class Utils {
 	static public void stopThinking() {
 		dialog.hide();
 	}
+	
+	static public long Time_TextToVal(String psTime) {
+	    String[] vTime;
+	    int numticks;
+	    long rtn = 0;
+
+	    vTime = psTime.split(" ");
+	    for (int item=0; item<vTime.length; item++) {
+	        numticks = Integer.parseInt(vTime[item].toString().substring(0, vTime[item].length()-1));
+	        String s = vTime[item].substring(vTime[item].length());
+	        if (s == "d") rtn = rtn + numticks * 24 * 60 * 60;
+	        if (s == "h") rtn = rtn + numticks * 60 * 60;
+	        if (s == "m") rtn = rtn + numticks * 60;
+	        if (s == "s") rtn = rtn + numticks;
+	    }
+	    
+	    return rtn;
+	}
+
+	static public String Time_ValToText(long pnVal) {
+		String sRtn = "";
+	    
+	    if (pnVal <= 0) {
+	        sRtn = "";
+	    }
+	    
+	    if (pnVal >= 60*60*24) {
+	        if (!sRtn.equals("")) sRtn = sRtn + " ";
+	        sRtn = sRtn + Math.round(pnVal/60/60/24) + "d";
+	        pnVal = pnVal - Math.round(pnVal/60/60/24)*60*60*24;
+	    }
+	    
+	    if (pnVal >= 60*60) {
+	        if (!sRtn.equals("")) sRtn = sRtn + " ";
+	        sRtn = sRtn + Math.round(pnVal/60/60) + "h";
+	        pnVal = pnVal - Math.round(pnVal/60/60)*60*60;
+	    }
+	
+	    if (pnVal >= 60) {
+	        if (!sRtn.equals("")) sRtn = sRtn + " ";
+	        sRtn = sRtn + Math.round(pnVal/60) + "m";
+	        pnVal = pnVal - Math.round(pnVal/60)*60;
+	    }
+	
+	    if (pnVal >= 1) {
+	        if (!sRtn.equals("")) sRtn = sRtn + " ";
+	        sRtn = sRtn + Math.round(pnVal) + "s";
+	        pnVal = pnVal - Math.round(pnVal);
+	    }
+	
+	    return sRtn;
+	}
 }

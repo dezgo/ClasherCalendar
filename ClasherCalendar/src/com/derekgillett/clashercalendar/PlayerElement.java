@@ -14,6 +14,9 @@ public class PlayerElement {
 
 	private SQLiteDatabase moDB;
 
+	//TODO: add in handling of >1 item, great for walls so there aren't 25+ individual entries
+	// that must be updated independently
+	//private int mnQuantity;
 	private long mnPlayerElementID;
 	private Player moPlayer;
 	private Element moElement;
