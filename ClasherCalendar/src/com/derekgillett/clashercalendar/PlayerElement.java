@@ -25,9 +25,10 @@ public class PlayerElement {
 		moDB = oMySQLiteHelper.getWritableDatabase();
 	}
 	
-	public PlayerElement(int pnPlayerElementID) {
+	public PlayerElement(int pnPlayerElementID, Player poPlayer) {
 		init();
 		mnPlayerElementID = pnPlayerElementID;
+		moPlayer = poPlayer;
 		Load();
 	}
 	
@@ -71,7 +72,6 @@ public class PlayerElement {
 
 		if (cursor != null) {
 			cursor.moveToFirst();
-			this.moPlayer = cursor.getString(1) == null ? null : new Player(Integer.parseInt(cursor.getString(1)));
 			this.moElement = cursor.getString(2) == null ? null : new Element(Integer.parseInt(cursor.getString(2)));
 			this.mnLevel = cursor.getString(3) == null ? 0 : Integer.parseInt(cursor.getString(3));
 		}

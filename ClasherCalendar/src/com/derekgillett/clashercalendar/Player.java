@@ -23,7 +23,7 @@ public class Player {
 		mnPlayerID = pnPlayerID;
 		this.select();
 		this.LoadExisting();
-        MyApplication.setPlayerElements(this);
+        MyApplication.setPlayer(this);
 	}
 	
 	public Player(int pnTHLevel, String psVillageName) {
@@ -31,7 +31,11 @@ public class Player {
 		msVillageName = psVillageName;
 		this.insert();
 		LoadDefaults();
-        MyApplication.setPlayerElements(this);
+        MyApplication.setPlayer(this);
+	}
+	
+	public String getVillageName() {
+		return this.msVillageName;
 	}
 	
 	public int getTHLevel() {
@@ -91,9 +95,10 @@ public class Player {
 			while (!cursor.isAfterLast()) {
 				int nPlayerElementID = cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0));
 				if (nPlayerElementID != 0) {
-					PlayerElement playerElement = new PlayerElement(nPlayerElementID);
+					PlayerElement playerElement = new PlayerElement(nPlayerElementID,this);
 					moPlayerElements.put(playerElement.getID(), playerElement);
 				}
+				cursor.moveToNext();
 			}
 		}
 	}
@@ -102,6 +107,11 @@ public class Player {
 		return moPlayerElements.size();
 	}
 	
+	public void delete() {
+		MyApplication.getDB().delete(TABLE_NAME, 
+				COLUMN_ID + " = ?", new String[] { String.valueOf(mnPlayerID) });
+	}
+
 	private void update() {
 		ContentValues values = new ContentValues();
 		values.put(this.COLUMN_VILLAGENAME, msVillageName);
@@ -120,8 +130,6 @@ public class Player {
 	
 	private void select() {
 		String[] selectionArgs = new String[] { String.valueOf(mnPlayerID) };
-		ContentValues values = new ContentValues();
-		values.put(COLUMN_ID, mnPlayerID);
 		Cursor cursor = MyApplication.getDB().query(this.TABLE_NAME, this.ALL_COLUMNS, COLUMN_ID + " = ?", selectionArgs, null, null, null);
 		if (cursor != null) {
 			cursor.moveToFirst();

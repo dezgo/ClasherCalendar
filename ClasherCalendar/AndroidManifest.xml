@@ -12,10 +12,11 @@
         android:name=".MyApplication"
         android:allowBackup="true"
         android:label="@string/app_name"
-        android:icon="@drawable/ic_launcher" >
+        android:icon="@drawable/ic_launcher" 
+        android:theme="@style/Theme.AppCompat.Light" >
         <activity
             android:name=".StartActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" > 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,8 +25,13 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
-        </activity>
+            android:label="@string/app_name"
+            android:parentActivityName="com.derekgillett.clashercalendar.StartActivity" >
+			<!-- Parent activity meta-data to support 4.0 and lower -->
+			<meta-data
+			    android:name="android.support.PARENT_ACTIVITY"
+			    android:value="com.derekgillett.clashercalendar.StartActivity" />
+		</activity>
     </application>
 
 </manifest>
