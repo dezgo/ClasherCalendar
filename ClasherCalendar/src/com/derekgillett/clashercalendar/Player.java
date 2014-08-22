@@ -1,7 +1,5 @@
 package com.derekgillett.clashercalendar;
 
-import java.util.ArrayList;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.v4.util.LongSparseArray;
@@ -75,11 +73,11 @@ public class Player {
 	
 	// for a newly created player, add in the default buildings that come with the given TH level
 	private void LoadDefaults() {
-        THElements townHall = new THElements(mnTHLevel);
-        ArrayList<THElement> oTHElements = townHall.getTHElements();
+        THElements oTHElements = new THElements(mnTHLevel);
+        //ArrayList<THElement> oTHElements = townHall.getTHElements();
 
         for (int i=0; i<oTHElements.size(); i++) {
-        	THElement thElement = oTHElements.get(i);
+        	THElement thElement = oTHElements.getTHElement();
         	for (int j=0; j<thElement.getQuantity(); j++) {
         		PlayerElement playerElement = new PlayerElement(this,
         				thElement.getElement(), thElement.getElement().getMaxLevel(mnTHLevel));
@@ -104,6 +102,7 @@ public class Player {
 				}
 				cursor.moveToNext();
 			}
+			cursor.close();
 		}
 	}
 	
@@ -143,6 +142,7 @@ public class Player {
 			cursor.moveToFirst();
 			this.msVillageName = cursor.getString(1) == null ? "" : cursor.getString(1);
 			this.mnTHLevel = cursor.getString(2) == null ? 0 : Integer.parseInt(cursor.getString(2));
+			cursor.close();
 		}
 	}
 

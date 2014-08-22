@@ -1,13 +1,13 @@
 package com.derekgillett.clashercalendar;
 
-import java.util.ArrayList;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.util.LongSparseArray;
 
 public class THElements {
 	private SQLiteDatabase moDB;
-	private ArrayList<THElement> moTHElements = new ArrayList<THElement>();
+	private LongSparseArray<THElement> moTHElements = new LongSparseArray<THElement>();
+	private int mnIndex = 0;
 	
 	public THElements(int pnLevel) {
 		THElement oTHElement;
@@ -25,14 +25,32 @@ public class THElements {
 					nElementID = cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0));
 					nQuantity = cursor.getString(1) == null ? 0 : Integer.parseInt(cursor.getString(1));
 					oTHElement = new THElement(pnLevel, nElementID, nQuantity);
-					moTHElements.add(oTHElement);
+					moTHElements.put(nElementID, oTHElement);
 					cursor.moveToNext();
 				}
 			}
+			cursor.close();
 		}
 	}
 	
-	public ArrayList<THElement> getTHElements() {
-		return moTHElements;
+	public int size() {
+		return moTHElements.size();
+	}
+	
+	public void moveToFirst() {
+		mnIndex = 0;
+	}
+	
+	public THElement getTHElement() {
+		THElement oTHElement = null;
+		if (mnIndex <= moTHElements.size() ) {
+			oTHElement = moTHElements.get(moTHElements.keyAt(mnIndex));
+			mnIndex++;
+		}
+		return oTHElement;
+	}
+	
+	public THElement getTHElement(long key) {
+		return moTHElements.get(key);
 	}
 }

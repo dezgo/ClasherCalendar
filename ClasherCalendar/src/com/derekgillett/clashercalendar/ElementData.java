@@ -66,6 +66,7 @@ public class ElementData {
 				this.mnBuildTime = cursor.getString(2) == null ? 0 : Integer.parseInt(cursor.getString(2));
 				this.mnTHMinLevel = cursor.getString(3) == null ? 0 : Integer.parseInt(cursor.getString(3));
 			}
+			cursor.close();
 		}
 	}
 }

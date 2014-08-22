@@ -1,6 +1,8 @@
 package com.derekgillett.clashercalendar;
 
 import java.text.NumberFormat;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -12,8 +14,10 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -208,7 +212,10 @@ public class MainActivity extends ActionBarActivity {
         	LinearLayout ll = new LinearLayout(this);
         	
         	TextView tv2 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
-        	tv2.setText( NumberFormat.getInstance().format(oElement.getElementData(oPlayerElement.getLevel()).getBuildCost()));
+        	if (oPlayerElement.isMax())
+        		tv2.setText("Maxed");
+        	else
+        		tv2.setText( NumberFormat.getInstance().format(oPlayerElement.getUpgradeCost()));
         	ll.addView(tv2);
 
         	// element cost type
@@ -232,19 +239,54 @@ public class MainActivity extends ActionBarActivity {
         	
         	// element time to build
         	TextView tv3 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
-        	tv3.setText(Utils.Time_ValToText(oElement.getElementData(oPlayerElement.getLevel()).getBuildTime()));
+        	if (oPlayerElement.isMax())
+        		tv3.setText("n/a");
+        	else
+        		tv3.setText(Utils.Time_ValToText(oPlayerElement.getUpgradeTime()));
+        	tv3.setOnTouchListener(new OnTouchListener() {
+				@Override
+				public boolean onTouch(View arg0, MotionEvent arg1) {
+					arg0.performClick();
+					onTouchHandler(arg0, oPlayerElement);
+					return false;
+				} });
         	vwMainLayout.addView(tv3);
 
     	}
     }
     
+    private void onTouchHandler(View arg0, PlayerElement poPlayerElement) {
+//    	switch (arg1.getAction()) {
+//			case MotionEvent.ACTION_DOWN:
+//				break;
+//    	}
+// not actually looking for any particular touch event, so could just do it here without checking
+    	// what happened
+    	
+    	if (poPlayerElement.getSecondsRemaining() == 0) {
+    		poPlayerElement.startUpgrade();
+    		
+    		/*
+    		http://android-er.blogspot.com/2013/12/example-of-using-timer-and-timertask-on.html
+    			TODO implement timer code
+    		Timer timer = new Timer();
+    		TimerTask task = new MyTimerTask().
+    		new Timer().scheduleAtFixedRate(task, 0, 1000);
+    		*/
+    	}
+    	
+    	TextView tv = (TextView) arg0;
+    	int secsRemaining = poPlayerElement.getSecondsRemaining();
+    	if (secsRemaining > 0) tv.setText(Utils.Time_ValToText(secsRemaining));
+    }
+
     // change the level of the selected item
     private void LevelChangeOnClickListener(TextView poTextview, int pnIncrement, PlayerElement poPlayerElement) {
     	int nCurrentValue = poPlayerElement.getLevel();
     	int nNewValue = nCurrentValue + pnIncrement;
     	
         Player player = MyApplication.getPlayer();
-    	if (nNewValue >= 1 && nNewValue <= poPlayerElement.getElement().getMaxLevel(player.getTHLevel())) {
+    	if (nNewValue >= 0 && nNewValue <= poPlayerElement.getElement().getMaxLevel(player.getTHLevel())) {
 	    	poTextview.setText("Lvl " + String.valueOf(nNewValue));
 	        PlayerElement playerElement = player.getPlayerElement(poPlayerElement.getID());
 	        playerElement.setLevel(nNewValue);

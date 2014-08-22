@@ -47,6 +47,7 @@ public class THElement {
 				this.mnQuantity = cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0));
 			} else
 				this.mnQuantity = 0;
+			cursor.close();
 		}
 	}
 }

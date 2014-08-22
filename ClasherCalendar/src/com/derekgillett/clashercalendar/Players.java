@@ -56,6 +56,7 @@ public class Players {
 				this.addPlayer(new Player(nPlayerID));
 				cursor.moveToNext();
 			}
+			cursor.close();
 		}
 	}
 

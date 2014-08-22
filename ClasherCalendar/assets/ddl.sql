@@ -38,6 +38,7 @@ CREATE TABLE tblPlayerElement (
 	PlayerID INTEGER NOT NULL,
 	ElementID INTEGER NOT NULL,
 	Level INTEGER NOT NULL,
+	UpgradeStart INTEGER NULL,
 	PRIMARY KEY (PlayerElementID));
 
 CREATE TABLE tblPlayer (

@@ -20,7 +20,7 @@ public class Element {
 	  
 	private SQLiteDatabase moDB;
 	private int mnID;
-	private String msElementName;
+	private String msElementName = "";
 	private int mnCostType;
 	private int mnCategory;
 	private int mnMaxLevel;
@@ -47,38 +47,38 @@ public class Element {
 	public int getMaxLevel(int pnTHLevel) {
 		Log.d("Element", "getMaxLevel"); 
 		
+		int rtn = 0;
+		
 		Cursor cursor = moDB.rawQuery("SELECT Max(ElementLevel) FROM tblElementData WHERE ElementID = ? AND THMinLevel <= ?", 
 				new String[] { String.valueOf(mnID), String.valueOf(pnTHLevel) }); 
-		if (cursor == null)
-			return 0;
-		else if (cursor.getCount() < 1) 
-			return 0;
-		else {
-			cursor.moveToFirst();
-			if (cursor.getString(0) == null)
-				return 0;
-			else
-				return Integer.parseInt(cursor.getString(0));
+		if (cursor != null) {
+			if (cursor.getCount() > 0) {
+				cursor.moveToFirst();
+				if (cursor.getString(0) != null)
+					rtn = Integer.parseInt(cursor.getString(0));
+			}
+			cursor.close();
 		}
+		return rtn;
 	}
 	
 	// maximum level this element can be
 	private int getMaxLevel() {
 		Log.d("Element", "getMaxLevel"); 
 		
+		int rtn = 0;
+		
 		Cursor cursor = moDB.rawQuery("SELECT Max(ElementLevel) FROM tblElementData WHERE ElementID = ?", 
 				new String[] { String.valueOf(mnID) }); 
-		if (cursor == null)
-			return 0;
-		else if (cursor.getCount() < 1) 
-			return 0;
-		else {
-			cursor.moveToFirst();
-			if (cursor.getString(0) == null)
-				return 0;
-			else
-				return Integer.parseInt(cursor.getString(0));
+		if (cursor != null) {
+			if (cursor.getCount() > 0) {
+				cursor.moveToFirst();
+				if (cursor.getString(0) != null)
+					rtn = Integer.parseInt(cursor.getString(0));
+			}
+			cursor.close();
 		}
+		return rtn;
 	}
 	
 	public int getId() {
@@ -169,15 +169,17 @@ public class Element {
 						null); // h. limit
 		 
 		// 3. if we got results get the first one
-		if (cursor == null) { }
-		else {
-			cursor.moveToFirst();
-		 
-			// 4. build element object
-			this.setId(cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0)));
-			this.setName(cursor.getString(1) == null ? "" : cursor.getString(1));
-			this.setCostType(cursor.getString(2) == null ? 0 : Integer.parseInt(cursor.getString(2)));
-			this.setCategory(cursor.getString(3) == null ? 0 : Integer.parseInt(cursor.getString(3)));
+		if (cursor != null) {
+			if (cursor.getCount() > 0) {
+				cursor.moveToFirst();
+			 
+				// 4. build element object
+				this.setId(cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0)));
+				this.setName(cursor.getString(1) == null ? "" : cursor.getString(1));
+				this.setCostType(cursor.getString(2) == null ? 0 : Integer.parseInt(cursor.getString(2)));
+				this.setCategory(cursor.getString(3) == null ? 0 : Integer.parseInt(cursor.getString(3)));
+			}
+			cursor.close();
 		}
 
 		//log 
@@ -188,12 +190,14 @@ public class Element {
 	public int countElements() {
 		Log.d("Element", "countElements"); 
 		
+		int rtn = 0;
+		
 		Cursor cursor = moDB.rawQuery("SELECT count(*) FROM tblElement", null); 
-		if (cursor == null)
-			return 0;
-		else {
+		if (cursor != null) {
 			cursor.moveToFirst();
-			return Integer.parseInt(cursor.getString(0));
+			rtn = cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0));
+			cursor.close();
 		}
+		return rtn;
 	}
 }
