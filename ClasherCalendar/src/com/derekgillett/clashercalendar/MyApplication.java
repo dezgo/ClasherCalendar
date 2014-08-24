@@ -9,6 +9,7 @@ public class MyApplication extends Application{
 	private static Context context;
 	private static SQLiteDatabase db;
 	private static Player player;
+	private static Players players;
 
     public void onCreate(){
         Log.d(MyApplication.class.getName(), "onCreate");
@@ -34,5 +35,13 @@ public class MyApplication extends Application{
     
     public static void setPlayer(Player poPlayer) {
     	player = poPlayer;
+    }
+
+    public static Players getPlayers() {
+    	return players;
+    }
+    
+    public static void setPlayers(Players poPlayers) {
+    	players = poPlayers;
     }
 }

@@ -11,7 +11,9 @@
     <string name="grid_title3">Cost</string>
     <string name="grid_title4">Build Time</string>
     <string name="title_activity_dashboard">Dashboard</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="action_fix_levels">Update Building Levels</string>
     <string name="action_settings">Settings</string>
+    <string name="drawer_open">Open Nav Drawer</string>
+    <string name="drawer_close">Close Nav Drawer</string>
 
 </resources>

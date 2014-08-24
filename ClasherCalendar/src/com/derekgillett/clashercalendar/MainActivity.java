@@ -1,13 +1,17 @@
 package com.derekgillett.clashercalendar;
 
 import java.text.NumberFormat;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -16,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.GridLayout;
@@ -26,28 +29,35 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
+	
+	private ScheduledExecutorService moSEService;
+	private MySETask moMySETask;
+	private TextView moBuildTime;
+	private PlayerElement moPlayerElement;
 
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
+    
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    // Inflate the menu items for use in the action bar
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.main, menu);
 	    
-	    // add onclick to next button
-	    Button button = (Button) this.findViewById(R.id.btnNext);
-	    button.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				NextButtonOnClickListener();
-			}	    	
-	    });
-	    
 	    return super.onCreateOptionsMenu(menu);
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    // Handle presses on the action bar items
+		// Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+          return true;
+        }
+		
+		// Handle presses on the action bar items
 	    switch (item.getItemId()) {
 	        case R.id.action_delete:
 	            deletePlayer();
@@ -55,6 +65,9 @@ public class MainActivity extends ActionBarActivity {
 	        case R.id.home:
 	        	NavUtils.navigateUpFromSameTask(this);
 	        	return true;
+	        case R.id.action_settings:
+	    		Intent intent = new Intent(this, SettingsActivity.class);
+	    		startActivity(intent);
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
@@ -67,8 +80,15 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+        // get extra info - is this an existing player?
+        boolean bIsExisting = false;
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+        	bIsExisting = extras.getBoolean("com.derekgillett.clashercalendar.existing");
+        }
+        
         // show up button
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        //getActionBar().setDisplayHomeAsUpEnabled(true);
         
         // set title
         TextView tvTitle = (TextView) this.findViewById(R.id.tvTitle);
@@ -76,15 +96,59 @@ public class MainActivity extends ActionBarActivity {
         tvTitle.setText(player.getVillageName() + "'s TH " + player.getTHLevel() + " Village");
         
         GridLayout vwMainLayout = (GridLayout) this.findViewById(R.id.layoutMain);
-        GetElements(vwMainLayout);
+        if (bIsExisting)
+        	this.GetElements_Dashboard(vwMainLayout);
+        else
+        	this.GetElements(vwMainLayout);
+        
+        // nav drawer stuff
+        mTitle = mDrawerTitle = getTitle();
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                getActionBar().setTitle(mTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getActionBar().setTitle(mDrawerTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(mDrawerToggle);        
+    }
+	
+	/* Called whenever we call invalidateOptionsMenu() */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content view
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+//        menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
     }
 
-	private void NextButtonOnClickListener() {
-        GridLayout vwMainLayout = (GridLayout) this.findViewById(R.id.layoutMain);
-		this.GetElements_Dashboard(vwMainLayout);
-	}
-	
-	private void deletePlayer() {
+	@Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+    
+    private void deletePlayer() {
         Toast.makeText(this, 
                 "Delete current player",
                 Toast.LENGTH_LONG).show();
@@ -265,21 +329,37 @@ public class MainActivity extends ActionBarActivity {
     	
     	if (poPlayerElement.getSecondsRemaining() == 0) {
     		poPlayerElement.startUpgrade();
-    		
-    		/*
-    		http://android-er.blogspot.com/2013/12/example-of-using-timer-and-timertask-on.html
-    			TODO implement timer code
-    		Timer timer = new Timer();
-    		TimerTask task = new MyTimerTask().
-    		new Timer().scheduleAtFixedRate(task, 0, 1000);
-    		*/
-    	}
-    	
-    	TextView tv = (TextView) arg0;
-    	int secsRemaining = poPlayerElement.getSecondsRemaining();
-    	if (secsRemaining > 0) tv.setText(Utils.Time_ValToText(secsRemaining));
+    		moPlayerElement = poPlayerElement;
+        	this.moBuildTime = (TextView) arg0;
+
+        	// setup timer
+    	    if (moSEService == null) {
+    	    	moSEService = Executors.newSingleThreadScheduledExecutor();
+	    	    moMySETask = new MySETask();
+	    	    moSEService.scheduleAtFixedRate(moMySETask,  0, 1, TimeUnit.SECONDS);
+    	    }
+	    }
     }
 
+	//http://android-er.blogspot.com/2013/12/example-of-using-timer-and-timertask-on.html, and
+    //http://stackoverflow.com/questions/14315293/converting-to-scheduledthreadpoolexecutor
+    class MySETask implements Runnable {
+		@Override
+		public void run() {
+	    	final int secsRemaining = moPlayerElement.getSecondsRemaining();
+	    	if (secsRemaining == 0) {
+	    		moSEService.shutdown();
+	    		moSEService = null;
+	    	}
+	    	else runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					moBuildTime.setText(Utils.Time_ValToText(secsRemaining));
+				}
+	    	});
+		}
+    }
+    
     // change the level of the selected item
     private void LevelChangeOnClickListener(TextView poTextview, int pnIncrement, PlayerElement poPlayerElement) {
     	int nCurrentValue = poPlayerElement.getLevel();

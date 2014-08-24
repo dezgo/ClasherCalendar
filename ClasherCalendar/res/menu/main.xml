@@ -5,6 +5,16 @@
 
     <item
         android:id="@+id/action_delete"
-        android:title="@string/action_delete"/>
+        android:title="@string/action_delete"
+         />
 
+    <item
+        android:id="@+id/action_fix_levels"
+        android:title="@string/action_fix_levels"
+        />
+    
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+		/>    
 </menu>

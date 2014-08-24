@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -31,24 +32,47 @@ public class StartActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_start);
-	       
+
 		createTHSpinner();
 		addNextButtonListener();
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
 		
-		// do this here so that when we come back to this screen, any new players are added
-		getPlayers();
+		// start task to init players object in background
+		new GetPlayersTask().execute();
 	}
+	
+	//http://androidresearch.wordpress.com/2012/03/17/understanding-asynctask-once-and-forever/
+	//TODO: implement the fixes here to avoid crashes when rotating screen while asynctask is running
+	//http://androidresearch.wordpress.com/2013/05/10/dealing-with-asynctask-and-screen-orientation/
+	private class GetPlayersTask extends AsyncTask<String, Integer, String> {
+		@Override
+		   protected void onPreExecute() {
+		      super.onPreExecute();
+		      Toast.makeText(MyApplication.getAppContext(), 
+		                "Loading existing players...",
+		                Toast.LENGTH_LONG).show();
+		   }
+		 
+		@Override
+		protected String doInBackground(String... params) {
+			getPlayers(); 
+			return null;
+		}
 
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			drawPlayers();
+		}
+	}
+	
 	private void getPlayers() {
-		Players players = new Players();
+		MyApplication.setPlayers(new Players());
+	}
+	
+	private void drawPlayers() {
+		Players players = MyApplication.getPlayers();
 		Player player;
 		LinearLayout ll = (LinearLayout) this.findViewById(R.id.layout_existing_players);
-		ll.removeAllViews();
 		players.moveToFirst();
 		while ((player = players.getPlayer()) != null) {
 			final Player player1 = player;
@@ -58,15 +82,16 @@ public class StartActivity extends ActionBarActivity {
 				@Override
 				public void onClick(View v) {
 					MyApplication.setPlayer(player1);
-					GoToMain_();
+					GoToMain_(true);
 				}
 			});
 			ll.addView(button);			
 		}
 	}
 	
-	private void GoToMain_() {
+	private void GoToMain_(boolean isExisting) {
 		Intent intent = new Intent(this, MainActivity.class);
+		intent.putExtra("com.derekgillett.clashercalendar.existing",isExisting);
 		startActivity(intent);
 	}
 
@@ -79,7 +104,7 @@ public class StartActivity extends ActionBarActivity {
 		} else {
 			Spinner spTHLevel = (Spinner) this.findViewById(R.id.spTHLevel);
 	        new Player( Integer.parseInt(spTHLevel.getSelectedItem().toString()) , et.getText().toString() );
-	        GoToMain_();
+	        GoToMain_(false);
 		}
 	}
 	
@@ -111,6 +136,6 @@ public class StartActivity extends ActionBarActivity {
         
         spinner.setAdapter(dataAdapter);
         
-        spinner.setOnItemSelectedListener(new THLevelOnItemSelectedListener());
+        //spinner.setOnItemSelectedListener(new THLevelOnItemSelectedListener());
     }
 }
