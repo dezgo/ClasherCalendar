@@ -26,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -44,11 +43,11 @@ public class MainActivity extends ActionBarActivity {
 	private boolean mbIsExisting;
 
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
+    private GridLayout mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private String[] mPlanetTitles;
+    //private String[] mPlanetTitles;
     
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -100,13 +99,13 @@ public class MainActivity extends ActionBarActivity {
         // nav drawer stuff
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mPlanetTitles = getResources().getStringArray(R.array.planets_array);
+        mDrawerList = (GridLayout) findViewById(R.id.left_drawer);
+        //mPlanetTitles = getResources().getStringArray(R.array.planets_array);
 
         // set up the drawer's list view with items and click listener
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, mPlanetTitles));
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        //mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+        //        R.layout.drawer_list_item, mPlanetTitles));
+        //mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);

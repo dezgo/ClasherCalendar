@@ -16,10 +16,10 @@
     <string name="drawer_open">Open Nav Drawer</string>
     <string name="drawer_close">Close Nav Drawer</string>
     <string-array name="planets_array">
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
+        <item>Maxed</item>
+        <item>Elixir</item>
+        <item>Gold</item>
+        <item>Defensive Buildings</item>
         <item>Jupiter</item>
         <item>Saturn</item>
         <item>Uranus</item>
