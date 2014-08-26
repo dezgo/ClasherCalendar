@@ -6,6 +6,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import android.annotation.SuppressLint;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -15,16 +17,21 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,11 +41,14 @@ public class MainActivity extends ActionBarActivity {
 	private MySETask moMySETask;
 	private TextView moBuildTime;
 	private PlayerElement moPlayerElement;
+	private boolean mbIsExisting;
 
     private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
+    private String[] mPlanetTitles;
     
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -78,32 +88,30 @@ public class MainActivity extends ActionBarActivity {
 		Log.d("MainActivity", "Constructor"); 
 
 		super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.nav_drawer);
         
         // get extra info - is this an existing player?
-        boolean bIsExisting = false;
+        mbIsExisting = false;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-        	bIsExisting = extras.getBoolean("com.derekgillett.clashercalendar.existing");
+        	mbIsExisting = extras.getBoolean("com.derekgillett.clashercalendar.existing");
         }
-        
-        // show up button
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
-        
-        // set title
-        TextView tvTitle = (TextView) this.findViewById(R.id.tvTitle);
-        Player player = MyApplication.getPlayer();
-        tvTitle.setText(player.getVillageName() + "'s TH " + player.getTHLevel() + " Village");
-        
-        GridLayout vwMainLayout = (GridLayout) this.findViewById(R.id.layoutMain);
-        if (bIsExisting)
-        	this.GetElements_Dashboard(vwMainLayout);
-        else
-        	this.GetElements(vwMainLayout);
         
         // nav drawer stuff
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mPlanetTitles = getResources().getStringArray(R.array.planets_array);
+
+        // set up the drawer's list view with items and click listener
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_list_item, mPlanetTitles));
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        // enable ActionBar app icon to behave as action to toggle nav drawer
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
 
@@ -123,14 +131,40 @@ public class MainActivity extends ActionBarActivity {
         };
 
         // Set the drawer toggle as the DrawerListener
-        mDrawerLayout.setDrawerListener(mDrawerToggle);        
-    }
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        
+        // show the main view
+        showElementView();
+	}
+
+	// show a view of the element list
+	private void showElementView() {
+        Fragment fragment = new ElementFragment();
+    //    Bundle args = new Bundle();
+//        args.putInt( Element PlanetFragment.ARG_PLANET_NUMBER, position);
+  //      fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+        // update selected item and title, then close the drawer
+//        mDrawerList.setItemChecked(position, true);
+//        setTitle(mPlanetTitles[position]);
+        mDrawerLayout.closeDrawer(mDrawerList);
+	}
 	
-	/* Called whenever we call invalidateOptionsMenu() */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        	showElementView();
+        }
+    }
+    
+    /* Called whenever we call invalidateOptionsMenu() */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerLayout);
 //        menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
@@ -374,4 +408,34 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    private void initialSetup(View poView) {
+        // set title
+        TextView tvTitle = (TextView) poView.findViewById(R.id.tvTitle);
+        Player player = MyApplication.getPlayer();
+        tvTitle.setText(player.getVillageName() + "'s TH " + player.getTHLevel() + " Village");
+        
+        GridLayout vwMainLayout = (GridLayout) poView.findViewById(R.id.layoutMain);
+        if (mbIsExisting)
+        	GetElements_Dashboard(vwMainLayout);
+        else
+        	GetElements(vwMainLayout);
+    }
+    
+    /**
+     * Fragment that appears in the "content_frame"
+     */
+    public class ElementFragment extends Fragment {
+        public ElementFragment() {
+            // Empty constructor required for fragment subclasses
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.activity_main, container, false);
+
+            initialSetup(rootView);
+            return rootView;
+        }
+    }
 }
