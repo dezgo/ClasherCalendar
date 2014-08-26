@@ -31,6 +31,7 @@ public class PlayerElement {
 	private Element moElement;
 	private int mnLevel;
 	private Date mdUpgradeStart = null;
+	private int mnQty;
 
 	private void init() {
 		// 1. get reference to writable DB

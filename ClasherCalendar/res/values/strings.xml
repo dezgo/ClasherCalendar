@@ -6,6 +6,7 @@
     <string name="action_delete">Delete</string>
     <string name="village_name">Village Name</string>
     <string name="button_next">>>></string>
+    <string name="grid_title0">Qty</string>
     <string name="grid_title1">Building</string>
     <string name="grid_title2">Level</string>
     <string name="grid_title3">Cost</string>
@@ -15,15 +16,14 @@
     <string name="action_settings">Settings</string>
     <string name="drawer_open">Open Nav Drawer</string>
     <string name="drawer_close">Close Nav Drawer</string>
-    <string-array name="planets_array">
-        <item>Maxed</item>
-        <item>Elixir</item>
-        <item>Gold</item>
-        <item>Defensive Buildings</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
-    </string-array>
-    
+	<string name="nav_title">Select Items to Show</string>
+	<string name="nav_maxed">Maxed Items</string>
+	<string name="nav_elixir">Costing Elixir</string>
+	<string name="nav_gold">Costing Gold</string>
+	<string name="nav_defence">Defensive Buildings</string>
+	<string name="nav_resource">Resource Buildings</string>
+	<string name="nav_army">Army Buildings</string>
+	<string name="nav_other">Other Buildings</string>
+	<string name="nav_troops">Troops</string>
+	<string name="nav_trap">Traps</string>
 </resources>

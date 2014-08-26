@@ -3,6 +3,14 @@ INSERT INTO tblCostType (CostTypeID, CostTypeName) VALUES (1, 'Gold');
 INSERT INTO tblCostType (CostTypeID, CostTypeName) VALUES (2, 'Elixir');
 INSERT INTO tblCostType (CostTypeID, CostTypeName) VALUES (3, 'Dark Elixir');
 
+-- categories
+INSERT INTO tblCategory (CategoryID, CategoryName) VALUES (1, 'Defence');
+INSERT INTO tblCategory (CategoryID, CategoryName) VALUES (2, 'Resource');
+INSERT INTO tblCategory (CategoryID, CategoryName) VALUES (3, 'Army');
+INSERT INTO tblCategory (CategoryID, CategoryName) VALUES (4, 'Other');
+INSERT INTO tblCategory (CategoryID, CategoryName) VALUES (5, 'Trap');
+INSERT INTO tblCategory (CategoryID, CategoryName) VALUES (6, 'Troop');
+
 -- elements
 INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (1, 'Air Bomb', 1, 5);
 INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (2, 'Air Defence', 1, 1);

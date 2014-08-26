@@ -6,6 +6,34 @@ import android.app.ProgressDialog;
 public class Utils {
 	static private ProgressDialog dialog;
 	
+	static public enum CostType {
+		Gold(1),
+		Elixir(2);
+		private int costType;
+		private CostType(int costType) {
+			this.costType = costType;
+		}
+		public int getId() {
+			return costType;
+		}
+	}
+	
+	static public enum Category {
+		Trap(5),
+		Troop(6),
+		Defence(1),
+		Resource(2),
+		Army(3),
+		Other(4);
+		private int categoryID;
+		private Category(int categoryID) {
+			this.categoryID = categoryID;
+		}
+		public int getId() {
+			return categoryID;
+		}
+	}
+	
 	static public void startThinking(Activity activity, String msg) {
 		dialog = new ProgressDialog(activity);
 		dialog.setMessage(msg);

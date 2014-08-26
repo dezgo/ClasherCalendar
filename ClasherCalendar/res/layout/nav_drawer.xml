@@ -19,40 +19,151 @@
     <GridLayout android:id="@+id/left_drawer"
         android:layout_width="240dp"
 	    android:columnCount="2"
+	    android:paddingLeft="16dp"
 	    android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="#fff"
         >
 	
-	   	<CheckBox 
+	    <TextView 
+		    android:id="@+id/txtTitle"
+		    android:layout_width="wrap_content"
+		    android:layout_height="48dp"
+			android:gravity="center_vertical|left"
+		    android:layout_columnSpan="2"
+		    android:textStyle="bold"
+		    android:textSize="22sp"
+		    android:text="@string/nav_title"
+		    />
+	
+  	   	<CheckBox 
 		    android:id="@+id/chkMaxed"
 		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
+		    android:layout_height="48dp"
 		    />
 		
 		<TextView 
-		    android:id="@+id/text1"
+		    android:id="@+id/txtMaxed"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:paddingLeft="1dp"
-		    android:paddingRight="1dp"
-		    android:text="Defensive Buildings"
+		    android:textSize="18sp"
+		    android:text="@string/nav_maxed"
+		    />
+	
+	
+  	   	<CheckBox 
+		    android:id="@+id/chkElixir"
+		    android:layout_width="wrap_content"
+		    android:layout_height="48dp"
+		    />
+		
+		<TextView 
+		    android:id="@+id/txtElixir"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textSize="18sp"
+		    android:text="@string/nav_elixir"
+		    />
+	
+	
+  	   	<CheckBox 
+		    android:id="@+id/chkGold"
+		    android:layout_width="wrap_content"
+		    android:layout_height="48dp"
+		    />
+		
+		<TextView 
+		    android:id="@+id/txtGold"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textSize="18sp"
+		    android:text="@string/nav_gold"
 		    />
 	
 	   	<CheckBox 
-		    android:id="@+id/chkMaxed2"
+		    android:id="@+id/chkDefence"
+		    android:layout_width="wrap_content"
+		    android:layout_height="48dp"
+		    />
+		
+		<TextView 
+		    android:id="@+id/txtDefence"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
+		    android:textSize="18sp"
+		    android:text="@string/nav_defence"
+		    />
+
+	   	<CheckBox 
+		    android:id="@+id/chkTrap"
+		    android:layout_width="wrap_content"
+		    android:layout_height="48dp"
+		    />
+		
+		<TextView 
+		    android:id="@+id/txtTrap"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textSize="18sp"
+		    android:text="@string/nav_trap"
+		    />
+	
+	   	<CheckBox 
+		    android:id="@+id/chkResource"
+		    android:layout_width="wrap_content"
+		    android:layout_height="48dp"
 	    	/>
 	   	
 		<TextView 
-		    android:id="@+id/text2"
+		    android:id="@+id/txtResource"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:paddingLeft="1dp"
-		    android:paddingRight="1dp"
-		    android:text="Resource Buildings"
+		    android:text="@string/nav_resource"
+		    android:textSize="18sp"
 		    />
 	    
-    </GridLayout>
+	   	<CheckBox 
+		    android:id="@+id/chkArmy"
+		    android:layout_width="wrap_content"
+		    android:layout_height="48dp"
+	    	/>
+	   	
+		<TextView 
+		    android:id="@+id/txtArmy"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/nav_army"
+		    android:textSize="18sp"
+		    />
+	    
+	   	<CheckBox 
+		    android:id="@+id/chkOther"
+		    android:layout_width="wrap_content"
+		    android:layout_height="48dp"
+	    	/>
+	   	
+		<TextView 
+		    android:id="@+id/txtOther"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/nav_other"
+		    android:textSize="18sp"
+		    />
+	    
+	
+  	   	<CheckBox 
+		    android:id="@+id/chkTroops"
+		    android:layout_width="wrap_content"
+		    android:layout_height="48dp"
+		    />
+		
+		<TextView 
+		    android:id="@+id/txtTroops"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textSize="18sp"
+		    android:text="@string/nav_troops"
+		    />
+	
+	</GridLayout>
 </android.support.v4.widget.DrawerLayout>

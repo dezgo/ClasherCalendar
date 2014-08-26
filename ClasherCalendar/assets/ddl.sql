@@ -5,6 +5,12 @@ DROP TABLE IF EXISTS tblPlayerElement;
 DROP TABLE IF EXISTS tblPlayer;
 DROP TABLE IF EXISTS tblPlayerElements;
 DROP TABLE IF EXISTS tblCostType;
+DROP TABLE IF EXISTS tblCategory;
+
+CREATE TABLE tblCategory (
+	CategoryID INTEGER NOT NULL,
+	CategoryName TEXT NOT NULL,
+	PRIMARY KEY (CategoryID));
 
 CREATE TABLE tblCostType (
 	CostTypeID INTEGER NOT NULL,

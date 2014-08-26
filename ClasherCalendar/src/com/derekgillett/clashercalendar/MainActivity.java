@@ -27,6 +27,8 @@ import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,7 +49,16 @@ public class MainActivity extends ActionBarActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    //private String[] mPlanetTitles;
+    
+    private boolean mbMaxed = true;
+    private boolean mbElixir = true;
+    private boolean mbGold = true;
+    private boolean mbDefence = true;
+    private boolean mbResource = true;
+    private boolean mbArmy = true;
+    private boolean mbOther = true;
+    private boolean mbTroops = true;
+    private boolean mbTrap = true;
     
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -82,6 +93,72 @@ public class MainActivity extends ActionBarActivity {
 	    }
 	}
 	
+	private void setNavCheckboxes() {
+        CheckBox chkView;
+        chkView = (CheckBox) this.findViewById(R.id.chkArmy);
+        chkView.setOnCheckedChangeListener(new NavCheckboxChangeListener());
+        chkView.setChecked(this.mbArmy);
+        chkView = (CheckBox) this.findViewById(R.id.chkDefence);
+        chkView.setOnCheckedChangeListener(new NavCheckboxChangeListener());
+        chkView.setChecked(this.mbDefence);
+        chkView = (CheckBox) this.findViewById(R.id.chkElixir);
+        chkView.setOnCheckedChangeListener(new NavCheckboxChangeListener());
+        chkView.setChecked(this.mbElixir);
+        chkView = (CheckBox) this.findViewById(R.id.chkGold);
+        chkView.setOnCheckedChangeListener(new NavCheckboxChangeListener());
+        chkView.setChecked(this.mbGold);
+        chkView = (CheckBox) this.findViewById(R.id.chkMaxed);
+        chkView.setOnCheckedChangeListener(new NavCheckboxChangeListener());
+        chkView.setChecked(this.mbMaxed);
+        chkView = (CheckBox) this.findViewById(R.id.chkOther);
+        chkView.setOnCheckedChangeListener(new NavCheckboxChangeListener());
+        chkView.setChecked(this.mbOther);
+        chkView = (CheckBox) this.findViewById(R.id.chkResource);
+        chkView.setOnCheckedChangeListener(new NavCheckboxChangeListener());
+        chkView.setChecked(this.mbResource);
+        chkView = (CheckBox) this.findViewById(R.id.chkTroops);
+        chkView.setOnCheckedChangeListener(new NavCheckboxChangeListener());
+        chkView.setChecked(this.mbTroops);
+        chkView = (CheckBox) this.findViewById(R.id.chkTrap);
+        chkView.setOnCheckedChangeListener(new NavCheckboxChangeListener());
+        chkView.setChecked(this.mbTrap);
+	}
+	
+	private class NavCheckboxChangeListener implements CheckBox.OnCheckedChangeListener {
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			switch (buttonView.getId()) {
+				case R.id.chkArmy: 
+					mbArmy = isChecked;
+					break;
+				case R.id.chkDefence: 
+					mbDefence = isChecked;
+					break;
+				case R.id.chkElixir:
+					mbElixir = isChecked;
+					break;
+				case R.id.chkGold:
+					mbGold = isChecked;
+					break;
+				case R.id.chkMaxed:
+					mbMaxed = isChecked;
+					break;
+				case R.id.chkOther:
+					mbOther = isChecked;
+					break;
+				case R.id.chkResource:
+					mbResource = isChecked;
+					break;
+				case R.id.chkTroops:
+					mbTroops = isChecked;
+					break;
+				case R.id.chkTrap:
+					mbTrap = isChecked;
+					break;
+			}
+		}
+    }	    
+	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
 		Log.d("MainActivity", "Constructor"); 
@@ -100,12 +177,8 @@ public class MainActivity extends ActionBarActivity {
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (GridLayout) findViewById(R.id.left_drawer);
-        //mPlanetTitles = getResources().getStringArray(R.array.planets_array);
 
-        // set up the drawer's list view with items and click listener
-        //mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-        //        R.layout.drawer_list_item, mPlanetTitles));
-        //mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+       // mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -119,6 +192,8 @@ public class MainActivity extends ActionBarActivity {
                 super.onDrawerClosed(view);
                 getActionBar().setTitle(mTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                if (findViewById(R.id.layoutMain) != null)
+                	GetElements_Dashboard((GridLayout) findViewById(R.id.layoutMain));
             }
 
             /** Called when a drawer has settled in a completely open state. */
@@ -134,6 +209,9 @@ public class MainActivity extends ActionBarActivity {
         
         // show the main view
         showElementView();
+        
+        // setup navigation checkboxes
+        setNavCheckboxes();
 	}
 
 	// show a view of the element list
@@ -152,14 +230,7 @@ public class MainActivity extends ActionBarActivity {
         mDrawerLayout.closeDrawer(mDrawerList);
 	}
 	
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        	showElementView();
-        }
-    }
-    
-    /* Called whenever we call invalidateOptionsMenu() */
+  /* Called whenever we call invalidateOptionsMenu() */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
@@ -291,7 +362,17 @@ public class MainActivity extends ActionBarActivity {
             junit.framework.Assert.assertNotNull("oPlayerElement variable null!", oPlayerElement);
 
             Element oElement = oPlayerElement.getElement();
-        	
+
+            // check on the filter. if this item should be excluded, do it now
+            if (oPlayerElement.isMax() && !this.mbMaxed) continue;
+            if (oElement.getCostType() == Utils.CostType.Elixir.getId() && !this.mbElixir) continue;
+            if (oElement.getCostType() == Utils.CostType.Gold.getId() && !this.mbGold) continue;
+            if (oElement.getCategory() == Utils.Category.Army.getId() && !this.mbArmy) continue;
+            if (oElement.getCategory() == Utils.Category.Defence.getId() && !this.mbDefence) continue;
+            if (oElement.getCategory() == Utils.Category.Other.getId() && !this.mbOther) continue;
+            if (oElement.getCategory() == Utils.Category.Resource.getId() && !this.mbResource) continue;
+            if (oElement.getCategory() == Utils.Category.Trap.getId() && !this.mbTrap) continue;
+            
         	// element name
         	TextView tv = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
         	tv.setText( oElement.getName());
@@ -413,11 +494,10 @@ public class MainActivity extends ActionBarActivity {
         Player player = MyApplication.getPlayer();
         tvTitle.setText(player.getVillageName() + "'s TH " + player.getTHLevel() + " Village");
         
-        GridLayout vwMainLayout = (GridLayout) poView.findViewById(R.id.layoutMain);
         if (mbIsExisting)
-        	GetElements_Dashboard(vwMainLayout);
+        	GetElements_Dashboard((GridLayout) poView.findViewById(R.id.layoutMain));
         else
-        	GetElements(vwMainLayout);
+        	GetElements((GridLayout) poView.findViewById(R.id.layoutMain));
     }
     
     /**
