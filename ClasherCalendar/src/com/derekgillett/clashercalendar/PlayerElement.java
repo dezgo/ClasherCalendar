@@ -31,7 +31,7 @@ public class PlayerElement {
 	private Element moElement;
 	private int mnLevel;
 	private Date mdUpgradeStart = null;
-	private int mnQty;
+	private int mnQty = 1;
 	private boolean mbExclude = false;
 
 	private void init() {
@@ -40,7 +40,7 @@ public class PlayerElement {
 		moDB = oMySQLiteHelper.getWritableDatabase();
 	}
 	
-	public PlayerElement(int pnPlayerElementID, Player poPlayer) {
+	public PlayerElement(Player poPlayer, long pnPlayerElementID) {
 		init();
 		mnPlayerElementID = pnPlayerElementID;
 		moPlayer = poPlayer;
@@ -97,8 +97,13 @@ public class PlayerElement {
 		return mnLevel;
 	}
 	
-	public void setLevel(int pnLevel) {
-		mnLevel = pnLevel;
+	public void incLevel() {
+		mnLevel++;
+		this.update();
+	}
+	
+	public void decLevel() {
+		mnLevel--;
 		this.update();
 	}
 	
@@ -108,6 +113,10 @@ public class PlayerElement {
 	
 	public void setQtyInc() {
 		mnQty++;
+	}
+	
+	public void setQtyDec() {
+		mnQty--;
 	}
 	
 	public boolean isMax() {
@@ -167,6 +176,10 @@ public class PlayerElement {
 	
 	public void setExclude(boolean bExclude) {
 		mbExclude = bExclude;
+	}
+	
+	public PlayerElement clone() {
+		return new PlayerElement(this.moPlayer, this.mnPlayerElementID);
 	}
 	
 	private void Load() {

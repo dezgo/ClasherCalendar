@@ -62,6 +62,10 @@ public class Element {
 		return rtn;
 	}
 	
+	public Element clone() {
+		return new Element(this.mnID);
+	}
+	
 	// maximum level this element can be
 	private int getMaxLevel() {
 		Log.d("Element", "getMaxLevel"); 

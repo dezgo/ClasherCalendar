@@ -17,7 +17,6 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,14 +26,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +41,6 @@ public class MainActivity extends ActionBarActivity {
 	private MySETask moMySETask;
 	private TextView moBuildTime;
 	private PlayerElement moPlayerElement;
-	private boolean mbIsExisting;
 
     private DrawerLayout mDrawerLayout;
     private GridLayout mDrawerList;
@@ -90,6 +86,10 @@ public class MainActivity extends ActionBarActivity {
 	        case R.id.action_settings:
 	    		Intent intent = new Intent(this, SettingsActivity.class);
 	    		startActivity(intent);
+	    		return true;
+	        case R.id.action_fix_levels:
+	        	this.GetElements((GridLayout) this.findViewById(R.id.layoutMain));
+	        	return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
@@ -169,11 +169,11 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.nav_drawer);
         
         // get extra info - is this an existing player?
-        mbIsExisting = false;
+        /*mbIsExisting = false;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
         	mbIsExisting = extras.getBoolean("com.derekgillett.clashercalendar.existing");
-        }
+        }*/
         
         // nav drawer stuff
         mTitle = mDrawerTitle = getTitle();
@@ -272,6 +272,9 @@ public class MainActivity extends ActionBarActivity {
         // clear out previous stuff first
         vwMainLayout.removeAllViews();
         
+        // update column count - it might have been changed by viewing the dashboard
+        vwMainLayout.setColumnCount(5);
+
         // get player elements, and check it's not null
         Player player = MyApplication.getPlayer();
         junit.framework.Assert.assertNotNull("MyApplication.getPlayerElements() global variable null!", player);
@@ -294,14 +297,19 @@ public class MainActivity extends ActionBarActivity {
     	tv_title.setText("");
     	vwMainLayout.addView(tv_title);
 */
-    	player.moveToFirst();
-    	for (int i=1; i<=player.size(); i++) {
-        	final PlayerElement oPlayerElement = player.getPlayerElement();
-        	player.moveNext();
+    	player.moveToFirstA();
+    	while (!player.isAfterLastA()) {
+        	final PlayerElement oPlayerElementA = player.getPlayerElementA();
         	
-        	Element oElement = oPlayerElement.getElement();
+        	Element oElement = oPlayerElementA.getElement();
         	
+        	// quantity
         	TextView tv = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+        	tv.setText(String.valueOf(oPlayerElementA.getQty()));
+        	vwMainLayout.addView(tv);
+
+        	// element name
+        	tv = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
         	tv.setText( oElement.getName());
         	vwMainLayout.addView(tv);
 
@@ -309,7 +317,7 @@ public class MainActivity extends ActionBarActivity {
             lp = new GridLayout.LayoutParams();
             lp.setGravity(Gravity.CENTER_HORIZONTAL);
             tv1.setLayoutParams(lp);
-        	tv1.setText("Lvl " + String.valueOf(oPlayerElement.getLevel()));
+        	tv1.setText("Lvl " + String.valueOf(oPlayerElementA.getLevel()));
         	vwMainLayout.addView(tv1);
 
         	Button btn1 = (Button) getLayoutInflater().inflate(R.layout.btn_template, null);
@@ -317,7 +325,7 @@ public class MainActivity extends ActionBarActivity {
         	btn1.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					LevelChangeOnClickListener(tv1, 1, oPlayerElement);
+					LevelChangeOnClickListener(tv1, 1, oPlayerElementA);
 				}
 			}); 
         	vwMainLayout.addView(btn1);
@@ -327,10 +335,12 @@ public class MainActivity extends ActionBarActivity {
         	btn2.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					LevelChangeOnClickListener(tv1, -1, oPlayerElement);
+					LevelChangeOnClickListener(tv1, -1, oPlayerElementA);
 				}
 			}); 
         	vwMainLayout.addView(btn2);
+        	
+        	player.moveToNextA();
     	}
     }
     
@@ -341,45 +351,54 @@ public class MainActivity extends ActionBarActivity {
         // clear out previous stuff first
         vwMainLayout.removeAllViews();
         
+        // set number of columns (it might have been changed if they used the update qtys view)
+        vwMainLayout.setColumnCount(6);
+
         // get player elements, and check it's not null
         Player player = MyApplication.getPlayer();
         junit.framework.Assert.assertNotNull("MyApplication.getPlayerElements() global variable null!", player);
 
-    	// building
+    	// quantity
     	TextView tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
     	tv_title.setText( R.string.grid_title1);
     	tv_title.setTypeface(null, Typeface.BOLD);
     	vwMainLayout.addView(tv_title);
 
-    	// level
+    	// building
     	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
     	tv_title.setText( R.string.grid_title2);
     	tv_title.setTypeface(null, Typeface.BOLD);
     	vwMainLayout.addView(tv_title);
 
-    	// max level
+    	// level
     	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
     	tv_title.setText( R.string.grid_title3);
+    	tv_title.setTypeface(null, Typeface.BOLD);
+    	vwMainLayout.addView(tv_title);
+
+    	// max level
+    	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+    	tv_title.setText( R.string.grid_title4);
     	tv_title.setMaxEms(3);
     	tv_title.setTypeface(null, Typeface.BOLD);
     	vwMainLayout.addView(tv_title);
 
     	// cost
     	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
-    	tv_title.setText( R.string.grid_title4);
+    	tv_title.setText( R.string.grid_title5);
     	tv_title.setTypeface(null, Typeface.BOLD);
     	vwMainLayout.addView(tv_title);
 
     	// build time
     	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
-    	tv_title.setText( R.string.grid_title5);
+    	tv_title.setText( R.string.grid_title6);
     	tv_title.setMaxEms(3);
     	tv_title.setTypeface(null, Typeface.BOLD);
     	vwMainLayout.addView(tv_title);
     	
-    	player.moveToFirst();
-    	for (int i=1; i<=player.size(); i++) {
-        	PlayerElement oPlayerElement = player.getPlayerElement();
+    	player.moveToFirstA();
+    	while (!player.isAfterLastA()) {
+        	PlayerElement oPlayerElement = player.getPlayerElementA();
             junit.framework.Assert.assertNotNull("oPlayerElement variable null!", oPlayerElement);
 
             Element oElement = oPlayerElement.getElement();
@@ -396,12 +415,16 @@ public class MainActivity extends ActionBarActivity {
             if (oElement.getCategory() == Utils.Category.Trap.getId() && !this.mbTrap) bExclude = true;
             
             // now if the item is excluded, update that in the players global var
-            // hoping that's how this line works being pass-by-ref
         	oPlayerElement.setExclude(bExclude);
             if (!bExclude) {
 	            
-	        	// element name
+            	// qty
 	        	TextView tv = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+	        	tv.setText(String.valueOf(oPlayerElement.getQty()));
+	        	vwMainLayout.addView(tv);
+	
+	        	// element name
+	        	tv = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
 	        	tv.setText( oElement.getName());
 	        	vwMainLayout.addView(tv);
 	
@@ -469,7 +492,7 @@ public class MainActivity extends ActionBarActivity {
             }
 
         	// move to the next player element in the player object
-        	player.moveNext();
+        	player.moveToNextA();
     	}
 
     	// show total upgrade time remaining (do this at the end after we've filtered items)
@@ -524,11 +547,9 @@ public class MainActivity extends ActionBarActivity {
     	int nNewValue = nCurrentValue + pnIncrement;
     	
         Player player = MyApplication.getPlayer();
-    	if (nNewValue >= 0 && nNewValue <= poPlayerElement.getElement().getMaxLevel(player.getTHLevel())) {
-	    	poTextview.setText("Lvl " + String.valueOf(nNewValue));
-	        PlayerElement playerElement = player.getPlayerElement(poPlayerElement.getID());
-	        playerElement.setLevel(nNewValue);
-	        MyApplication.setPlayer(player);
+        if (nNewValue >= 0 && nNewValue <= poPlayerElement.getElement().getMaxLevel(player.getTHLevel())) {
+        	player.incPlayerElementLevel(poPlayerElement, pnIncrement);
+        	this.GetElements((GridLayout) this.findViewById(R.id.layoutMain));
         }
     }
 

@@ -41,8 +41,7 @@
 				    android:id="@+id/layoutMain"
 				    android:layout_width="match_parent"
 				    android:layout_height="wrap_content"
-				    android:useDefaultMargins="true"
-				    android:columnCount="5">
+				    android:useDefaultMargins="true" >
 			    
 			    </GridLayout>
 			</ScrollView>	

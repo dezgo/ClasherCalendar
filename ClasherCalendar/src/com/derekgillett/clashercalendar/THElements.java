@@ -41,11 +41,18 @@ public class THElements {
 		mnIndex = 0;
 	}
 	
+	public void moveToNext() {
+		mnIndex++;
+	}
+	
+	public boolean isAfterLast() {
+		return mnIndex >= moTHElements.size();
+	}
+	
 	public THElement getTHElement() {
 		THElement oTHElement = null;
 		if (mnIndex <= moTHElements.size() ) {
 			oTHElement = moTHElements.get(moTHElements.keyAt(mnIndex));
-			mnIndex++;
 		}
 		return oTHElement;
 	}

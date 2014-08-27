@@ -45,9 +45,67 @@ public class Player {
 		return mnTHLevel;
 	}
 	
-	public void setTHLevel(int pnTHLevel) {
-		mnTHLevel = pnTHLevel;
+	public void incTHLevel() {
+		mnTHLevel++;
 		this.update();
+		
+		// now add in the new items
+		THElements oTHElements = new THElements(mnTHLevel);
+		THElements oTHElementsPrev = new THElements(mnTHLevel-1);
+		oTHElements.moveToFirst();
+		while (!oTHElements.isAfterLast()) {
+			// get all th elements for this new th level
+			THElement oTHElement = oTHElements.getTHElement();
+			
+			// start qty off at number of this item
+			int qty = oTHElement.getQuantity();
+			
+			// now reduce it by the number of items there were at the previous th level
+			THElement oTHElementPrev = oTHElementsPrev.getTHElement(oTHElement.getElement().getId());
+			if (oTHElementPrev != null)
+				qty = qty - oTHElementPrev.getQuantity();
+			
+			// now add that many of this new element
+			for (int i=0; i<qty; i++)
+				this.addPlayerElement(oTHElement.getElement(), 0);
+			
+			// NEXT!
+			oTHElements.moveToNext();
+		}
+	}
+	
+	public void incPlayerElementLevel(PlayerElement poPlayerElement, int pnIncrement) {
+		junit.framework.Assert.assertTrue("increment can only be -1 or 1, not " + pnIncrement, pnIncrement == -1 || pnIncrement == 1);
+		
+		// only increment if we're not already at max level
+		// only decrement if we're at level > 0
+		if (((pnIncrement ==  1) && (poPlayerElement.getLevel() < poPlayerElement.getElement().getMaxLevel(this.mnTHLevel)) ||
+			((pnIncrement == -1) && (poPlayerElement.getLevel() > 0)))) {
+
+			// for the standard array of player elements, just increment/decrement the level
+			if (pnIncrement == 1)
+				this.moPlayerElements.get(poPlayerElement.getID()).incLevel();
+			else
+				this.moPlayerElements.get(poPlayerElement.getID()).decLevel();
+			
+			// get a playerelement from the aggregated array
+			long key = this.getKeyA(poPlayerElement.getElement(), poPlayerElement.getLevel());
+			PlayerElement oPlayerElementOld = this.moPlayerElementsA.get(key);
+			
+			// remove 1 from the array (i.e. remove it altogether if there is only 1, otherwise reduce qty by 1)
+			if (oPlayerElementOld.getQty() == 1)
+				moPlayerElementsA.remove(key);
+			else
+				oPlayerElementOld.setQtyDec();
+
+			// add 1 to array for element at new level
+			key = this.getKeyA(poPlayerElement.getElement(), poPlayerElement.getLevel()+pnIncrement);
+			PlayerElement oPlayerElementNew = this.moPlayerElementsA.get(key);
+			if (oPlayerElementNew == null)
+				moPlayerElementsA.put(key, oPlayerElementNew);
+			else
+				oPlayerElementNew.setQtyInc();
+		}
 	}
 	
 	public long getid() {
@@ -55,7 +113,7 @@ public class Player {
 	}
 	
 	private void addPlayerElement(int pnPlayerElementID) {
-		PlayerElement oPlayerElement = new PlayerElement(pnPlayerElementID, this);
+		PlayerElement oPlayerElement = new PlayerElement(this, pnPlayerElementID);
 		addPlayerElement(oPlayerElement);
 	}
 	
@@ -73,9 +131,12 @@ public class Player {
 		int nLevel = poPlayerElement.getLevel();
 		long key = getKeyA(oElement, nLevel);
 		PlayerElement oPlayerElementA = this.moPlayerElementsA.get(key);
-		if (oPlayerElementA == null)
-			moPlayerElementsA.put(key, poPlayerElement);
-		else
+		if (oPlayerElementA == null) {
+			// want to create a new playerelement object for this array rather than using the one already
+			// in the other array
+			PlayerElement oPlayerElementANew = poPlayerElement.clone();
+			moPlayerElementsA.put(key, oPlayerElementANew);
+		} else
 			oPlayerElementA.setQtyInc();			
 	}
 	
@@ -94,15 +155,26 @@ public class Player {
 	
 	public void moveToFirst() {
 		this.mnIndex = 0;
+	}
+	
+	public void moveToFirstA() {
 		this.mnIndexA = 0;
 	}
 	
-	public void moveNext() {
+	public void moveToNext() {
 		this.mnIndex++;
 	}
 	
-	public void moveNextA() {
+	public void moveToNextA() {
 		this.mnIndexA++;
+	}
+	
+	public boolean isAfterLast() {
+		return mnIndex >= this.moPlayerElements.size();
+	}
+	
+	public boolean isAfterLastA() {
+		return mnIndexA >= this.moPlayerElementsA.size();
 	}
 	
 	public PlayerElement getPlayerElement() {
@@ -144,6 +216,7 @@ public class Player {
         		if (mnTHLevel > 1) nLevel = oElement.getMaxLevel(mnTHLevel-1);
         		this.addPlayerElement(oElement, nLevel);
         	}
+        	oTHElements.moveToNext();
         }
 	}
 	
