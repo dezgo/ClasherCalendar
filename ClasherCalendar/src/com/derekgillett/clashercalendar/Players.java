@@ -34,11 +34,14 @@ public class Players {
 		mnIndex = 0;
 	}
 	
+	public void moveNext() {
+		mnIndex++;
+	}
+	
 	public Player getPlayer() {
 		Player player = null;
 		if (mnIndex <= moPlayers.size() ) {
 			player = moPlayers.get(moPlayers.keyAt(mnIndex));
-			mnIndex++;
 		}
 		return player;
 	}

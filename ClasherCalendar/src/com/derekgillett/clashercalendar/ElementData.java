@@ -37,8 +37,32 @@ public class ElementData {
 		return mnBuildCost;
 	}
 	
+	// how long would it take to get this element to the specified level
+	public int getBuildCost(int pnLevel) {
+		int nBuildCost = mnBuildCost;
+
+		// if pnLevel is <= mnElementLevel will return the build Cost
+		for (int nLevel = mnElementLevel+1; nLevel <= pnLevel; nLevel++) {
+			ElementData oElementData = new ElementData(this.getElement(), nLevel);
+			nBuildCost = nBuildCost + oElementData.getBuildCost();
+		}
+		return nBuildCost;
+	}
+	
 	public int getBuildTime() {
 		return mnBuildTime;
+	}
+	
+	// how long would it take to get this element to the specified level
+	public int getBuildTime(int pnLevel) {
+		int nBuildTime = mnBuildTime;
+
+		// if pnLevel is <= mnElementLevel will return the build time
+		for (int nLevel = mnElementLevel+1; nLevel <= pnLevel; nLevel++) {
+			ElementData oElementData = new ElementData(this.getElement(), nLevel);
+			nBuildTime = nBuildTime + oElementData.getBuildTime();
+		}
+		return nBuildTime;
 	}
 	
 	public int getTHMinLevel() {

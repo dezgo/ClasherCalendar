@@ -32,6 +32,7 @@ public class PlayerElement {
 	private int mnLevel;
 	private Date mdUpgradeStart = null;
 	private int mnQty;
+	private boolean mbExclude = false;
 
 	private void init() {
 		// 1. get reference to writable DB
@@ -101,6 +102,14 @@ public class PlayerElement {
 		this.update();
 	}
 	
+	public int getQty() {
+		return mnQty;
+	}
+	
+	public void setQtyInc() {
+		mnQty++;
+	}
+	
 	public boolean isMax() {
 		ElementData oElementData = moElement.getElementData(mnLevel+1);
 		if (oElementData == null)
@@ -111,7 +120,7 @@ public class PlayerElement {
 	}
 	
 	public int getUpgradeCost() {
-		if (isMax()) 
+		if (isMax() || mbExclude) 
 			return 0;
 		else {
 			ElementData oElementData = moElement.getElementData(mnLevel+1);
@@ -119,17 +128,45 @@ public class PlayerElement {
 		}
 	}
 	
+	public int getUpgradeCostMax() {
+		if (isMax() || mbExclude) 
+			return 0;
+		else {
+			int nTargetLevel = moElement.getMaxLevel(moPlayer.getTHLevel());
+			ElementData oElementData = moElement.getElementData(mnLevel+1);
+			return oElementData.getBuildCost(nTargetLevel);
+		}
+	}
+	
 	public int getUpgradeTime() {
-		if (isMax()) 
+		if (isMax() || mbExclude) 
 			return 0;
 		else {
 			ElementData oElementData = moElement.getElementData(mnLevel+1);
-			return oElementData.getBuildTime();
+			return oElementData.getBuildTime(); 
+		}
+	}
+	
+	public int getUpgradeTimeMax() {
+		if (isMax() || mbExclude) 
+			return 0;
+		else {
+			int nTargetLevel = moElement.getMaxLevel(moPlayer.getTHLevel());
+			ElementData oElementData = moElement.getElementData(mnLevel+1);
+			return oElementData.getBuildTime(nTargetLevel); 
 		}
 	}
 	
 	public long getID() {
 		return this.mnPlayerElementID;
+	}
+	
+	public boolean getExclude() {
+		return mbExclude;
+	}
+	
+	public void setExclude(boolean bExclude) {
+		mbExclude = bExclude;
 	}
 	
 	private void Load() {

@@ -85,7 +85,8 @@ public class StartActivity extends ActionBarActivity {
 					GoToMain_(true);
 				}
 			});
-			ll.addView(button);			
+			ll.addView(button);
+			players.moveNext();
 		}
 	}
 	

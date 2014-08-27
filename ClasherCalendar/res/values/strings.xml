@@ -9,8 +9,9 @@
     <string name="grid_title0">Qty</string>
     <string name="grid_title1">Building</string>
     <string name="grid_title2">Level</string>
-    <string name="grid_title3">Cost</string>
-    <string name="grid_title4">Build Time</string>
+    <string name="grid_title3">Max Level</string>
+    <string name="grid_title4">Cost</string>
+    <string name="grid_title5">Build Time</string>
     <string name="title_activity_dashboard">Dashboard</string>
     <string name="action_fix_levels">Update Building Levels</string>
     <string name="action_settings">Settings</string>

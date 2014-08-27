@@ -15,7 +15,12 @@ public class Player {
 	private String msVillageName;
 	private int mnTHLevel = 1;
 	private LongSparseArray<PlayerElement> moPlayerElements = new LongSparseArray<PlayerElement>();
+
+	// aggregated player elements where items with same element id and level are grouped together
+	private LongSparseArray<PlayerElement> moPlayerElementsA = new LongSparseArray<PlayerElement>();
+	
 	private int mnIndex = 0;
+	private int mnIndexA = 0;
 	
 	public Player(long pnPlayerID) {
 		mnPlayerID = pnPlayerID;
@@ -49,39 +54,95 @@ public class Player {
 		return this.mnPlayerID;
 	}
 	
-	public void addPlayerElement(Element poElement, int pnLevel) {
+	private void addPlayerElement(int pnPlayerElementID) {
+		PlayerElement oPlayerElement = new PlayerElement(pnPlayerElementID, this);
+		addPlayerElement(oPlayerElement);
+	}
+	
+	private void addPlayerElement(Element poElement, int pnLevel) {
 		PlayerElement oPlayerElement = new PlayerElement(this, poElement, pnLevel);
-		moPlayerElements.put(oPlayerElement.getID(),oPlayerElement);
+		addPlayerElement(oPlayerElement);
+	}
+	
+	private void addPlayerElement(PlayerElement poPlayerElement) {
+		// add to standard list of player elements
+		moPlayerElements.put(poPlayerElement.getID(), poPlayerElement);
+
+		// add to aggregated list of player elements
+		Element oElement = poPlayerElement.getElement();
+		int nLevel = poPlayerElement.getLevel();
+		long key = getKeyA(oElement, nLevel);
+		PlayerElement oPlayerElementA = this.moPlayerElementsA.get(key);
+		if (oPlayerElementA == null)
+			moPlayerElementsA.put(key, poPlayerElement);
+		else
+			oPlayerElementA.setQtyInc();			
+	}
+	
+	private long getKeyA(Element poElement, int pnLevel) {
+		return poElement.getId() * 100 + pnLevel;
 	}
 	
 	public PlayerElement getPlayerElement(long pnPlayerElementID) {
 		return moPlayerElements.get(pnPlayerElementID);
 	}
 	
+	public PlayerElement getPlayerElementA(Element poElement, int pnLevel) {
+		long key = getKeyA(poElement, pnLevel);
+		return moPlayerElementsA.get(key);
+	}
+	
 	public void moveToFirst() {
 		this.mnIndex = 0;
+		this.mnIndexA = 0;
+	}
+	
+	public void moveNext() {
+		this.mnIndex++;
+	}
+	
+	public void moveNextA() {
+		this.mnIndexA++;
 	}
 	
 	public PlayerElement getPlayerElement() {
 		PlayerElement playerElement = null;
 		if (mnIndex <= moPlayerElements.size() ) {
 			playerElement = moPlayerElements.get(moPlayerElements.keyAt(mnIndex));
-			mnIndex++;
 		}
 		return playerElement;
+	}
+	
+	public PlayerElement getPlayerElementA() {
+		PlayerElement playerElementA = null;
+		if (mnIndexA <= moPlayerElementsA.size() ) {
+			playerElementA = moPlayerElementsA.get(moPlayerElementsA.keyAt(mnIndexA));
+		}
+		return playerElementA;
+	}
+	
+	public void setExclude(long key, boolean pbExclude) {
+		PlayerElement playerElement = moPlayerElements.get(key);
+		playerElement.setExclude(pbExclude);
+
+		long keyA = getKeyA(playerElement.getElement(), playerElement.getLevel());
+		PlayerElement playerElementA = moPlayerElementsA.get(keyA);
+		playerElementA.setExclude(pbExclude);
 	}
 	
 	// for a newly created player, add in the default buildings that come with the given TH level
 	private void LoadDefaults() {
         THElements oTHElements = new THElements(mnTHLevel);
-        //ArrayList<THElement> oTHElements = townHall.getTHElements();
 
         for (int i=0; i<oTHElements.size(); i++) {
         	THElement thElement = oTHElements.getTHElement();
         	for (int j=0; j<thElement.getQuantity(); j++) {
-        		PlayerElement playerElement = new PlayerElement(this,
-        				thElement.getElement(), thElement.getElement().getMaxLevel(mnTHLevel));
-        		moPlayerElements.put(playerElement.getID(),playerElement);
+        		// for each element, add it assuming player has maxed out buildings at previous level
+        		// for level 1, assume all buildings are level 0 (not built yet)
+        		int nLevel = 0;
+        		Element oElement = thElement.getElement();
+        		if (mnTHLevel > 1) nLevel = oElement.getMaxLevel(mnTHLevel-1);
+        		this.addPlayerElement(oElement, nLevel);
         	}
         }
 	}
@@ -96,14 +157,34 @@ public class Player {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
 				int nPlayerElementID = cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0));
-				if (nPlayerElementID != 0) {
-					PlayerElement playerElement = new PlayerElement(nPlayerElementID,this);
-					moPlayerElements.put(playerElement.getID(), playerElement);
-				}
+				if (nPlayerElementID != 0)
+					this.addPlayerElement(nPlayerElementID);
 				cursor.moveToNext();
 			}
 			cursor.close();
 		}
+	}
+	
+	public int getUpgradeTimeMax() {
+		int nUpgradeTime = 0;
+		
+		for (int i=0; i<this.moPlayerElements.size(); i++) {
+			long key = moPlayerElements.keyAt(i);
+			PlayerElement oPlayerElement = moPlayerElements.get(key);
+			nUpgradeTime = nUpgradeTime + oPlayerElement.getUpgradeTimeMax();
+		}
+		return nUpgradeTime;
+	}
+	
+	public int getUpgradeCostMax() {
+		int nUpgradeCost = 0;
+		
+		for (int i=0; i<this.moPlayerElements.size(); i++) {
+			long key = moPlayerElements.keyAt(i);
+			PlayerElement oPlayerElement = moPlayerElements.get(key);
+			nUpgradeCost = nUpgradeCost + oPlayerElement.getUpgradeCostMax();
+		}
+		return nUpgradeCost;
 	}
 	
 	public int size() {
