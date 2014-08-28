@@ -14,6 +14,16 @@
         />
     
     <item
+        android:id="@+id/action_dashboard"
+        android:title="@string/action_dashboard"
+        />
+    
+    <item
+        android:id="@+id/action_inc_th_level"
+        android:title="@string/action_inc_th_level"
+        />
+    
+    <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
 		/>    

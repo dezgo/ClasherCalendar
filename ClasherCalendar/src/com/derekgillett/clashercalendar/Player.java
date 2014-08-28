@@ -11,13 +11,14 @@ public class Player {
 	private final String COLUMN_THLEVEL = "THLevel";
 	private final String[] ALL_COLUMNS = { this.COLUMN_ID, this.COLUMN_VILLAGENAME, this.COLUMN_THLEVEL };
 
+	private boolean mbRepopulateA = true;	// flag indicating whether to repopulate aggregate array
 	private long mnPlayerID;
 	private String msVillageName;
 	private int mnTHLevel = 1;
 	private LongSparseArray<PlayerElement> moPlayerElements = new LongSparseArray<PlayerElement>();
 
 	// aggregated player elements where items with same element id and level are grouped together
-	private LongSparseArray<PlayerElement> moPlayerElementsA = new LongSparseArray<PlayerElement>();
+	private LongSparseArray<ElementA> moElementsA = new LongSparseArray<ElementA>();
 	
 	private int mnIndex = 0;
 	private int mnIndexA = 0;
@@ -72,6 +73,30 @@ public class Player {
 			// NEXT!
 			oTHElements.moveToNext();
 		}
+		this.mbRepopulateA = true;
+	}
+	
+	private long getKey(Element poElement, int pnLevel) {
+		return poElement.getId()*100 + pnLevel;
+	}
+	
+	private void populateElementsA() {
+		moElementsA.clear();
+		for (int i=0; i<this.moPlayerElements.size(); i++) {
+			PlayerElement oPlayerElement = moPlayerElements.get(moPlayerElements.keyAt(i));
+			if (!oPlayerElement.getExclude()) {
+				Element oElement = oPlayerElement.getElement();
+				int nLevel = oPlayerElement.getLevel();
+				
+				ElementA oElementA = moElementsA.get(getKey(oElement,nLevel));
+				if (oElementA == null) {
+					oElementA = new ElementA(oElement, oPlayerElement.getLevel());
+					moElementsA.put(getKey(oElement,nLevel), oElementA);
+				} else
+					oElementA.add(1);
+			}
+		}
+		mbRepopulateA = false;
 	}
 	
 	public void incPlayerElementLevel(PlayerElement poPlayerElement, int pnIncrement) {
@@ -87,24 +112,7 @@ public class Player {
 				this.moPlayerElements.get(poPlayerElement.getID()).incLevel();
 			else
 				this.moPlayerElements.get(poPlayerElement.getID()).decLevel();
-			
-			// get a playerelement from the aggregated array
-			long key = this.getKeyA(poPlayerElement.getElement(), poPlayerElement.getLevel());
-			PlayerElement oPlayerElementOld = this.moPlayerElementsA.get(key);
-			
-			// remove 1 from the array (i.e. remove it altogether if there is only 1, otherwise reduce qty by 1)
-			if (oPlayerElementOld.getQty() == 1)
-				moPlayerElementsA.remove(key);
-			else
-				oPlayerElementOld.setQtyDec();
-
-			// add 1 to array for element at new level
-			key = this.getKeyA(poPlayerElement.getElement(), poPlayerElement.getLevel()+pnIncrement);
-			PlayerElement oPlayerElementNew = this.moPlayerElementsA.get(key);
-			if (oPlayerElementNew == null)
-				moPlayerElementsA.put(key, oPlayerElementNew);
-			else
-				oPlayerElementNew.setQtyInc();
+			mbRepopulateA = true;
 		}
 	}
 	
@@ -125,19 +133,6 @@ public class Player {
 	private void addPlayerElement(PlayerElement poPlayerElement) {
 		// add to standard list of player elements
 		moPlayerElements.put(poPlayerElement.getID(), poPlayerElement);
-
-		// add to aggregated list of player elements
-		Element oElement = poPlayerElement.getElement();
-		int nLevel = poPlayerElement.getLevel();
-		long key = getKeyA(oElement, nLevel);
-		PlayerElement oPlayerElementA = this.moPlayerElementsA.get(key);
-		if (oPlayerElementA == null) {
-			// want to create a new playerelement object for this array rather than using the one already
-			// in the other array
-			PlayerElement oPlayerElementANew = poPlayerElement.clone();
-			moPlayerElementsA.put(key, oPlayerElementANew);
-		} else
-			oPlayerElementA.setQtyInc();			
 	}
 	
 	private long getKeyA(Element poElement, int pnLevel) {
@@ -148,9 +143,26 @@ public class Player {
 		return moPlayerElements.get(pnPlayerElementID);
 	}
 	
-	public PlayerElement getPlayerElementA(Element poElement, int pnLevel) {
+	public PlayerElement getPlayerElement(long pnElementID, int pnLevel) {
+		PlayerElement oPlayerElement = null;
+		boolean bFound = false;
+		int i = 0;
+		while (!bFound && i<moPlayerElements.size()) {
+			oPlayerElement = moPlayerElements.get(moPlayerElements.keyAt(i));			
+			bFound = (oPlayerElement.getElement().getId() == pnElementID && oPlayerElement.getLevel() == pnLevel);
+			i++;
+		}
+		if (bFound)
+			return oPlayerElement;
+		else
+			return null;
+	}
+	
+	public ElementA getElementA(Element poElement, int pnLevel) {
+		if (mbRepopulateA) this.populateElementsA();
+		
 		long key = getKeyA(poElement, pnLevel);
-		return moPlayerElementsA.get(key);
+		return moElementsA.get(key);
 	}
 	
 	public void moveToFirst() {
@@ -158,6 +170,7 @@ public class Player {
 	}
 	
 	public void moveToFirstA() {
+		if (mbRepopulateA) this.populateElementsA();
 		this.mnIndexA = 0;
 	}
 	
@@ -174,7 +187,7 @@ public class Player {
 	}
 	
 	public boolean isAfterLastA() {
-		return mnIndexA >= this.moPlayerElementsA.size();
+		return mnIndexA >= this.moElementsA.size();
 	}
 	
 	public PlayerElement getPlayerElement() {
@@ -185,21 +198,17 @@ public class Player {
 		return playerElement;
 	}
 	
-	public PlayerElement getPlayerElementA() {
-		PlayerElement playerElementA = null;
-		if (mnIndexA <= moPlayerElementsA.size() ) {
-			playerElementA = moPlayerElementsA.get(moPlayerElementsA.keyAt(mnIndexA));
+	public ElementA getElementA() {
+		ElementA oElementA = null;
+		if (mnIndexA <= moElementsA.size() ) {
+			oElementA = moElementsA.get(moElementsA.keyAt(mnIndexA));
 		}
-		return playerElementA;
+		return oElementA;
 	}
 	
 	public void setExclude(long key, boolean pbExclude) {
 		PlayerElement playerElement = moPlayerElements.get(key);
 		playerElement.setExclude(pbExclude);
-
-		long keyA = getKeyA(playerElement.getElement(), playerElement.getLevel());
-		PlayerElement playerElementA = moPlayerElementsA.get(keyA);
-		playerElementA.setExclude(pbExclude);
 	}
 	
 	// for a newly created player, add in the default buildings that come with the given TH level

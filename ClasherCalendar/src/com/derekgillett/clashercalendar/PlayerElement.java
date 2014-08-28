@@ -10,9 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 public class PlayerElement {
 	private final String TABLE_NAME = "tblPlayerElement";
 	private final String COLUMN_ID = "PlayerElementID";
-	private final int 	 COLUMN_ID_NUM = 0;
 	private final String COLUMN_PLAYERID = "PlayerID";
-	private final int 	 COLUMN_PLAYERID_NUM = 1;
 	private final String COLUMN_ELEMENTID = "ElementID";
 	private final int 	 COLUMN_ELEMENTID_NUM = 2;
 	private final String COLUMN_LEVEL = "Level";
@@ -31,7 +29,6 @@ public class PlayerElement {
 	private Element moElement;
 	private int mnLevel;
 	private Date mdUpgradeStart = null;
-	private int mnQty = 1;
 	private boolean mbExclude = false;
 
 	private void init() {
@@ -107,18 +104,6 @@ public class PlayerElement {
 		this.update();
 	}
 	
-	public int getQty() {
-		return mnQty;
-	}
-	
-	public void setQtyInc() {
-		mnQty++;
-	}
-	
-	public void setQtyDec() {
-		mnQty--;
-	}
-	
 	public boolean isMax() {
 		ElementData oElementData = moElement.getElementData(mnLevel+1);
 		if (oElementData == null)
@@ -188,9 +173,9 @@ public class PlayerElement {
 
 		if (cursor != null) {
 			cursor.moveToFirst();
-			this.moElement = cursor.getString(this.COLUMN_ELEMENTID_NUM) == null ? null : new Element(Integer.parseInt(cursor.getString(this.COLUMN_ELEMENTID_NUM)));
-			this.mnLevel = cursor.getString(this.COLUMN_LEVEL_NUM) == null ? 0 : Integer.parseInt(cursor.getString(this.COLUMN_LEVEL_NUM));
-			this.mdUpgradeStart = cursor.getString(this.COLUMN_UPGRADESTART_NUM) == null ? null : new Date(Integer.parseInt(cursor.getString(this.COLUMN_UPGRADESTART_NUM))*1000);
+			this.moElement = new Element(cursor.getInt(this.COLUMN_ELEMENTID_NUM));
+			this.mnLevel = cursor.getInt(this.COLUMN_LEVEL_NUM);
+			this.mdUpgradeStart = new Date(cursor.getInt(this.COLUMN_UPGRADESTART_NUM)*1000);
 			cursor.close();
 		}
 	}

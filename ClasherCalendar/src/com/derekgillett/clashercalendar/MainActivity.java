@@ -26,7 +26,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.GridLayout;
@@ -88,7 +87,15 @@ public class MainActivity extends ActionBarActivity {
 	    		startActivity(intent);
 	    		return true;
 	        case R.id.action_fix_levels:
-	        	this.GetElements((GridLayout) this.findViewById(R.id.layoutMain));
+	        	this.GetElements(findViewById(R.id.rlMain), (GridLayout) this.findViewById(R.id.layoutMain));
+	        	return true;
+	        case R.id.action_dashboard:
+	        	this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) this.findViewById(R.id.layoutMain));
+	        	return true;
+	        case R.id.action_inc_th_level:
+	        	MyApplication.getPlayer().incTHLevel();
+	        	this.initialSetup(findViewById(R.id.rlMain));
+//	        	this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) this.findViewById(R.id.layoutMain));
 	        	return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
@@ -266,9 +273,13 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
     @SuppressLint("InflateParams")
-	private void GetElements(GridLayout vwMainLayout) {
+	private void GetElements(View poParent, GridLayout vwMainLayout) {
         GridLayout.LayoutParams lp;
 
+        // found situations where vwMainLayout was null. definitely get outta here if
+        // that happens
+        if (vwMainLayout == null) return;
+        
         // clear out previous stuff first
         vwMainLayout.removeAllViews();
         
@@ -299,13 +310,13 @@ public class MainActivity extends ActionBarActivity {
 */
     	player.moveToFirstA();
     	while (!player.isAfterLastA()) {
-        	final PlayerElement oPlayerElementA = player.getPlayerElementA();
+        	final ElementA oElementA = player.getElementA();
         	
-        	Element oElement = oPlayerElementA.getElement();
+        	Element oElement = oElementA.getElement();
         	
         	// quantity
         	TextView tv = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
-        	tv.setText(String.valueOf(oPlayerElementA.getQty()));
+        	tv.setText(String.valueOf(oElementA.getQuantity()));
         	vwMainLayout.addView(tv);
 
         	// element name
@@ -317,37 +328,48 @@ public class MainActivity extends ActionBarActivity {
             lp = new GridLayout.LayoutParams();
             lp.setGravity(Gravity.CENTER_HORIZONTAL);
             tv1.setLayoutParams(lp);
-        	tv1.setText("Lvl " + String.valueOf(oPlayerElementA.getLevel()));
+        	tv1.setText("Lvl " + String.valueOf(oElementA.getLevel()));
         	vwMainLayout.addView(tv1);
 
-        	Button btn1 = (Button) getLayoutInflater().inflate(R.layout.btn_template, null);
+        	//AutoRepeatButton btn1 = (AutoRepeatButton) getLayoutInflater().inflate(R.layout.btn_template, null);
+        	AutoRepeatButton btn1 = new AutoRepeatButton(this);
         	btn1.setText("  +  ");
         	btn1.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					LevelChangeOnClickListener(tv1, 1, oPlayerElementA);
+					//v.performClick();
+					LevelChangeOnClickListener(tv1, 1, oElementA);
 				}
-			}); 
+			});
         	vwMainLayout.addView(btn1);
 
-        	Button btn2 = (Button) getLayoutInflater().inflate(R.layout.btn_template, null);
+        	//Button btn2 = (Button) getLayoutInflater().inflate(R.layout.btn_template, null);
+        	AutoRepeatButton btn2 = new AutoRepeatButton(this);
         	btn2.setText("  -  ");
         	btn2.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					LevelChangeOnClickListener(tv1, -1, oPlayerElementA);
+					//v.performClick();
+					LevelChangeOnClickListener(tv1, -1, oElementA);
 				}
-			}); 
+			});
         	vwMainLayout.addView(btn2);
         	
         	player.moveToNextA();
     	}
+
+    	// show total upgrade time remaining (do this at the end after we've filtered items)
+        TextView tv_upgrade_time = (TextView) poParent.findViewById(R.id.tvUpgradeTime);
+    	tv_upgrade_time.setText(Utils.Time_ValToText(player.getUpgradeTimeMax()));    	
     }
     
     @SuppressLint("InflateParams")
-	private void GetElements_Dashboard(View moParent, GridLayout vwMainLayout) {
+	private void GetElements_Dashboard(View poParent, GridLayout vwMainLayout) {
         GridLayout.LayoutParams lp;
 
+        // unsure if this could happen, but wanted to cover it off just in case
+        if (vwMainLayout == null) return;
+        
         // clear out previous stuff first
         vwMainLayout.removeAllViews();
         
@@ -398,10 +420,11 @@ public class MainActivity extends ActionBarActivity {
     	
     	player.moveToFirstA();
     	while (!player.isAfterLastA()) {
-        	PlayerElement oPlayerElement = player.getPlayerElementA();
-            junit.framework.Assert.assertNotNull("oPlayerElement variable null!", oPlayerElement);
+        	ElementA oElementA = player.getElementA();
+            junit.framework.Assert.assertNotNull("oPlayerElement variable null!", oElementA);
 
-            Element oElement = oPlayerElement.getElement();
+            Element oElement = oElementA.getElement();
+            PlayerElement oPlayerElement = player.getPlayerElement(oElement.getId(), oElementA.getLevel());
 
             // check on the filter. if this item should be excluded, do it now
             boolean bExclude = false;
@@ -420,7 +443,7 @@ public class MainActivity extends ActionBarActivity {
 	            
             	// qty
 	        	TextView tv = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
-	        	tv.setText(String.valueOf(oPlayerElement.getQty()));
+	        	tv.setText(String.valueOf(oElementA.getQuantity()));
 	        	vwMainLayout.addView(tv);
 	
 	        	// element name
@@ -496,7 +519,7 @@ public class MainActivity extends ActionBarActivity {
     	}
 
     	// show total upgrade time remaining (do this at the end after we've filtered items)
-        TextView tv_upgrade_time = (TextView) moParent.findViewById(R.id.tvUpgradeTime);
+        TextView tv_upgrade_time = (TextView) poParent.findViewById(R.id.tvUpgradeTime);
     	tv_upgrade_time.setText(Utils.Time_ValToText(player.getUpgradeTimeMax()));    	
     }
     
@@ -542,22 +565,26 @@ public class MainActivity extends ActionBarActivity {
     }
     
     // change the level of the selected item
-    private void LevelChangeOnClickListener(TextView poTextview, int pnIncrement, PlayerElement poPlayerElement) {
-    	int nCurrentValue = poPlayerElement.getLevel();
+    private void LevelChangeOnClickListener(TextView poTextview, int pnIncrement, ElementA poElementA) {
+    	int nCurrentValue = poElementA.getLevel();
     	int nNewValue = nCurrentValue + pnIncrement;
     	
         Player player = MyApplication.getPlayer();
-        if (nNewValue >= 0 && nNewValue <= poPlayerElement.getElement().getMaxLevel(player.getTHLevel())) {
-        	player.incPlayerElementLevel(poPlayerElement, pnIncrement);
-        	this.GetElements((GridLayout) this.findViewById(R.id.layoutMain));
-        }
+        if (nNewValue >= 0 && nNewValue <= poElementA.getElement().getMaxLevel(player.getTHLevel())) {
+        	long nElementID = poElementA.getElement().getId();
+        	PlayerElement oPlayerElement = player.getPlayerElement(nElementID,poElementA.getLevel());
+        	if (oPlayerElement != null) {
+	        	player.incPlayerElementLevel(oPlayerElement, pnIncrement);
+	        	this.GetElements(findViewById(R.id.rlMain), (GridLayout) this.findViewById(R.id.layoutMain));
+        	}
+    	}
     }
 
     private void initialSetup(View poView) {
         // set title
         TextView tvTitle = (TextView) poView.findViewById(R.id.tvTitle);
         Player player = MyApplication.getPlayer();
-        tvTitle.setText(player.getVillageName() + "'s Village (TH Lvl " + player.getTHLevel() + ")");
+        tvTitle.setText(player.getVillageName() + "'s Village (Townhall " + player.getTHLevel() + ")");
         
         // show total upgrade time remaining
         TextView tv_upgrade_time = (TextView) poView.findViewById(R.id.tvUpgradeTime);

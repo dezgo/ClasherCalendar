@@ -85,7 +85,7 @@ public class Element {
 		return rtn;
 	}
 	
-	public int getId() {
+	public long getId() {
 		return mnID;
 	}
 	
