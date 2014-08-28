@@ -14,10 +14,9 @@ public class Player {
 	private long mnPlayerID;
 	private String msVillageName;
 	private int mnTHLevel = 1;
-	private LongSparseArray<PlayerElement> moPlayerElements = new LongSparseArray<PlayerElement>();
 
 	// aggregated player elements where items with same element id and level are grouped together
-	private LongSparseArray<PlayerElement> moPlayerElementsA = new LongSparseArray<PlayerElement>();
+	private LongSparseArray<PlayerElementA> moPlayerElementsA = new LongSparseArray<PlayerElementA>();
 	
 	private int mnIndex = 0;
 	private int mnIndexA = 0;
@@ -74,7 +73,7 @@ public class Player {
 		}
 	}
 	
-	public void incPlayerElementLevel(PlayerElement poPlayerElement, int pnIncrement) {
+	public void incPlayerElementLevel(PlayerElementA poPlayerElement, int pnIncrement) {
 		junit.framework.Assert.assertTrue("increment can only be -1 or 1, not " + pnIncrement, pnIncrement == -1 || pnIncrement == 1);
 		
 		// only increment if we're not already at max level
@@ -90,7 +89,7 @@ public class Player {
 			
 			// get a playerelement from the aggregated array
 			long key = this.getKeyA(poPlayerElement.getElement(), poPlayerElement.getLevel());
-			PlayerElement oPlayerElementOld = this.moPlayerElementsA.get(key);
+			PlayerElementA oPlayerElementOld = this.moPlayerElementsA.get(key);
 			
 			// remove 1 from the array (i.e. remove it altogether if there is only 1, otherwise reduce qty by 1)
 			if (oPlayerElementOld.getQty() == 1)
@@ -100,7 +99,7 @@ public class Player {
 
 			// add 1 to array for element at new level
 			key = this.getKeyA(poPlayerElement.getElement(), poPlayerElement.getLevel()+pnIncrement);
-			PlayerElement oPlayerElementNew = this.moPlayerElementsA.get(key);
+			PlayerElementA oPlayerElementNew = this.moPlayerElementsA.get(key);
 			if (oPlayerElementNew == null)
 				moPlayerElementsA.put(key, oPlayerElementNew);
 			else
@@ -113,16 +112,16 @@ public class Player {
 	}
 	
 	private void addPlayerElement(int pnPlayerElementID) {
-		PlayerElement oPlayerElement = new PlayerElement(this, pnPlayerElementID);
+		PlayerElementA oPlayerElement = new PlayerElementA(this, pnPlayerElementID);
 		addPlayerElement(oPlayerElement);
 	}
 	
 	private void addPlayerElement(Element poElement, int pnLevel) {
-		PlayerElement oPlayerElement = new PlayerElement(this, poElement, pnLevel);
+		PlayerElementA oPlayerElement = new PlayerElementA(this, poElement, pnLevel);
 		addPlayerElement(oPlayerElement);
 	}
 	
-	private void addPlayerElement(PlayerElement poPlayerElement) {
+	private void addPlayerElement(PlayerElementA poPlayerElement) {
 		// add to standard list of player elements
 		moPlayerElements.put(poPlayerElement.getID(), poPlayerElement);
 
@@ -130,11 +129,11 @@ public class Player {
 		Element oElement = poPlayerElement.getElement();
 		int nLevel = poPlayerElement.getLevel();
 		long key = getKeyA(oElement, nLevel);
-		PlayerElement oPlayerElementA = this.moPlayerElementsA.get(key);
+		PlayerElementA oPlayerElementA = this.moPlayerElementsA.get(key);
 		if (oPlayerElementA == null) {
 			// want to create a new playerelement object for this array rather than using the one already
 			// in the other array
-			PlayerElement oPlayerElementANew = poPlayerElement.clone();
+			PlayerElementA oPlayerElementANew = poPlayerElement.clone();
 			moPlayerElementsA.put(key, oPlayerElementANew);
 		} else
 			oPlayerElementA.setQtyInc();			
@@ -144,11 +143,11 @@ public class Player {
 		return poElement.getId() * 100 + pnLevel;
 	}
 	
-	public PlayerElement getPlayerElement(long pnPlayerElementID) {
+	public PlayerElementA getPlayerElement(long pnPlayerElementID) {
 		return moPlayerElements.get(pnPlayerElementID);
 	}
 	
-	public PlayerElement getPlayerElementA(Element poElement, int pnLevel) {
+	public PlayerElementA getPlayerElementA(Element poElement, int pnLevel) {
 		long key = getKeyA(poElement, pnLevel);
 		return moPlayerElementsA.get(key);
 	}
@@ -177,16 +176,16 @@ public class Player {
 		return mnIndexA >= this.moPlayerElementsA.size();
 	}
 	
-	public PlayerElement getPlayerElement() {
-		PlayerElement playerElement = null;
+	public PlayerElementA getPlayerElement() {
+		PlayerElementA playerElement = null;
 		if (mnIndex <= moPlayerElements.size() ) {
 			playerElement = moPlayerElements.get(moPlayerElements.keyAt(mnIndex));
 		}
 		return playerElement;
 	}
 	
-	public PlayerElement getPlayerElementA() {
-		PlayerElement playerElementA = null;
+	public PlayerElementA getPlayerElementA() {
+		PlayerElementA playerElementA = null;
 		if (mnIndexA <= moPlayerElementsA.size() ) {
 			playerElementA = moPlayerElementsA.get(moPlayerElementsA.keyAt(mnIndexA));
 		}
@@ -194,11 +193,11 @@ public class Player {
 	}
 	
 	public void setExclude(long key, boolean pbExclude) {
-		PlayerElement playerElement = moPlayerElements.get(key);
+		PlayerElementA playerElement = moPlayerElements.get(key);
 		playerElement.setExclude(pbExclude);
 
 		long keyA = getKeyA(playerElement.getElement(), playerElement.getLevel());
-		PlayerElement playerElementA = moPlayerElementsA.get(keyA);
+		PlayerElementA playerElementA = moPlayerElementsA.get(keyA);
 		playerElementA.setExclude(pbExclude);
 	}
 	
@@ -243,7 +242,7 @@ public class Player {
 		
 		for (int i=0; i<this.moPlayerElements.size(); i++) {
 			long key = moPlayerElements.keyAt(i);
-			PlayerElement oPlayerElement = moPlayerElements.get(key);
+			PlayerElementA oPlayerElement = moPlayerElements.get(key);
 			nUpgradeTime = nUpgradeTime + oPlayerElement.getUpgradeTimeMax();
 		}
 		return nUpgradeTime;
@@ -254,7 +253,7 @@ public class Player {
 		
 		for (int i=0; i<this.moPlayerElements.size(); i++) {
 			long key = moPlayerElements.keyAt(i);
-			PlayerElement oPlayerElement = moPlayerElements.get(key);
+			PlayerElementA oPlayerElement = moPlayerElements.get(key);
 			nUpgradeCost = nUpgradeCost + oPlayerElement.getUpgradeCostMax();
 		}
 		return nUpgradeCost;

@@ -4,65 +4,28 @@ import java.util.Calendar;
 import java.util.Date;
 
 import android.content.ContentValues;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class PlayerElement {
+public class PlayerElement extends PlayerElementA {
 	private final String TABLE_NAME = "tblPlayerElement";
 	private final String COLUMN_ID = "PlayerElementID";
-	private final int 	 COLUMN_ID_NUM = 0;
 	private final String COLUMN_PLAYERID = "PlayerID";
-	private final int 	 COLUMN_PLAYERID_NUM = 1;
 	private final String COLUMN_ELEMENTID = "ElementID";
-	private final int 	 COLUMN_ELEMENTID_NUM = 2;
 	private final String COLUMN_LEVEL = "Level";
-	private final int 	 COLUMN_LEVEL_NUM = 3;
 	private final String COLUMN_UPGRADESTART = "UpgradeStart";
-	private final int 	 COLUMN_UPGRADESTART_NUM = 4;
 	private final String[] ALL_COLUMNS = { this.COLUMN_ID, this.COLUMN_PLAYERID, this.COLUMN_ELEMENTID, this.COLUMN_LEVEL, this.COLUMN_UPGRADESTART };
 
-	private SQLiteDatabase moDB;
-
-	//TODO: add in handling of >1 item, great for walls so there aren't 25+ individual entries
-	// that must be updated independently
-	//private int mnQuantity;
-	private long mnPlayerElementID;
-	private Player moPlayer;
-	private Element moElement;
-	private int mnLevel;
 	private Date mdUpgradeStart = null;
-	private int mnQty = 1;
-	private boolean mbExclude = false;
+	private long mnPlayerElementID;
 
-	private void init() {
-		// 1. get reference to writable DB
-		MySQLiteHelper oMySQLiteHelper = new MySQLiteHelper();
-		moDB = oMySQLiteHelper.getWritableDatabase();
-	}
-	
-	public PlayerElement(Player poPlayer, long pnPlayerElementID) {
-		init();
-		mnPlayerElementID = pnPlayerElementID;
-		moPlayer = poPlayer;
-		Load();
-	}
-	
 	public PlayerElement(Player poPlayer, Element poElement, int pnLevel) {
-		init();
-		moElement = poElement;
-		mnLevel = pnLevel;
-		moPlayer = poPlayer;
-		insert();
-	}
-	
-	public long getPlayerElementID() {
-		return mnPlayerElementID;
+		super(poPlayer, poElement, pnLevel);
+		// TODO Auto-generated constructor stub
 	}
 	
 	public void startUpgrade() {
 		if (!this.isMax()) {
-			Calendar c = Calendar.getInstance();
-			this.mdUpgradeStart = c.getTime();
+			mdUpgradeStart = new Date();
 			this.update();
 		}
 	}
@@ -84,117 +47,6 @@ public class PlayerElement {
 		}
 	}
 	
-	public Element getElement() {
-		return moElement;
-	}
-	
-	public void setElement(Element poElement) {
-		moElement = poElement;
-		this.update();
-	}
-	
-	public int getLevel() {
-		return mnLevel;
-	}
-	
-	public void incLevel() {
-		mnLevel++;
-		this.update();
-	}
-	
-	public void decLevel() {
-		mnLevel--;
-		this.update();
-	}
-	
-	public int getQty() {
-		return mnQty;
-	}
-	
-	public void setQtyInc() {
-		mnQty++;
-	}
-	
-	public void setQtyDec() {
-		mnQty--;
-	}
-	
-	public boolean isMax() {
-		ElementData oElementData = moElement.getElementData(mnLevel+1);
-		if (oElementData == null)
-			return true;
-		else {
-			return oElementData.getTHMinLevel() > moPlayer.getTHLevel();
-		}
-	}
-	
-	public int getUpgradeCost() {
-		if (isMax() || mbExclude) 
-			return 0;
-		else {
-			ElementData oElementData = moElement.getElementData(mnLevel+1);
-			return oElementData.getBuildCost();
-		}
-	}
-	
-	public int getUpgradeCostMax() {
-		if (isMax() || mbExclude) 
-			return 0;
-		else {
-			int nTargetLevel = moElement.getMaxLevel(moPlayer.getTHLevel());
-			ElementData oElementData = moElement.getElementData(mnLevel+1);
-			return oElementData.getBuildCost(nTargetLevel);
-		}
-	}
-	
-	public int getUpgradeTime() {
-		if (isMax() || mbExclude) 
-			return 0;
-		else {
-			ElementData oElementData = moElement.getElementData(mnLevel+1);
-			return oElementData.getBuildTime(); 
-		}
-	}
-	
-	public int getUpgradeTimeMax() {
-		if (isMax() || mbExclude) 
-			return 0;
-		else {
-			int nTargetLevel = moElement.getMaxLevel(moPlayer.getTHLevel());
-			ElementData oElementData = moElement.getElementData(mnLevel+1);
-			return oElementData.getBuildTime(nTargetLevel); 
-		}
-	}
-	
-	public long getID() {
-		return this.mnPlayerElementID;
-	}
-	
-	public boolean getExclude() {
-		return mbExclude;
-	}
-	
-	public void setExclude(boolean bExclude) {
-		mbExclude = bExclude;
-	}
-	
-	public PlayerElement clone() {
-		return new PlayerElement(this.moPlayer, this.mnPlayerElementID);
-	}
-	
-	private void Load() {
-		Cursor cursor = moDB.query(this.TABLE_NAME, this.ALL_COLUMNS, this.COLUMN_ID + " = ?", 
-				new String[] { String.valueOf(mnPlayerElementID) }, null, null, null );
-
-		if (cursor != null) {
-			cursor.moveToFirst();
-			this.moElement = cursor.getString(this.COLUMN_ELEMENTID_NUM) == null ? null : new Element(Integer.parseInt(cursor.getString(this.COLUMN_ELEMENTID_NUM)));
-			this.mnLevel = cursor.getString(this.COLUMN_LEVEL_NUM) == null ? 0 : Integer.parseInt(cursor.getString(this.COLUMN_LEVEL_NUM));
-			this.mdUpgradeStart = cursor.getString(this.COLUMN_UPGRADESTART_NUM) == null ? null : new Date(Integer.parseInt(cursor.getString(this.COLUMN_UPGRADESTART_NUM))*1000);
-			cursor.close();
-		}
-	}
-
 	private void update() {
 		ContentValues values = new ContentValues();
 		values.put(this.COLUMN_LEVEL, mnLevel);

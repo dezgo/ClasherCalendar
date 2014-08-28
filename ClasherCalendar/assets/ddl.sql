@@ -39,11 +39,16 @@ CREATE TABLE tblTHElement (
 	Quantity INTEGER NOT NULL,
 	PRIMARY KEY (THLevel, ElementID));
 
-CREATE TABLE tblPlayerElement (
-	PlayerElementID INTEGER NOT NULL,
+CREATE TABLE tblPlayerElementA (
+	PlayerElementAID INTEGER NOT NULL,
 	PlayerID INTEGER NOT NULL,
 	ElementID INTEGER NOT NULL,
 	Level INTEGER NOT NULL,
+	PRIMARY KEY (PlayerElementID));
+
+CREATE TABLE tblPlayerElement (
+	PlayerElementID INTEGER NOT NULL,
+	PlayerElementAID INTEGER NOT NULL,
 	UpgradeStart INTEGER NULL,
 	PRIMARY KEY (PlayerElementID));
 

@@ -40,7 +40,7 @@ public class MainActivity extends ActionBarActivity {
 	private ScheduledExecutorService moSEService;
 	private MySETask moMySETask;
 	private TextView moBuildTime;
-	private PlayerElement moPlayerElement;
+	private PlayerElementA moPlayerElement;
 
     private DrawerLayout mDrawerLayout;
     private GridLayout mDrawerList;
@@ -299,7 +299,7 @@ public class MainActivity extends ActionBarActivity {
 */
     	player.moveToFirstA();
     	while (!player.isAfterLastA()) {
-        	final PlayerElement oPlayerElementA = player.getPlayerElementA();
+        	final PlayerElementA oPlayerElementA = player.getPlayerElementA();
         	
         	Element oElement = oPlayerElementA.getElement();
         	
@@ -398,7 +398,7 @@ public class MainActivity extends ActionBarActivity {
     	
     	player.moveToFirstA();
     	while (!player.isAfterLastA()) {
-        	PlayerElement oPlayerElement = player.getPlayerElementA();
+        	PlayerElementA oPlayerElement = player.getPlayerElementA();
             junit.framework.Assert.assertNotNull("oPlayerElement variable null!", oPlayerElement);
 
             Element oElement = oPlayerElement.getElement();
@@ -480,7 +480,7 @@ public class MainActivity extends ActionBarActivity {
 	        	else
 	        		tv3.setText(Utils.Time_ValToText(oPlayerElement.getUpgradeTime()));
 	        	
-	        	final PlayerElement oPlayerElementFinal = oPlayerElement;
+	        	final PlayerElementA oPlayerElementFinal = oPlayerElement;
 	        	tv3.setOnTouchListener(new OnTouchListener() {
 					@Override
 					public boolean onTouch(View arg0, MotionEvent arg1) {
@@ -500,7 +500,7 @@ public class MainActivity extends ActionBarActivity {
     	tv_upgrade_time.setText(Utils.Time_ValToText(player.getUpgradeTimeMax()));    	
     }
     
-    private void onTouchHandler(View arg0, PlayerElement poPlayerElement) {
+    private void onTouchHandler(View arg0, PlayerElementA poPlayerElement) {
 //    	switch (arg1.getAction()) {
 //			case MotionEvent.ACTION_DOWN:
 //				break;
@@ -542,7 +542,7 @@ public class MainActivity extends ActionBarActivity {
     }
     
     // change the level of the selected item
-    private void LevelChangeOnClickListener(TextView poTextview, int pnIncrement, PlayerElement poPlayerElement) {
+    private void LevelChangeOnClickListener(TextView poTextview, int pnIncrement, PlayerElementA poPlayerElement) {
     	int nCurrentValue = poPlayerElement.getLevel();
     	int nNewValue = nCurrentValue + pnIncrement;
     	
