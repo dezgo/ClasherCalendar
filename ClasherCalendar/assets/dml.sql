@@ -44,6 +44,23 @@ INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (29, 
 INSERT INTO tblElement (ElementID, ElementName, CostType, Category) VALUES (30, 'Archer Queen Alter', 3, 3);
 
 -- th element quantities
+-- air bomb
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (5, 1, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (6, 1, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 1, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 1, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 1, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 1, 5);
+
+-- air defence
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (4, 2, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (5, 2, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (6, 2, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 2, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 2, 3);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 2, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 2, 4);
+
 -- archer towers
 INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (2, 3, 1);
 INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (3, 3, 1);
@@ -137,6 +154,13 @@ INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 12, 3);
 INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 12, 4);
 INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 12, 4);
 
+-- Giant Bomb
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (6, 13, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 13, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 13, 3);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 13, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 13, 5);
+
 -- gold mine
 INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (1, 14, 1);
 INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (2, 14, 2);
@@ -162,7 +186,10 @@ INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 15, 4);
 INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 15, 4);
 
 -- Hidden Tesla
-INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (, 16, );
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 16, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 16, 3);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 16, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 16, 4);
 
 -- laboratory
 INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (3, 17, 1);
@@ -185,7 +212,10 @@ INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 18, 3);
 INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 18, 3);
 
 -- Seeking Air Mine
-INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (, 19, );
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 19, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 19, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 19, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 19, 5);
 
 -- spell factory
 INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (5, 20, 1);
@@ -196,7 +226,12 @@ INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 20, 1);
 INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 20, 1);
 
 -- wizard tower
-INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (, 21, );
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (5, 21, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (6, 21, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 21, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 21, 3);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 21, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 21, 4);
 
 -- dark elixir drills
 INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 22, 1);
@@ -204,10 +239,20 @@ INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 22, 2);
 INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 22, 3);
 
 -- town hall
-INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (, 23, );
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (1, 23, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (2, 23, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (3, 23, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (4, 23, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (5, 23, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (6, 23, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 23, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 23, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 23, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 23, 1);
 
 -- x-bow
-INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (, 24, );
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 24, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 24, 3);
 
 -- walls
 INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (2, 25, 25);
@@ -220,7 +265,27 @@ INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 25, 225);
 INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 25, 250);
 INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 25, 250);
 
+-- Inferno Tower
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 26, 2);
 
+-- Spring Trap
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (4, 27, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (5, 27, 2);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (6, 27, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 27, 4);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 27, 6);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 27, 6);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 27, 6);
+
+-- Barbarian King Alter
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (7, 29, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (8, 29, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 29, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 29, 1);
+
+-- Archer Queen Alter
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (9, 30, 1);
+INSERT INTO tblTHElement (THLevel, ElementID, Quantity) VALUES (10, 30, 1);
 
 -- element data
 -- air bomb
@@ -408,6 +473,11 @@ INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, Build
 INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (18, 7, 640, 3200000,604800,9);
 INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (18, 8, 670, 6400000,864000,10);
 
+-- seeking air mine
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (19, 1, 0, 15000,0,7);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (19, 2, 0, 2000000,86400,9);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (19, 3, 0, 4000000,259200,10);
+
 -- spell factory
 INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (20, 1, 200, 200000,86400,5);
 INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (20, 2, 300, 400000,172800,6);
@@ -425,6 +495,32 @@ INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, Build
 INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (21, 7, 840, 5360000,604800,9);
 INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (21, 8, 880, 6480000,864000,10);
 
+-- Dark Elixir Drill
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (22, 1, 400, 1000000, 86400,8);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (22, 2, 480, 1500000, 172800,8);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (22, 3, 580, 2000000, 259200,8);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (22, 4, 690, 3000000, 345600,9);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (22, 5, 830, 4000000, 518400,9);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (22, 6, 1000, 5000000, 691200,9);
+
+-- Town Hall
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 1, 1500, 0, 0, 1);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 2, 1600, 1000, 300, 2);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 3, 1850, 4000, 10800, 3);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 4, 2100, 25000, 86400, 4);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 5, 2400, 150000, 172800, 5);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 6, 2800, 750000, 345600, 6);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 7, 3200, 1200000, 518400, 7);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 8, 3700, 2000000, 691200, 8);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 9, 4200, 3000000, 864000, 9);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 10, 5000, 4000000, 1209600, 10);
+
+-- X-Bow
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (24, 1, 1500, 3000000, 604800, 9);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (24, 2, 1900, 5000000, 864000, 9);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (24, 3, 2400, 7000000, 1209600, 9);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (24, 4, 2800, 8000000, 1209600, 10);
+
 -- wall
 INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (25, 1, 300, 200, 0, 2);
 INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (25, 2, 500, 1000, 0, 2);
@@ -437,3 +533,20 @@ INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, Build
 INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (25, 9, 4000, 1000000, 0, 9);
 INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (25, 10, 5500, 3000000, 0, 9);
 INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (25, 11, 7000, 4000000, 0, 10);
+
+-- Inferno Tower
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (26, 1, 1500, 5000000, 604800, 10);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (26, 2, 1900, 6500000, 864000, 10);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (26, 3, 2200, 8000000, 1209600, 10);
+
+-- Spring Trap
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (27, 1, 0, 2000, 0, 4);
+
+-- Builder's Hut
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (28, 1, 250, 0, 0, 1);
+
+-- Barbarian King Alter
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (29, 1, 250, 10000, 0, 7);
+
+-- Archer Queen Alter
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (30, 1, 250, 40000, 0, 9);

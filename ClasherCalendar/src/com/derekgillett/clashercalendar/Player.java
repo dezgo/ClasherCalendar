@@ -3,6 +3,7 @@ package com.derekgillett.clashercalendar;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.v4.util.LongSparseArray;
+import android.util.Log;
 
 public class Player {
 	private final String TABLE_NAME = "tblPlayer";
@@ -248,14 +249,17 @@ public class Player {
 	}
 	
 	public int getUpgradeTimeMax() {
-		int nUpgradeTime = 0;
+		int nUpgradeTimeTotal = 0;
 		
 		for (int i=0; i<this.moPlayerElements.size(); i++) {
 			long key = moPlayerElements.keyAt(i);
 			PlayerElement oPlayerElement = moPlayerElements.get(key);
-			nUpgradeTime = nUpgradeTime + oPlayerElement.getUpgradeTimeMax();
+			int nUpgradeTime = oPlayerElement.getUpgradeTimeMax();
+			nUpgradeTimeTotal = nUpgradeTimeTotal + nUpgradeTime;
+			if (nUpgradeTime > 0) Log.d("Player", "Upgrade time: " + oPlayerElement.getElement().getName() + " lvl " + oPlayerElement.getLevel() + 
+					" " + nUpgradeTime/60/60/24);
 		}
-		return nUpgradeTime;
+		return nUpgradeTimeTotal;
 	}
 	
 	public int getUpgradeCostMax() {

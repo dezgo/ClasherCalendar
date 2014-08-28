@@ -421,7 +421,7 @@ public class MainActivity extends ActionBarActivity {
     	player.moveToFirstA();
     	while (!player.isAfterLastA()) {
         	ElementA oElementA = player.getElementA();
-            junit.framework.Assert.assertNotNull("oPlayerElement variable null!", oElementA);
+            junit.framework.Assert.assertNotNull("oElementA variable null!", oElementA);
 
             Element oElement = oElementA.getElement();
             PlayerElement oPlayerElement = player.getPlayerElement(oElement.getId(), oElementA.getLevel());
