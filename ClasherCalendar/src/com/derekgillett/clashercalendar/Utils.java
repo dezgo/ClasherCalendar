@@ -66,33 +66,38 @@ public class Utils {
 
 	static public String Time_ValToText(long pnVal) {
 		String sRtn = "";
+		int parts = 0;	// only want to show 2 components to time, say days and hours, or hours and minutes, not whole time like 1d 2h 3m 14s
 	    
 	    if (pnVal <= 0) {
 	        sRtn = "";
 	    }
 	    
-	    if (pnVal >= 60*60*24) {
+	    if (pnVal >= 60*60*24 && parts<2) {
 	        if (!sRtn.equals("")) sRtn = sRtn + " ";
 	        sRtn = sRtn + Math.round(pnVal/60/60/24) + "d";
 	        pnVal = pnVal - Math.round(pnVal/60/60/24)*60*60*24;
+	        parts++;
 	    }
 	    
-	    if (pnVal >= 60*60) {
+	    if (pnVal >= 60*60 && parts<2) {
 	        if (!sRtn.equals("")) sRtn = sRtn + " ";
 	        sRtn = sRtn + Math.round(pnVal/60/60) + "h";
 	        pnVal = pnVal - Math.round(pnVal/60/60)*60*60;
+	        parts++;
 	    }
 	
-	    if (pnVal >= 60) {
+	    if (pnVal >= 60 && parts<2) {
 	        if (!sRtn.equals("")) sRtn = sRtn + " ";
 	        sRtn = sRtn + Math.round(pnVal/60) + "m";
 	        pnVal = pnVal - Math.round(pnVal/60)*60;
+	        parts++;
 	    }
 	
-	    if (pnVal >= 1) {
+	    if (pnVal >= 1 && parts<2) {
 	        if (!sRtn.equals("")) sRtn = sRtn + " ";
 	        sRtn = sRtn + Math.round(pnVal) + "s";
 	        pnVal = pnVal - Math.round(pnVal);
+	        parts++;
 	    }
 	
 	    return sRtn;

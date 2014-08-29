@@ -77,8 +77,8 @@ public class Player {
 		this.mbRepopulateA = true;
 	}
 	
-	private long getKey(Element poElement, int pnLevel) {
-		return poElement.getId()*100 + pnLevel;
+	public void forceRepopulate() {
+		this.mbRepopulateA = true;
 	}
 	
 	private void populateElementsA() {
@@ -89,10 +89,16 @@ public class Player {
 				Element oElement = oPlayerElement.getElement();
 				int nLevel = oPlayerElement.getLevel();
 				
-				ElementA oElementA = moElementsA.get(getKey(oElement,nLevel));
+				long key;
+				if (oPlayerElement.getSecondsRemaining() > 0)
+					key = ElementA.getKey(oPlayerElement.getID(),null,0);
+				else
+					key = ElementA.getKey(0,oElement,nLevel);
+				ElementA oElementA = moElementsA.get(key);
+				
 				if (oElementA == null) {
-					oElementA = new ElementA(oElement, oPlayerElement.getLevel());
-					moElementsA.put(getKey(oElement,nLevel), oElementA);
+					oElementA = new ElementA(oElement, nLevel);
+					moElementsA.put(key, oElementA);
 				} else
 					oElementA.add(1);
 			}
@@ -102,6 +108,11 @@ public class Player {
 	
 	public void incPlayerElementLevel(PlayerElement poPlayerElement, int pnIncrement) {
 		junit.framework.Assert.assertTrue("increment can only be -1 or 1, not " + pnIncrement, pnIncrement == -1 || pnIncrement == 1);
+		
+		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+		junit.framework.Assert.assertTrue(
+				"Player.incPlayerElementLevel should only be called from MainActivity, not " + stackTraceElements[0].getClassName(),
+				stackTraceElements[0].getClassName() == "MainActivity");
 		
 		// only increment if we're not already at max level
 		// only decrement if we're at level > 0
@@ -257,7 +268,7 @@ public class Player {
 			int nUpgradeTime = oPlayerElement.getUpgradeTimeMax();
 			nUpgradeTimeTotal = nUpgradeTimeTotal + nUpgradeTime;
 			if (nUpgradeTime > 0) Log.d("Player", "Upgrade time: " + oPlayerElement.getElement().getName() + " lvl " + oPlayerElement.getLevel() + 
-					" " + nUpgradeTime/60/60/24);
+					" " + nUpgradeTime);
 		}
 		return nUpgradeTimeTotal;
 	}

@@ -73,6 +73,11 @@ public class StartActivity extends ActionBarActivity {
 		Players players = MyApplication.getPlayers();
 		Player player;
 		LinearLayout ll = (LinearLayout) this.findViewById(R.id.layout_existing_players);
+		
+		// this will be called each time a new player is added, so may have already been done
+		// clear out existing buttons first
+		ll.removeAllViews();
+		
 		players.moveToFirst();
 		while ((player = players.getPlayer()) != null) {
 			final Player player1 = player;
@@ -114,6 +119,8 @@ public class StartActivity extends ActionBarActivity {
 		button.setOnClickListener(new View.OnClickListener() {			
 			@Override
 			public void onClick(View v) {
+				// redraw buttons to add in new player just created
+				new GetPlayersTask().execute();
 				GoToMain();
 			}
 		});

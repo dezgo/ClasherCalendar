@@ -17,6 +17,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_dashboard">Back to Dashboard</string>
     <string name="action_inc_th_level">Upgrade Townhall</string>
+    <string name="action_home">Home</string>
     <string name="drawer_open">Open Nav Drawer</string>
     <string name="drawer_close">Close Nav Drawer</string>
 	<string name="nav_title">Select Items to Show</string>

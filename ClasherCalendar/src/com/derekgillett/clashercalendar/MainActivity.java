@@ -14,6 +14,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.util.LongSparseArray;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -24,8 +25,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.GridLayout;
@@ -36,10 +37,8 @@ import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 	
-	private ScheduledExecutorService moSEService;
-	private MySETask moMySETask;
-	private TextView moBuildTime;
-	private PlayerElement moPlayerElement;
+	// holds list of all textviews showing the countdown times
+	private LongSparseArray<ItemUpgrade> moItemUpgrades = new LongSparseArray<ItemUpgrade>();
 
     private DrawerLayout mDrawerLayout;
     private GridLayout mDrawerList;
@@ -68,6 +67,8 @@ public class MainActivity extends ActionBarActivity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent;
+		
 		// Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
         if (mDrawerToggle.onOptionsItemSelected(item)) {
@@ -83,7 +84,7 @@ public class MainActivity extends ActionBarActivity {
 	        	NavUtils.navigateUpFromSameTask(this);
 	        	return true;
 	        case R.id.action_settings:
-	    		Intent intent = new Intent(this, SettingsActivity.class);
+	    		intent = new Intent(this, SettingsActivity.class);
 	    		startActivity(intent);
 	    		return true;
 	        case R.id.action_fix_levels:
@@ -96,6 +97,10 @@ public class MainActivity extends ActionBarActivity {
 	        	MyApplication.getPlayer().incTHLevel();
 	        	this.initialSetup(findViewById(R.id.rlMain));
 //	        	this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) this.findViewById(R.id.layoutMain));
+	        	return true;
+	        case R.id.action_home:
+	    		intent = new Intent(this, StartActivity.class);
+	    		startActivity(intent);
 	        	return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
@@ -368,10 +373,15 @@ public class MainActivity extends ActionBarActivity {
         GridLayout.LayoutParams lp;
 
         // unsure if this could happen, but wanted to cover it off just in case
-        if (vwMainLayout == null) return;
+        if (vwMainLayout == null) {
+        	Log.d("MainActivity","Exiting GetElements_Dashboard - vwMainLayout null");
+        	return;
+        }
         
         // clear out previous stuff first
+    	Log.d("MainActivity","Clear existing views");
         vwMainLayout.removeAllViews();
+    	Log.d("MainActivity","Clear existing views - done");
         
         // set number of columns (it might have been changed if they used the update qtys view)
         vwMainLayout.setColumnCount(6);
@@ -425,6 +435,7 @@ public class MainActivity extends ActionBarActivity {
 
             Element oElement = oElementA.getElement();
             PlayerElement oPlayerElement = player.getPlayerElement(oElement.getId(), oElementA.getLevel());
+            junit.framework.Assert.assertNotNull("oPlayerElement variable null!", oPlayerElement);
 
             // check on the filter. if this item should be excluded, do it now
             boolean bExclude = false;
@@ -530,40 +541,32 @@ public class MainActivity extends ActionBarActivity {
 //    	}
 // not actually looking for any particular touch event, so could just do it here without checking
     	// what happened
-    	
-    	if (poPlayerElement.getSecondsRemaining() == 0) {
-    		poPlayerElement.startUpgrade();
-    		moPlayerElement = poPlayerElement;
-        	this.moBuildTime = (TextView) arg0;
 
-        	// setup timer
-    	    if (moSEService == null) {
-    	    	moSEService = Executors.newSingleThreadScheduledExecutor();
-	    	    moMySETask = new MySETask();
-	    	    moSEService.scheduleAtFixedRate(moMySETask,  0, 1, TimeUnit.SECONDS);
-    	    }
+    	// only do this if the element isn't currently being upgraded
+    	if (this.moItemUpgrades.get(poPlayerElement.getID()) == null) {
+    		ItemUpgrade oItemUpgrade = new ItemUpgrade(this, (TextView) arg0, poPlayerElement);
+    		moItemUpgrades.put(ItemUpgrade.getKey(poPlayerElement), oItemUpgrade);
 	    }
     }
-
-	//http://android-er.blogspot.com/2013/12/example-of-using-timer-and-timertask-on.html, and
-    //http://stackoverflow.com/questions/14315293/converting-to-scheduledthreadpoolexecutor
-    class MySETask implements Runnable {
-		@Override
-		public void run() {
-	    	final int secsRemaining = moPlayerElement.getSecondsRemaining();
-	    	if (secsRemaining == 0) {
-	    		moSEService.shutdown();
-	    		moSEService = null;
-	    	}
-	    	else runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					moBuildTime.setText(Utils.Time_ValToText(secsRemaining));
-				}
-	    	});
-		}
-    }
     
+    public void upgradeDone(long pnPlayerElementID) {
+    	// get global reference to player
+    	Player oPlayer = MyApplication.getPlayer();
+    	
+    	// get player element that's just been upgraded
+    	PlayerElement oPlayerElement = oPlayer.getPlayerElement(pnPlayerElementID);
+    	
+    	// finish upgrade increments level and other stuff
+    	oPlayerElement.finishUpgrade();
+
+    	// remove from upgrades array
+    	moItemUpgrades.delete(pnPlayerElementID);
+    	
+    	// and redraw
+    	oPlayer.forceRepopulate();
+    	GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) findViewById(R.id.layoutMain));
+    }
+
     // change the level of the selected item
     private void LevelChangeOnClickListener(TextView poTextview, int pnIncrement, ElementA poElementA) {
     	int nCurrentValue = poElementA.getLevel();

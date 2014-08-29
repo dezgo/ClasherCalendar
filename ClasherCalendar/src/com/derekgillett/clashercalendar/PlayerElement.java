@@ -64,18 +64,20 @@ public class PlayerElement {
 		}
 	}
 	
+	public void finishUpgrade() {
+		this.mdUpgradeStart = null;
+		this.mnLevel++;
+		this.update();
+	}
+	
 	public int getSecondsRemaining() {
 		if (this.mdUpgradeStart == null)
 			return 0;
 		else {
 			Date afterUpgrade = new Date(this.mdUpgradeStart.getTime() + this.getUpgradeTime()*1000);
 			Calendar c = Calendar.getInstance();
-			if (afterUpgrade.getTime() < c.getTimeInMillis()) {
-				this.mdUpgradeStart = null;
-				this.mnLevel++;
-				this.update();
+			if (afterUpgrade.getTime() < c.getTimeInMillis())
 				return 0;
-			}
 			else
 				return (int) (afterUpgrade.getTime() - c.getTimeInMillis())/1000;
 		}

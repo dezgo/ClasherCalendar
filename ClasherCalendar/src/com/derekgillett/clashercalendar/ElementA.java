@@ -26,4 +26,15 @@ public class ElementA {
 	public Element getElement() {
 		return moElement;
 	}
+
+	static public long getKey(long pnPlayerElementID, Element poElement, int pnLevel) {
+		// if a playerelementid is passed in, use that as the key (*10000) to ensure it's
+		// different to the alternate key
+		// used so that upgrading elements can get a different key and be separated
+		if (pnPlayerElementID != 0)
+			return 10000 + pnPlayerElementID;
+		else
+			return poElement.getId()*100 + pnLevel;
+	}
+	
 }

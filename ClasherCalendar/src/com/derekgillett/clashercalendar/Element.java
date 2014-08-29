@@ -27,9 +27,6 @@ public class Element {
 	private LongSparseArray<ElementData> moElementData = new LongSparseArray<ElementData>();
 
 	public Element() {
-		Log.d("Element", "Constructor");
-
-		// 1. get reference to writable DB
 		moDB = MyApplication.getDB();
 	}
 	
@@ -45,8 +42,6 @@ public class Element {
 	
 	// return the maximum level this element can be for the given TH level
 	public int getMaxLevel(int pnTHLevel) {
-		Log.d("Element", "getMaxLevel"); 
-		
 		int rtn = 0;
 		
 		Cursor cursor = moDB.rawQuery("SELECT Max(ElementLevel) FROM tblElementData WHERE ElementID = ? AND THMinLevel <= ?", 
@@ -68,8 +63,6 @@ public class Element {
 	
 	// maximum level this element can be
 	private int getMaxLevel() {
-		Log.d("Element", "getMaxLevel"); 
-		
 		int rtn = 0;
 		
 		Cursor cursor = moDB.rawQuery("SELECT Max(ElementLevel) FROM tblElementData WHERE ElementID = ?", 
@@ -126,8 +119,6 @@ public class Element {
 	}
 
 	public void updateElement(){
-		Log.d("Element", "updateElement"); 
-
 		// 2. create ContentValues to add key "column"/value
 		ContentValues values = new ContentValues();
 		values.put(Element.COLUMN_NAME, this.getName()); 
@@ -143,8 +134,6 @@ public class Element {
 	}
 
 	public void addElement() {		
-		Log.d("Element", "addElement"); 
-
 		// 2. create ContentValues to add key "column"/value
 		ContentValues values = new ContentValues();
 		values.put(Element.COLUMN_NAME, this.getName()); 
@@ -159,8 +148,6 @@ public class Element {
 	}
 
 	public void loadElement(int id){
-		Log.d("Element", "loadElement");
-		  
 		// 2. build query
 		Cursor cursor = 
 				moDB.query(TABLE_ELEMENT, // a. table
@@ -185,15 +172,9 @@ public class Element {
 			}
 			cursor.close();
 		}
-
-		//log 
-		Log.d("getElement("+id+")", this.toString());
-
 	}
 	
 	public int countElements() {
-		Log.d("Element", "countElements"); 
-		
 		int rtn = 0;
 		
 		Cursor cursor = moDB.rawQuery("SELECT count(*) FROM tblElement", null); 
