@@ -4,11 +4,15 @@ public class ElementA {
 	private Element moElement;
 	private int mnLevel;
 	private int mnQuantity;
+	private boolean mbIsPlayerElement;
+	private long mnKey;
 	
-	public ElementA(Element poElement, int pnLevel) {
-		moElement = poElement;
+	public ElementA(Element poElement, int pnLevel, boolean pbIsPlayerElement, long pnKey) {
 		mnLevel = pnLevel;
 		mnQuantity = 1;
+		moElement = poElement;
+		mbIsPlayerElement = pbIsPlayerElement;
+		mnKey = pnKey;
 	}
 	
 	public void add(int pnIncrement) {
@@ -26,7 +30,15 @@ public class ElementA {
 	public Element getElement() {
 		return moElement;
 	}
+	
+	public boolean isPlayerElement() {
+		return mbIsPlayerElement;
+	}
 
+	public long getKey() {
+		return mnKey;
+	}
+	
 	static public long getKey(long pnPlayerElementID, Element poElement, int pnLevel) {
 		// if a playerelementid is passed in, use that as the key (*10000) to ensure it's
 		// different to the alternate key

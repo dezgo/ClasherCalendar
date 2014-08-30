@@ -504,16 +504,16 @@ INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, Build
 INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (22, 6, 1000, 5000000, 691200,9);
 
 -- Town Hall
-INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 1, 1500, 0, 0, 1);
-INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 2, 1600, 1000, 300, 2);
-INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 3, 1850, 4000, 10800, 3);
-INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 4, 2100, 25000, 86400, 4);
-INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 5, 2400, 150000, 172800, 5);
-INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 6, 2800, 750000, 345600, 6);
-INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 7, 3200, 1200000, 518400, 7);
-INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 8, 3700, 2000000, 691200, 8);
-INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 9, 4200, 3000000, 864000, 9);
-INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 10, 5000, 4000000, 1209600, 10);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 1, 1500, 0, 0, 0);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 2, 1600, 1000, 300, 1);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 3, 1850, 4000, 10800, 2);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 4, 2100, 25000, 86400, 3);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 5, 2400, 150000, 172800, 4);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 6, 2800, 750000, 345600, 5);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 7, 3200, 1200000, 518400, 6);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 8, 3700, 2000000, 691200, 7);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 9, 4200, 3000000, 864000, 8);
+INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (23, 10, 5000, 4000000, 1209600, 9);
 
 -- X-Bow
 INSERT INTO tblElementData (ElementID, ElementLevel, HitPoints, BuildCost, BuildTime, THMinLevel) VALUES (24, 1, 1500, 3000000, 604800, 9);

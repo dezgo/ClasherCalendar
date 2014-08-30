@@ -1,9 +1,6 @@
 package com.derekgillett.clashercalendar;
 
 import java.text.NumberFormat;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
@@ -449,7 +446,7 @@ public class MainActivity extends ActionBarActivity {
             if (oElement.getCategory() == Utils.Category.Trap.getId() && !this.mbTrap) bExclude = true;
             
             // now if the item is excluded, update that in the players global var
-        	oPlayerElement.setExclude(bExclude);
+        	player.setExclude(oElementA, bExclude);
             if (!bExclude) {
 	            
             	// qty
@@ -508,11 +505,18 @@ public class MainActivity extends ActionBarActivity {
 	        	vwMainLayout.addView(ll);
 	        	
 	        	// element time to build
-	        	TextView tv3 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
-	        	if (oPlayerElement.isMax())
+	        	TextView tv3;
+	        	if (oPlayerElement.isMax()) {
+		        	tv3 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
 	        		tv3.setText("n/a");
-	        	else
+	        	} else {
+	        		ItemUpgrade oItemUpgrade = this.moItemUpgrades.get(oPlayerElement.getID());
+	            	if (oItemUpgrade == null)
+			        	tv3 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+	            	else
+	            		tv3 = oItemUpgrade.getTVBuildTime();
 	        		tv3.setText(Utils.Time_ValToText(oPlayerElement.getUpgradeTime()));
+	        	}
 	        	
 	        	final PlayerElement oPlayerElementFinal = oPlayerElement;
 	        	tv3.setOnTouchListener(new OnTouchListener() {
@@ -546,6 +550,9 @@ public class MainActivity extends ActionBarActivity {
     	if (this.moItemUpgrades.get(poPlayerElement.getID()) == null) {
     		ItemUpgrade oItemUpgrade = new ItemUpgrade(this, (TextView) arg0, poPlayerElement);
     		moItemUpgrades.put(ItemUpgrade.getKey(poPlayerElement), oItemUpgrade);
+    		Player player = MyApplication.getPlayer();
+    		player.forceRepopulate();
+    		this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) findViewById(R.id.layoutMain));
 	    }
     }
     

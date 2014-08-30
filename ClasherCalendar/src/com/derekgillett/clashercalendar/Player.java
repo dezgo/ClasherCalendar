@@ -90,14 +90,18 @@ public class Player {
 				int nLevel = oPlayerElement.getLevel();
 				
 				long key;
-				if (oPlayerElement.getSecondsRemaining() > 0)
+				boolean bIsPlayerElement;
+				if (oPlayerElement.getSecondsRemaining() > 0) {
+					bIsPlayerElement = true;
 					key = ElementA.getKey(oPlayerElement.getID(),null,0);
-				else
+				} else {
+					bIsPlayerElement = false;
 					key = ElementA.getKey(0,oElement,nLevel);
+				}
 				ElementA oElementA = moElementsA.get(key);
 				
 				if (oElementA == null) {
-					oElementA = new ElementA(oElement, nLevel);
+					oElementA = new ElementA(oElement, nLevel, bIsPlayerElement, key);
 					moElementsA.put(key, oElementA);
 				} else
 					oElementA.add(1);
@@ -108,12 +112,12 @@ public class Player {
 	
 	public void incPlayerElementLevel(PlayerElement poPlayerElement, int pnIncrement) {
 		junit.framework.Assert.assertTrue("increment can only be -1 or 1, not " + pnIncrement, pnIncrement == -1 || pnIncrement == 1);
-		
+/*		
 		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
 		junit.framework.Assert.assertTrue(
 				"Player.incPlayerElementLevel should only be called from MainActivity, not " + stackTraceElements[0].getClassName(),
 				stackTraceElements[0].getClassName() == "MainActivity");
-		
+	*/	
 		// only increment if we're not already at max level
 		// only decrement if we're at level > 0
 		if (((pnIncrement ==  1) && (poPlayerElement.getLevel() < poPlayerElement.getElement().getMaxLevel(this.mnTHLevel)) ||
@@ -126,6 +130,24 @@ public class Player {
 				this.moPlayerElements.get(poPlayerElement.getID()).decLevel();
 			mbRepopulateA = true;
 		}
+	}
+	
+	public void includeAll() {
+		for (int i=0; i<moPlayerElements.size(); i++) {
+			PlayerElement oPlayerElement = moPlayerElements.valueAt(i);
+			oPlayerElement.setExclude(false);
+		}
+	}
+	
+	public void setExclude(ElementA poElementA, boolean pbExclude) {
+		for (int i=0; i<moPlayerElements.size(); i++) {
+			PlayerElement oPlayerElement = moPlayerElements.valueAt(i);
+			if (poElementA.isPlayerElement() && oPlayerElement.getID() == poElementA.getKey() ||
+				!poElementA.isPlayerElement() && oPlayerElement.getElement().getId() == poElementA.getElement().getId() && 
+					oPlayerElement.getLevel() == poElementA.getLevel())
+				oPlayerElement.setExclude(pbExclude);
+		}
+		
 	}
 	
 	public long getid() {

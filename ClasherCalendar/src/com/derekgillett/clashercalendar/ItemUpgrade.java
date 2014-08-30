@@ -4,6 +4,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.widget.TextView;
 
 public class ItemUpgrade {
@@ -18,6 +21,9 @@ public class ItemUpgrade {
 	// holds list of all elements being upgraded
 	private PlayerElement moUpgradingElement;
 
+	// textview which shows buildtime countdown
+	private TextView moTVBuildTime;
+	
 	public ItemUpgrade(MainActivity poMainActivity,
 			TextView poBuildTime,
 			PlayerElement poUpgradingElement) {
@@ -29,6 +35,14 @@ public class ItemUpgrade {
 		moUpgradingElement = poUpgradingElement;
 		poUpgradingElement.startUpgrade();
 	    moSEService.scheduleAtFixedRate(moMySETask,  0, 1, TimeUnit.SECONDS);
+
+//		MyApplication.getAppContext();
+//		LayoutInflater inflater = (LayoutInflater) MyApplication.getAppContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+		moTVBuildTime = (TextView) moMainActivity.getLayoutInflater().inflate(R.layout.tv_template, null);
+	}
+	
+	public TextView getTVBuildTime() {
+		return moTVBuildTime;
 	}
 	
 	static public long getKey(PlayerElement poPlayerElement) {
@@ -45,6 +59,8 @@ public class ItemUpgrade {
     		moMainActivity.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
+					int nSecsLeft = moUpgradingElement.getSecondsRemaining();
+					Log.d("ItemUpgrade","Countdown tick: " + nSecsLeft + "secs left for lvl " + moUpgradingElement.getLevel() + " " + moUpgradingElement.getElement().getName());
 			    	if (secsRemaining <= 0) {
 			    		if (moSEService != null) {
 				    		moSEService.shutdown();

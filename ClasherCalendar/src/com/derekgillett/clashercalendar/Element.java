@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.util.LongSparseArray;
-import android.util.Log;
 
 public class Element {
 	// Element table name
@@ -19,7 +18,7 @@ public class Element {
 	private static final String[] COLUMNS = {COLUMN_ID, COLUMN_NAME, COLUMN_COSTTYPE, COLUMN_CATEGORY};
 	  
 	private SQLiteDatabase moDB;
-	private int mnID;
+	private int mnID = 0;
 	private String msElementName = "";
 	private int mnCostType;
 	private int mnCategory;
@@ -118,7 +117,7 @@ public class Element {
 		return moElementData.get(pnLevel);
 	}
 
-	public void updateElement(){
+	private void updateElement(){
 		// 2. create ContentValues to add key "column"/value
 		ContentValues values = new ContentValues();
 		values.put(Element.COLUMN_NAME, this.getName()); 
@@ -133,7 +132,7 @@ public class Element {
 
 	}
 
-	public void addElement() {		
+	private void addElement() {		
 		// 2. create ContentValues to add key "column"/value
 		ContentValues values = new ContentValues();
 		values.put(Element.COLUMN_NAME, this.getName()); 
@@ -147,7 +146,7 @@ public class Element {
 
 	}
 
-	public void loadElement(int id){
+	private void loadElement(int id){
 		// 2. build query
 		Cursor cursor = 
 				moDB.query(TABLE_ELEMENT, // a. table
@@ -161,28 +160,20 @@ public class Element {
 		 
 		// 3. if we got results get the first one
 		if (cursor != null) {
-			if (cursor.getCount() > 0) {
-				cursor.moveToFirst();
-			 
-				// 4. build element object
-				this.setId(cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0)));
-				this.setName(cursor.getString(1) == null ? "" : cursor.getString(1));
-				this.setCostType(cursor.getString(2) == null ? 0 : Integer.parseInt(cursor.getString(2)));
-				this.setCategory(cursor.getString(3) == null ? 0 : Integer.parseInt(cursor.getString(3)));
+			try {
+				if (cursor.getCount() > 0) {
+					cursor.moveToFirst();
+				 
+					// 4. build element object
+					this.setId(cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0)));
+					this.setName(cursor.getString(1) == null ? "" : cursor.getString(1));
+					this.setCostType(cursor.getString(2) == null ? 0 : Integer.parseInt(cursor.getString(2)));
+					this.setCategory(cursor.getString(3) == null ? 0 : Integer.parseInt(cursor.getString(3)));
+				}
+				cursor.close();
+			} catch (Exception e) {
+				// TODO: handle exception
 			}
-			cursor.close();
 		}
-	}
-	
-	public int countElements() {
-		int rtn = 0;
-		
-		Cursor cursor = moDB.rawQuery("SELECT count(*) FROM tblElement", null); 
-		if (cursor != null) {
-			cursor.moveToFirst();
-			rtn = cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0));
-			cursor.close();
-		}
-		return rtn;
-	}
+	}	
 }
