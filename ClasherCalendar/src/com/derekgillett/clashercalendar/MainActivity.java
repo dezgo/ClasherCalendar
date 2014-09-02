@@ -276,8 +276,6 @@ public class MainActivity extends ActionBarActivity {
 	
     @SuppressLint("InflateParams")
 	private void GetElements(View poParent, GridLayout vwMainLayout) {
-        GridLayout.LayoutParams lp;
-
         // found situations where vwMainLayout was null. definitely get outta here if
         // that happens
         if (vwMainLayout == null) return;
@@ -317,46 +315,86 @@ public class MainActivity extends ActionBarActivity {
         	Element oElement = oElementA.getElement();
         	
         	// quantity
-        	TextView tv = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
-        	tv.setText(String.valueOf(oElementA.getQuantity()));
-        	vwMainLayout.addView(tv);
-
-        	// element name
-        	tv = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
-        	tv.setText( oElement.getName());
-        	vwMainLayout.addView(tv);
-
-        	final TextView tv1 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
-            lp = new GridLayout.LayoutParams();
-            lp.setGravity(Gravity.CENTER_HORIZONTAL);
-            tv1.setLayoutParams(lp);
-        	tv1.setText("Lvl " + String.valueOf(oElementA.getLevel()));
+        	TextView tv1 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+        	tv1.setText(String.valueOf(oElementA.getQuantity()));
+        	GridLayout.LayoutParams lp1 = new GridLayout.LayoutParams();
+            lp1.setGravity(Gravity.CENTER_VERTICAL);
+            tv1.setLayoutParams(lp1);
         	vwMainLayout.addView(tv1);
 
-        	//AutoRepeatButton btn1 = (AutoRepeatButton) getLayoutInflater().inflate(R.layout.btn_template, null);
-        	AutoRepeatButton btn1 = new AutoRepeatButton(this);
-        	btn1.setText("  +  ");
-        	btn1.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					//v.performClick();
-					LevelChangeOnClickListener(tv1, 1, oElementA);
-				}
-			});
-        	vwMainLayout.addView(btn1);
+        	// element name
+        	TextView tv2 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+        	tv2.setText( oElement.getName());
+        	GridLayout.LayoutParams lp2 = new GridLayout.LayoutParams();
+            lp2.setGravity(Gravity.CENTER_VERTICAL);
+            tv2.setLayoutParams(lp2);
+        	vwMainLayout.addView(tv2);
 
-        	//Button btn2 = (Button) getLayoutInflater().inflate(R.layout.btn_template, null);
-        	AutoRepeatButton btn2 = new AutoRepeatButton(this);
-        	btn2.setText("  -  ");
-        	btn2.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					//v.performClick();
-					LevelChangeOnClickListener(tv1, -1, oElementA);
-				}
-			});
-        	vwMainLayout.addView(btn2);
-        	
+        	TextView tv3 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+        	GridLayout.LayoutParams lp3 = new GridLayout.LayoutParams();
+            lp3.setGravity(Gravity.CENTER_VERTICAL);
+            tv3.setLayoutParams(lp3);
+        	tv3.setText("Lvl " + String.valueOf(oElementA.getLevel()));
+        	vwMainLayout.addView(tv3);
+        	final TextView tv4 = tv3;
+
+        	// use this layout parameter if there's only one button
+        	GridLayout.LayoutParams lp4 = new GridLayout.LayoutParams();
+            lp4.setGravity(Gravity.CENTER);
+        	lp4.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 2);
+
+            // check if we've hit max or min level
+        	int nCurrentValue = oElementA.getLevel();
+        	boolean bMax = nCurrentValue+1 > oElementA.getElement().getMaxLevel(player.getTHLevel());
+            boolean bMin = nCurrentValue-1 < 0;
+            boolean bCentre = bMax && !bMin || !bMax && bMin;
+
+            // just in case an element level can neither be increased nor decreased, put in a blank
+            // element so the layout doesn't get mucked up
+            if (bMax && bMin) {
+            	TextView oTVMax = new TextView(this);
+            	oTVMax.setLayoutParams(lp4);
+            	oTVMax.setGravity(Gravity.CENTER);
+            	vwMainLayout.addView(oTVMax);
+            }
+            
+        	// Draw increment button (if appropriate)
+            if (!bMax) {
+	        	AutoRepeatButton btn1 = new AutoRepeatButton(this);
+	        	btn1.setText("  +  ");
+	        	btn1.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						//v.performClick();
+						LevelChangeOnClickListener(tv4, 1, oElementA);
+					}
+				});
+	        	if (bCentre) btn1.setLayoutParams(lp4);
+	        	btn1.setGravity(Gravity.CENTER);
+//	        	lp4.columnSpec = GridLayout.spec(3);
+//	        	btn1.setLayoutParams(lp4);
+	        	vwMainLayout.addView(btn1);
+            }
+
+        	// Draw decrement button (if appropriate)
+            if (!bMin) {
+	        	AutoRepeatButton btn2 = new AutoRepeatButton(this);
+	        	btn2.setText("  -  ");
+	        	btn2.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						//v.performClick();
+						LevelChangeOnClickListener(tv4, -1, oElementA);
+					}
+				});
+	        	if (bCentre) btn2.setLayoutParams(lp4);
+	        	btn2.setGravity(Gravity.CENTER);
+//	        	lp4.columnSpec = GridLayout.spec(3);
+//	        	btn2.setLayoutParams(lp4);
+	        	vwMainLayout.addView(btn2);
+	        }
+            
+            // move to next element in aggregated array
         	player.moveToNextA();
     	}
 
