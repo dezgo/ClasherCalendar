@@ -172,7 +172,7 @@ public class MainActivity extends ActionBarActivity {
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
-		Log.d("MainActivity", "Constructor"); 
+		if (Utils.DEBUG) Log.d("MainActivity", "Constructor"); 
 
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.nav_drawer);
@@ -409,14 +409,14 @@ public class MainActivity extends ActionBarActivity {
 
         // unsure if this could happen, but wanted to cover it off just in case
         if (vwMainLayout == null) {
-        	Log.d("MainActivity","Exiting GetElements_Dashboard - vwMainLayout null");
+        	if (Utils.DEBUG) Log.d("MainActivity","Exiting GetElements_Dashboard - vwMainLayout null");
         	return;
         }
         
         // clear out previous stuff first
-    	Log.d("MainActivity","Clear existing views");
+        if (Utils.DEBUG) Log.d("MainActivity","Clear existing views");
         vwMainLayout.removeAllViews();
-    	Log.d("MainActivity","Clear existing views - done");
+        if (Utils.DEBUG) Log.d("MainActivity","Clear existing views - done");
         
         // set number of columns (it might have been changed if they used the update qtys view)
         vwMainLayout.setColumnCount(6);
@@ -548,11 +548,22 @@ public class MainActivity extends ActionBarActivity {
 		        	tv3 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
 	        		tv3.setText("n/a");
 	        	} else {
+	        		if (Utils.DEBUG) Log.d("Dashboard", "Is PlayerElement " + oPlayerElement.getID() + " being upgraded?");
 	        		ItemUpgrade oItemUpgrade = this.moItemUpgrades.get(oPlayerElement.getID());
-	            	if (oItemUpgrade == null)
+	            	if (oItemUpgrade == null) {
+	            		if (Utils.DEBUG) Log.d("Dashboard", "No, or upgrades array not yet setup");
 			        	tv3 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
-	            	else
+		            	
+			        	// if this item is actually being upgraded, add it to the upgrades array now
+			        	if (oPlayerElement.getSecondsRemaining() > 0) {
+		            		ItemUpgrade itemUpgrade = new ItemUpgrade(this, tv3, oPlayerElement);
+		            		this.moItemUpgrades.put(oPlayerElement.getID(), itemUpgrade);
+		            	}
+		        		
+	            	} else {
+	            		if (Utils.DEBUG) Log.d("Dashboard", "Yes - get textview from upgrades array");
 	            		tv3 = oItemUpgrade.getTVBuildTime();
+	            	}
 	        		tv3.setText(Utils.Time_ValToText(oPlayerElement.getUpgradeTime()));
 	        	}
 	        	

@@ -289,7 +289,7 @@ public class Player {
 			PlayerElement oPlayerElement = moPlayerElements.get(key);
 			int nUpgradeTime = oPlayerElement.getUpgradeTimeMax();
 			nUpgradeTimeTotal = nUpgradeTimeTotal + nUpgradeTime;
-			if (nUpgradeTime > 0) Log.d("Player", "Upgrade time: " + oPlayerElement.getElement().getName() + " lvl " + oPlayerElement.getLevel() + 
+			if (nUpgradeTime > 0 && Utils.DEBUG) Log.d("Player", "Upgrade time: " + oPlayerElement.getElement().getName() + " lvl " + oPlayerElement.getLevel() + 
 					" " + nUpgradeTime);
 		}
 		return nUpgradeTimeTotal;

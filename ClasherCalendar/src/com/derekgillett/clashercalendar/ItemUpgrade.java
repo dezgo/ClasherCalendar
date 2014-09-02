@@ -13,9 +13,6 @@ public class ItemUpgrade {
 	private ScheduledExecutorService moSEService;
 	private MySETask moMySETask;
 
-	// holds textview showing the countdown time
-	private TextView moBuildTime;
-	
 	// holds list of all elements being upgraded
 	private PlayerElement moUpgradingElement;
 
@@ -29,7 +26,7 @@ public class ItemUpgrade {
 		moMainActivity = poMainActivity;
 		moSEService = Executors.newSingleThreadScheduledExecutor();
 	    moMySETask = new MySETask();
-		moBuildTime = poBuildTime;
+		moTVBuildTime = poBuildTime;
 		moUpgradingElement = poUpgradingElement;
 		poUpgradingElement.startUpgrade();
 	    moSEService.scheduleAtFixedRate(moMySETask,  0, 1, TimeUnit.SECONDS);
@@ -58,7 +55,7 @@ public class ItemUpgrade {
 				@Override
 				public void run() {
 					int nSecsLeft = moUpgradingElement.getSecondsRemaining();
-					Log.d("ItemUpgrade","Countdown tick: " + nSecsLeft + "secs left for lvl " + moUpgradingElement.getLevel() + " " + moUpgradingElement.getElement().getName());
+					if (Utils.DEBUG) Log.d("ItemUpgrade","Countdown tick: " + nSecsLeft + "secs left for lvl " + moUpgradingElement.getLevel() + " " + moUpgradingElement.getElement().getName());
 			    	if (secsRemaining <= 0) {
 			    		if (moSEService != null) {
 				    		moSEService.shutdown();
@@ -66,7 +63,7 @@ public class ItemUpgrade {
 				    		moMainActivity.upgradeDone(moUpgradingElement.getID());
 				    	}
 			    	} else
-			    		moBuildTime.setText(Utils.Time_ValToText(secsRemaining));
+			    		moTVBuildTime.setText(Utils.Time_ValToText(secsRemaining));
 				}
     		});
 		}

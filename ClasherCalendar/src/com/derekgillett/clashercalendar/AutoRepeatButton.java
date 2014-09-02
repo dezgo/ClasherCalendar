@@ -54,7 +54,7 @@ public class AutoRepeatButton extends Button {
                     // Cancel any repetition in progress.
                     removeCallbacks(repeatClickWhileButtonHeldRunnable);
                 } else
-                	Log.d("AutoRepeatButton", "unhandled action: " + action);
+                	if (Utils.DEBUG) Log.d("AutoRepeatButton", "unhandled action: " + action);
 
                 // Returning true here prevents performClick() from getting called
                 // in the usual manner, which would be redundant, given that we are

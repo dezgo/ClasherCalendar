@@ -127,7 +127,7 @@ public class StartActivity extends ActionBarActivity {
 	}
 	
     private void createTHSpinner() {
-		Log.d("MainActivity", "createTHSpinner"); 
+    	if (Utils.DEBUG) Log.d("MainActivity", "createTHSpinner"); 
 
         // get reference to spinner
         Spinner spinner = (Spinner) this.findViewById(R.id.spTHLevel);

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 
 public class Utils {
+	static public boolean DEBUG = true;
 	static private ProgressDialog dialog;
 	
 	static public enum CostType {

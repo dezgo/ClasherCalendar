@@ -12,7 +12,7 @@ public class MyApplication extends Application{
 	private static Players players;
 
     public void onCreate(){
-        Log.d(MyApplication.class.getName(), "onCreate");
+    	if (Utils.DEBUG) Log.d(MyApplication.class.getName(), "onCreate");
 
         super.onCreate();
         MyApplication.context = getApplicationContext();
