@@ -1,6 +1,7 @@
 package com.derekgillett.clashercalendar;
 
 import java.text.NumberFormat;
+import java.util.HashMap;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
@@ -11,7 +12,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.NavUtils;
-import android.support.v4.util.LongSparseArray;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -35,7 +35,8 @@ import android.widget.Toast;
 public class MainActivity extends ActionBarActivity {
 	
 	// holds list of all textviews showing the countdown times
-	private LongSparseArray<ItemUpgrade> moItemUpgrades = new LongSparseArray<ItemUpgrade>();
+	@SuppressLint("UseSparseArrays")
+	private HashMap<Long, ItemUpgrade> moItemUpgrades = new HashMap<Long, ItemUpgrade>();
 
     private DrawerLayout mDrawerLayout;
     private GridLayout mDrawerList;
@@ -616,7 +617,7 @@ public class MainActivity extends ActionBarActivity {
     	oPlayerElement.finishUpgrade();
 
     	// remove from upgrades array
-    	moItemUpgrades.delete(pnPlayerElementID);
+    	moItemUpgrades.remove(pnPlayerElementID);
     	
     	// and redraw
     	oPlayer.forceRepopulate();

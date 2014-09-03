@@ -1,5 +1,14 @@
 package com.derekgillett.clashercalendar;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.v4.util.LongSparseArray;
@@ -19,7 +28,9 @@ public class Player {
 	private LongSparseArray<PlayerElement> moPlayerElements = new LongSparseArray<PlayerElement>();
 
 	// aggregated player elements where items with same element id and level are grouped together
-	private LongSparseArray<ElementA> moElementsA = new LongSparseArray<ElementA>();
+	@SuppressLint("UseSparseArrays")
+	private HashMap<Long, ElementA> moElementsA = new HashMap<Long, ElementA>();
+	private Iterator<Entry<Long, ElementA>> moElementsAIterator;
 	
 	private int mnIndex = 0;
 	private int mnIndexA = 0;
@@ -108,6 +119,7 @@ public class Player {
 			}
 		}
 		mbRepopulateA = false;
+		moElementsAIterator = this.moElementsA.entrySet().iterator();
 	}
 	
 	public void incPlayerElementLevel(PlayerElement poPlayerElement, int pnIncrement) {
@@ -232,10 +244,12 @@ public class Player {
 		return playerElement;
 	}
 	
+	// as per http://stackoverflow.com/questions/1066589/java-iterate-through-hashmap
 	public ElementA getElementA() {
 		ElementA oElementA = null;
-		if (mnIndexA <= moElementsA.size() ) {
-			oElementA = moElementsA.get(moElementsA.keyAt(mnIndexA));
+		if (moElementsAIterator.hasNext()) {
+			oElementA = (ElementA) moElementsAIterator.next();
+			moElementsAIterator.remove(); // avoids a ConcurrentModificationException
 		}
 		return oElementA;
 	}
@@ -243,6 +257,17 @@ public class Player {
 	public void setExclude(long key, boolean pbExclude) {
 		PlayerElement playerElement = moPlayerElements.get(key);
 		playerElement.setExclude(pbExclude);
+	}
+	
+	// thanks to http://stackoverflow.com/questions/780541/how-to-sort-a-hashmap-in-java
+	public void sort() {
+		List<ElementA> oElementsByName = new ArrayList<ElementA>(this.moElementsA.values());
+		Collections.sort(this.moElementsA, new Comparator<ElementA>() {
+			@Override
+			public int compare(ElementA arg0, ElementA arg1) {
+				return arg0.getElement().getName().compareTo(arg1.getElement().getName());
+			}
+		});
 	}
 	
 	// for a newly created player, add in the default buildings that come with the given TH level
