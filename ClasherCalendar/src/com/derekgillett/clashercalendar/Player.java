@@ -3,12 +3,8 @@ package com.derekgillett.clashercalendar;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
+import java.util.TreeMap;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.v4.util.LongSparseArray;
@@ -28,9 +24,11 @@ public class Player {
 	private LongSparseArray<PlayerElement> moPlayerElements = new LongSparseArray<PlayerElement>();
 
 	// aggregated player elements where items with same element id and level are grouped together
-	@SuppressLint("UseSparseArrays")
-	private HashMap<Long, ElementA> moElementsA = new HashMap<Long, ElementA>();
-	private Iterator<Entry<Long, ElementA>> moElementsAIterator;
+	//private LongSparseArray<ElementA> moElementsA1 = new LongSparseArray<ElementA>();
+	// and a matching treeset for sortingO
+	private TreeMap<Long, ElementA> moElementsA = new TreeMap<Long, ElementA>();
+	//private Iterator<Entry<Long, ElementA>> moElementsAIterator;
+	private ArrayList<ElementA> moElementsASorted;
 	
 	private int mnIndex = 0;
 	private int mnIndexA = 0;
@@ -119,7 +117,9 @@ public class Player {
 			}
 		}
 		mbRepopulateA = false;
-		moElementsAIterator = this.moElementsA.entrySet().iterator();
+		moElementsASorted = new ArrayList<ElementA>(this.moElementsA.values());
+		//this.sortByName(true);
+		this.sortByCost(true);
 	}
 	
 	public void incPlayerElementLevel(PlayerElement poPlayerElement, int pnIncrement) {
@@ -181,10 +181,11 @@ public class Player {
 		moPlayerElements.put(poPlayerElement.getID(), poPlayerElement);
 	}
 	
+	/*
 	private long getKeyA(Element poElement, int pnLevel) {
 		return poElement.getId() * 100 + pnLevel;
 	}
-	
+	*/
 	public PlayerElement getPlayerElement(long pnPlayerElementID) {
 		return moPlayerElements.get(pnPlayerElementID);
 	}
@@ -204,12 +205,14 @@ public class Player {
 			return null;
 	}
 	
+	/*
 	public ElementA getElementA(Element poElement, int pnLevel) {
 		if (mbRepopulateA) this.populateElementsA();
 		
 		long key = getKeyA(poElement, pnLevel);
 		return moElementsA.get(key);
 	}
+	*/
 	
 	public void moveToFirst() {
 		this.mnIndex = 0;
@@ -247,10 +250,26 @@ public class Player {
 	// as per http://stackoverflow.com/questions/1066589/java-iterate-through-hashmap
 	public ElementA getElementA() {
 		ElementA oElementA = null;
+
+		/*
+		if (this.mnIndexA < this.moElementsA.size()) {
+			oElementA = this.moElementsA.valueAt(mnIndexA);
+			this.mnIndexA++;
+		}*/
+		
+		if (this.mnIndexA < this.moElementsASorted.size()) {
+			oElementA = this.moElementsASorted.get(mnIndexA);
+			this.mnIndexA++;
+		}
+		
+		/*
+		// do this if using an iterator
 		if (moElementsAIterator.hasNext()) {
 			oElementA = (ElementA) moElementsAIterator.next();
 			moElementsAIterator.remove(); // avoids a ConcurrentModificationException
 		}
+		*/
+				
 		return oElementA;
 	}
 	
@@ -260,12 +279,37 @@ public class Player {
 	}
 	
 	// thanks to http://stackoverflow.com/questions/780541/how-to-sort-a-hashmap-in-java
-	public void sort() {
-		List<ElementA> oElementsByName = new ArrayList<ElementA>(this.moElementsA.values());
-		Collections.sort(this.moElementsA, new Comparator<ElementA>() {
+	public void sortByName(final boolean pbAscending) {
+		moElementsASorted = new ArrayList<ElementA>(this.moElementsA.values());
+		Collections.sort(moElementsASorted, new Comparator<ElementA>() {
 			@Override
 			public int compare(ElementA arg0, ElementA arg1) {
-				return arg0.getElement().getName().compareTo(arg1.getElement().getName());
+				if (pbAscending)
+					return arg0.getElement().getName().compareTo(arg1.getElement().getName());
+				else
+					return arg1.getElement().getName().compareTo(arg0.getElement().getName());
+			}
+		});
+	}
+	
+	public void sortByCost(final boolean pbAscending) {
+		moElementsASorted = new ArrayList<ElementA>(this.moElementsA.values());
+		Collections.sort(moElementsASorted, new Comparator<ElementA>() {
+			@Override
+			public int compare(ElementA arg0, ElementA arg1) {
+				Element oElement0 = arg0.getElement();
+				if (oElement0 == null) { Log.d("Player", "oElement0 is null!"); return 1; }
+				Element oElement1 = arg1.getElement();
+				if (oElement1 == null) { Log.d("Player", "oElement1 is null!"); return 1; }
+				
+				ElementData oElementData0 = oElement0.getElementData(arg0.getLevel());
+				if (oElementData0 == null) { Log.d("Player", oElement0.getName() + ": oElementData0 is null!"); return 1; }
+				ElementData oElementData1 = oElement1.getElementData(arg1.getLevel());
+				if (oElementData1 == null) { Log.d("Player", oElement1.getName() + ": oElementData1 is null!"); return 1; }
+				if (pbAscending)
+					return oElementData0.getBuildCost() - oElementData1.getBuildCost();
+				else
+					return oElementData1.getBuildCost() - oElementData0.getBuildCost();
 			}
 		});
 	}

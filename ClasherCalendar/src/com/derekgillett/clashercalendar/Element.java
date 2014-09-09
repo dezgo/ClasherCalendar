@@ -1,6 +1,5 @@
 package com.derekgillett.clashercalendar;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.util.LongSparseArray;
@@ -117,6 +116,7 @@ public class Element {
 		return moElementData.get(pnLevel);
 	}
 
+	/*
 	private void updateElement(){
 		// 2. create ContentValues to add key "column"/value
 		ContentValues values = new ContentValues();
@@ -131,7 +131,8 @@ public class Element {
 				new String[] { String.valueOf(this.getId()) }); // d. selections args
 
 	}
-
+*/
+	/*
 	private void addElement() {		
 		// 2. create ContentValues to add key "column"/value
 		ContentValues values = new ContentValues();
@@ -145,7 +146,8 @@ public class Element {
 				values); // key/value -> keys = column names/ values = column values
 
 	}
-
+*/
+	
 	private void loadElement(int id){
 		// 2. build query
 		Cursor cursor = 
