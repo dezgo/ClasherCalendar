@@ -185,7 +185,7 @@ public class PlayerElement {
 		values.put(this.COLUMN_ELEMENTID, moElement.getId());
 		if (this.mdUpgradeStart != null)
 			values.put(this.COLUMN_UPGRADESTART, this.mdUpgradeStart.getTime()/1000);
-		MyApplication.getDB().update(TABLE_NAME,values, 
+		Globals.INSTANCE.getDB().update(TABLE_NAME,values, 
 				COLUMN_ID + " = ?", new String[] { String.valueOf(mnPlayerElementID) });
 	}
 
@@ -196,7 +196,7 @@ public class PlayerElement {
 		values.put(this.COLUMN_PLAYERID, this.moPlayer.getid());
 		if (this.mdUpgradeStart != null) 
 			values.put(this.COLUMN_UPGRADESTART, this.mdUpgradeStart.getTime()/1000);
-		mnPlayerElementID = MyApplication.getDB().insert(TABLE_NAME,  null,  values);
+		mnPlayerElementID = Globals.INSTANCE.getDB().insert(TABLE_NAME,  null,  values);
 		return mnPlayerElementID != 0;
 	}
 }

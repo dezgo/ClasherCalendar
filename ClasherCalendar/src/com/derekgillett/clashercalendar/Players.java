@@ -51,7 +51,7 @@ public class Players {
 	}
 	
 	private void select() {
-		Cursor cursor = MyApplication.getDB().query(this.TABLE_NAME, this.ALL_COLUMNS, null, null, null, null, null);
+		Cursor cursor = Globals.INSTANCE.getDB().query(this.TABLE_NAME, this.ALL_COLUMNS, null, null, null, null, null);
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {

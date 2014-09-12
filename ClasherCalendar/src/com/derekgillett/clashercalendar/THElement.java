@@ -11,7 +11,7 @@ public class THElement {
 	private int mnQuantity;
 
 	public THElement(int pnTHLevel, int pnElementID, int pnQuantity) {
-		moDB = MyApplication.getDB();
+		moDB = Globals.INSTANCE.getDB();
 		
 		mnTHLevel = pnTHLevel;
 		moElement = new Element(pnElementID);

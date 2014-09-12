@@ -25,7 +25,7 @@ public class Element {
 	private LongSparseArray<ElementData> moElementData = new LongSparseArray<ElementData>();
 
 	public Element() {
-		moDB = MyApplication.getDB();
+		moDB = Globals.INSTANCE.getDB();
 	}
 	
 	public Element(int id) {

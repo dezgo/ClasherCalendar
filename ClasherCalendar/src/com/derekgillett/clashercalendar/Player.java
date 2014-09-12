@@ -37,7 +37,7 @@ public class Player {
 		mnPlayerID = pnPlayerID;
 		this.select();
 		this.LoadExisting();
-        MyApplication.setPlayer(this);
+		Globals.INSTANCE.setPlayer(this);
 	}
 	
 	public Player(int pnTHLevel, String psVillageName) {
@@ -45,7 +45,7 @@ public class Player {
 		msVillageName = psVillageName;
 		this.insert();
 		LoadDefaults();
-        MyApplication.setPlayer(this);
+		Globals.INSTANCE.setPlayer(this);
 	}
 	
 	public String getVillageName() {
@@ -119,7 +119,7 @@ public class Player {
 		mbRepopulateA = false;
 		moElementsASorted = new ArrayList<ElementA>(this.moElementsA.values());
 		//this.sortByName(true);
-		this.sortByCost(true);
+		//this.sortByCost(true);
 	}
 	
 	public void incPlayerElementLevel(PlayerElement poPlayerElement, int pnIncrement) {
@@ -259,7 +259,7 @@ public class Player {
 		
 		if (this.mnIndexA < this.moElementsASorted.size()) {
 			oElementA = this.moElementsASorted.get(mnIndexA);
-			this.mnIndexA++;
+			//this.mnIndexA++;
 		}
 		
 		/*
@@ -337,7 +337,7 @@ public class Player {
 		String[] selectionArgs = new String[] { String.valueOf(mnPlayerID) };
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_ID, mnPlayerID);
-		Cursor cursor = MyApplication.getDB().query("tblPlayerElement", new String[] {"PlayerElementID"}, "PlayerID = ?", selectionArgs, null, null, null);
+		Cursor cursor = Globals.INSTANCE.getDB().query("tblPlayerElement", new String[] {"PlayerElementID"}, "PlayerID = ?", selectionArgs, null, null, null);
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
@@ -382,9 +382,9 @@ public class Player {
 	public void delete() {
 		// cheeky reference to PlayerElement table here
 		// didn't want to implement a delete method over there when it's only used here
-		MyApplication.getDB().delete("tblPlayerElement", 
+		Globals.INSTANCE.getDB().delete("tblPlayerElement", 
 				COLUMN_ID + " = ?", new String[] { String.valueOf(mnPlayerID) });
-		MyApplication.getDB().delete(TABLE_NAME, 
+		Globals.INSTANCE.getDB().delete(TABLE_NAME, 
 				COLUMN_ID + " = ?", new String[] { String.valueOf(mnPlayerID) });
 	}
 
@@ -392,7 +392,7 @@ public class Player {
 		ContentValues values = new ContentValues();
 		values.put(this.COLUMN_VILLAGENAME, msVillageName);
 		values.put(this.COLUMN_THLEVEL, mnTHLevel);
-		MyApplication.getDB().update(TABLE_NAME,values, 
+		Globals.INSTANCE.getDB().update(TABLE_NAME,values, 
 				COLUMN_ID + " = ?", new String[] { String.valueOf(mnPlayerID) });
 	}
 
@@ -400,13 +400,13 @@ public class Player {
 		ContentValues values = new ContentValues();
 		values.put("VillageName", msVillageName);
 		values.put("THLevel", mnTHLevel);
-		mnPlayerID = MyApplication.getDB().insert("tblPlayer",  null,  values);
+		mnPlayerID = Globals.INSTANCE.getDB().insert("tblPlayer",  null,  values);
 		return mnPlayerID != 0;
 	}
 	
 	private void select() {
 		String[] selectionArgs = new String[] { String.valueOf(mnPlayerID) };
-		Cursor cursor = MyApplication.getDB().query(this.TABLE_NAME, this.ALL_COLUMNS, COLUMN_ID + " = ?", selectionArgs, null, null, null);
+		Cursor cursor = Globals.INSTANCE.getDB().query(this.TABLE_NAME, this.ALL_COLUMNS, COLUMN_ID + " = ?", selectionArgs, null, null, null);
 		if (cursor != null) {
 			cursor.moveToFirst();
 			this.msVillageName = cursor.getString(1) == null ? "" : cursor.getString(1);

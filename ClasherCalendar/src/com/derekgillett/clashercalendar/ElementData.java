@@ -14,7 +14,7 @@ public class ElementData {
 	private int mnTHMinLevel = 0;
 	
 	public ElementData(Element poElement, int pnElementLevel) {
-		moDB = MyApplication.getDB();
+		moDB = Globals.INSTANCE.getDB();
 
 		mnElementLevel = pnElementLevel;
 		moElement = poElement;

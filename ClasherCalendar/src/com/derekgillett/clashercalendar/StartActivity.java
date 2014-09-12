@@ -66,11 +66,11 @@ public class StartActivity extends ActionBarActivity {
 	}
 	
 	private void getPlayers() {
-		MyApplication.setPlayers(new Players());
+		Globals.INSTANCE.setPlayers(new Players());
 	}
 	
 	private void drawPlayers() {
-		Players players = MyApplication.getPlayers();
+		Players players = Globals.INSTANCE.getPlayers();
 		Player player;
 		LinearLayout ll = (LinearLayout) this.findViewById(R.id.layout_existing_players);
 		
@@ -86,7 +86,7 @@ public class StartActivity extends ActionBarActivity {
 			button.setOnClickListener(new View.OnClickListener() {				
 				@Override
 				public void onClick(View v) {
-					MyApplication.setPlayer(player1);
+					Globals.INSTANCE.setPlayer(player1);
 					GoToMain_(true);
 				}
 			});

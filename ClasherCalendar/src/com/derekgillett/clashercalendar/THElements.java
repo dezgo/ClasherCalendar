@@ -14,7 +14,7 @@ public class THElements {
 		int nElementID;
 		int nQuantity;
 
-		moDB = MyApplication.getDB();
+		moDB = Globals.INSTANCE.getDB();
 		Cursor cursor = moDB.rawQuery("SELECT ElementID,Quantity FROM tblTHElement WHERE THLevel = ?",
 				new String[] { String.valueOf(pnLevel) }); 
 		if (cursor != null) {

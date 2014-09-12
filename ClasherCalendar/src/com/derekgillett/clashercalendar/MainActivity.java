@@ -92,7 +92,7 @@ public class MainActivity extends ActionBarActivity {
 	        	this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) this.findViewById(R.id.layoutMain));
 	        	return true;
 	        case R.id.action_inc_th_level:
-	        	MyApplication.getPlayer().incTHLevel();
+	        	Globals.INSTANCE.getPlayer().incTHLevel();
 	        	this.initialSetup(findViewById(R.id.rlMain));
 //	        	this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) this.findViewById(R.id.layoutMain));
 	        	return true;
@@ -269,8 +269,8 @@ public class MainActivity extends ActionBarActivity {
         Toast.makeText(this, 
                 "Delete current player",
                 Toast.LENGTH_LONG).show();
-        MyApplication.getPlayer().delete();
-        MyApplication.setPlayer(null);
+        Globals.INSTANCE.getPlayer().delete();
+        Globals.INSTANCE.setPlayer(null);
 		Intent intent = new Intent(this, StartActivity.class);
 		startActivity(intent);
 	}
@@ -288,7 +288,7 @@ public class MainActivity extends ActionBarActivity {
         vwMainLayout.setColumnCount(5);
 
         // get player elements, and check it's not null
-        Player player = MyApplication.getPlayer();
+        Player player = Globals.INSTANCE.getPlayer();
         junit.framework.Assert.assertNotNull("MyApplication.getPlayerElements() global variable null!", player);
 /*
     	TextView tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
@@ -423,7 +423,7 @@ public class MainActivity extends ActionBarActivity {
         vwMainLayout.setColumnCount(6);
 
         // get player elements, and check it's not null
-        Player player = MyApplication.getPlayer();
+        Player player = Globals.INSTANCE.getPlayer();
         junit.framework.Assert.assertNotNull("MyApplication.getPlayerElements() global variable null!", player);
 
     	// quantity
@@ -600,7 +600,7 @@ public class MainActivity extends ActionBarActivity {
     	if (this.moItemUpgrades.get(poPlayerElement.getID()) == null) {
     		ItemUpgrade oItemUpgrade = new ItemUpgrade(this, (TextView) arg0, poPlayerElement);
     		moItemUpgrades.put(ItemUpgrade.getKey(poPlayerElement), oItemUpgrade);
-    		Player player = MyApplication.getPlayer();
+    		Player player = Globals.INSTANCE.getPlayer();
     		player.forceRepopulate();
     		this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) findViewById(R.id.layoutMain));
 	    }
@@ -608,7 +608,7 @@ public class MainActivity extends ActionBarActivity {
     
     public void upgradeDone(long pnPlayerElementID) {
     	// get global reference to player
-    	Player oPlayer = MyApplication.getPlayer();
+    	Player oPlayer = Globals.INSTANCE.getPlayer();
     	
     	// get player element that's just been upgraded
     	PlayerElement oPlayerElement = oPlayer.getPlayerElement(pnPlayerElementID);
@@ -629,7 +629,7 @@ public class MainActivity extends ActionBarActivity {
     	int nCurrentValue = poElementA.getLevel();
     	int nNewValue = nCurrentValue + pnIncrement;
     	
-        Player player = MyApplication.getPlayer();
+        Player player = Globals.INSTANCE.getPlayer();
         if (nNewValue >= 0 && nNewValue <= poElementA.getElement().getMaxLevel(player.getTHLevel())) {
         	long nElementID = poElementA.getElement().getId();
         	PlayerElement oPlayerElement = player.getPlayerElement(nElementID,poElementA.getLevel());
@@ -643,7 +643,7 @@ public class MainActivity extends ActionBarActivity {
     private void initialSetup(View poView) {
         // set title
         TextView tvTitle = (TextView) poView.findViewById(R.id.tvTitle);
-        Player player = MyApplication.getPlayer();
+        Player player = Globals.INSTANCE.getPlayer();
         tvTitle.setText(player.getVillageName() + "'s Village (Townhall " + player.getTHLevel() + ")");
         
         // show total upgrade time remaining
