@@ -576,7 +576,7 @@ public class MainActivity extends ActionBarActivity {
 						onTouchHandler(arg0, oPlayerElementFinal);
 						return false;
 					} });
-	        	vwMainLayout.addView(tv3);
+	        	if (tv3.getParent() == null) vwMainLayout.addView(tv3);
             }
 
         	// move to the next player element in the player object

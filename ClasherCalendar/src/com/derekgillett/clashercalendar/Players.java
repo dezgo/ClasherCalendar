@@ -38,6 +38,10 @@ public class Players {
 		mnIndex++;
 	}
 	
+	public boolean IsAfterLast() {
+		return mnIndex >= moPlayers.size();
+	}
+	
 	public Player getPlayer() {
 		Player player = null;
 		if (mnIndex <= moPlayers.size() ) {
