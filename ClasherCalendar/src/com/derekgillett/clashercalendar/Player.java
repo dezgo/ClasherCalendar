@@ -323,9 +323,13 @@ public class Player {
         	for (int j=0; j<thElement.getQuantity(); j++) {
         		// for each element, add it assuming player has maxed out buildings at previous level
         		// for level 1, assume all buildings are level 0 (not built yet)
+        		// EXCEPTION: make townhall level = mnTHLevel
         		int nLevel = 0;
         		Element oElement = thElement.getElement();
-        		if (mnTHLevel > 1) nLevel = oElement.getMaxLevel(mnTHLevel-1);
+        		if (oElement.getName().equals("Town Hall")) 
+        			nLevel = mnTHLevel;
+        		else
+        			if (mnTHLevel > 1) nLevel = oElement.getMaxLevel(mnTHLevel-1);
         		this.addPlayerElement(oElement, nLevel);
         	}
         	oTHElements.moveToNext();

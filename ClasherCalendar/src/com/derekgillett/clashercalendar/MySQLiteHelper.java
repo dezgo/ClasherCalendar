@@ -12,7 +12,7 @@ import android.util.Log;
 public class MySQLiteHelper extends SQLiteOpenHelper {
 
   private static final String DATABASE_NAME = "ClasherCalendar.db";
-  private static final int DATABASE_VERSION = 3;
+  private static final int DATABASE_VERSION = 4;
 
   private static void execInitSQL(SQLiteDatabase database, String fileName) {
 	  InputStream inputStream;

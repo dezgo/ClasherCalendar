@@ -43,4 +43,8 @@ public class PlayerActions extends TestCase {
 		PlayerElement oPlayerElement = moPlayer.getPlayerElement();
 		oPlayerElement.startUpgrade();
 	}
+	
+	public void testOrderByName() {
+		moPlayer.sortByName(true);
+	}
 }
