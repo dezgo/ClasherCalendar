@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -11,6 +12,9 @@ import android.util.Log;
 
 public class MySQLiteHelper extends SQLiteOpenHelper {
 
+	// tag used when logging
+  private static final String TAG = "MySQLiteHelper";
+  
   private static final String DATABASE_NAME = "ClasherCalendar.db";
   private static final int DATABASE_VERSION = 4;
 
@@ -57,8 +61,60 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
   @Override
   public void onCreate(SQLiteDatabase database) {
-    Log.w(MySQLiteHelper.class.getName(), "Creating database");
-    execInitSQL(database, "ddl.sql");
+    if (Utils.DEBUG) Log.w(MySQLiteHelper.class.getName(), "Creating database");
+    
+	ClasherDBContract.ClasherCostType.createTable(database);
+	long nCostTypeGold = ClasherDBContract.ClasherCostType.insert(database, "Gold");
+	long nCostTypeElixir = ClasherDBContract.ClasherCostType.insert(database, "Elixir");
+	long nCostTypeDarkElixir = ClasherDBContract.ClasherCostType.insert(database, "Dark Elixir");
+	long nCostTypeGems = ClasherDBContract.ClasherCostType.insert(database, "Gems");
+	
+	ClasherDBContract.ClasherCategory.createTable(database);
+	long nCategoryDefence = ClasherDBContract.ClasherCategory.insert(database, "Defence");
+	long nCategoryResource = ClasherDBContract.ClasherCategory.insert(database, "Resource");
+	long nCategoryArmy = ClasherDBContract.ClasherCategory.insert(database, "Army");
+	long nCategoryOther = ClasherDBContract.ClasherCategory.insert(database, "Other");
+	long nCategoryTrap = ClasherDBContract.ClasherCategory.insert(database, "Trap");
+
+	ClasherDBContract.ClasherElement.createTable(database);
+	
+	//traps
+	ClasherDBContract.ClasherElement.insert(database, "Air Bomb", nCategoryTrap, nCostTypeGold);
+	ClasherDBContract.ClasherElement.insert(database, "Bomb", nCategoryTrap, nCostTypeGold);
+	ClasherDBContract.ClasherElement.insert(database, "Giant Bomb", nCategoryTrap, nCostTypeGold);
+	ClasherDBContract.ClasherElement.insert(database, "Seeking Air Mine", nCategoryTrap, nCostTypeGold);
+	ClasherDBContract.ClasherElement.insert(database, "Spring Trap", nCategoryTrap, nCostTypeGold);
+
+	//defence
+	ClasherDBContract.ClasherElement.insert(database, "Air Defence", nCategoryDefence, nCostTypeGold);
+	ClasherDBContract.ClasherElement.insert(database, "Archer Tower", nCategoryDefence, nCostTypeGold);
+	ClasherDBContract.ClasherElement.insert(database, "Canon", nCategoryDefence, nCostTypeGold);
+	ClasherDBContract.ClasherElement.insert(database, "Hidden Tesla", nCategoryDefence, nCostTypeGold);
+	ClasherDBContract.ClasherElement.insert(database, "Mortar", nCategoryDefence, nCostTypeGold);
+	ClasherDBContract.ClasherElement.insert(database, "Wizard Tower", nCategoryDefence, nCostTypeGold);
+	ClasherDBContract.ClasherElement.insert(database, "X-Bow", nCategoryDefence, nCostTypeGold);
+	ClasherDBContract.ClasherElement.insert(database, "Wall", nCategoryDefence, nCostTypeGold);
+	ClasherDBContract.ClasherElement.insert(database, "Inferno Tower", nCategoryDefence, nCostTypeGold);
+
+	//resource
+	ClasherDBContract.ClasherElement.insert(database, "Dark Elixir Storage", nCategoryResource, nCostTypeGold);
+	ClasherDBContract.ClasherElement.insert(database, "Elixir Collector", nCategoryResource, nCostTypeGold);
+	ClasherDBContract.ClasherElement.insert(database, "Elixir Storage", nCategoryResource, nCostTypeGold);
+	ClasherDBContract.ClasherElement.insert(database, "Gold Mine", nCategoryResource, nCostTypeElixir);
+	ClasherDBContract.ClasherElement.insert(database, "Gold Storage", nCategoryResource, nCostTypeElixir);
+	ClasherDBContract.ClasherElement.insert(database, "Dark Elixir Drill", nCategoryResource, nCostTypeElixir);
+	ClasherDBContract.ClasherElement.insert(database, "Builder's Hut", nCategoryResource, nCostTypeGems);
+
+	database.execSQL(ClasherDBContract.ClasherElementData.SQL_DROP_TABLE);
+	database.execSQL(ClasherDBContract.ClasherElementData.SQL_CREATE_TABLE);
+	database.execSQL(ClasherDBContract.ClasherPlayer.SQL_DROP_TABLE);
+	database.execSQL(ClasherDBContract.ClasherPlayer.SQL_CREATE_TABLE);
+	database.execSQL(ClasherDBContract.ClasherPlayerElement.SQL_DROP_TABLE);
+	database.execSQL(ClasherDBContract.ClasherPlayerElement.SQL_CREATE_TABLE);
+	database.execSQL(ClasherDBContract.ClasherTHElement.SQL_DROP_TABLE);
+	database.execSQL(ClasherDBContract.ClasherTHElement.SQL_CREATE_TABLE);
+    
+    //execInitSQL(database, "ddl.sql");
     Log.w(MySQLiteHelper.class.getName(), "Populating database");
     execInitSQL(database, "dml.sql");
   }
