@@ -105,6 +105,19 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	ClasherDBContract.ClasherElement.insert(database, "Dark Elixir Drill", nCategoryResource, nCostTypeElixir);
 	ClasherDBContract.ClasherElement.insert(database, "Builder's Hut", nCategoryResource, nCostTypeGems);
 
+	//army
+	ClasherDBContract.ClasherElement.insert(database, "Army Camp", nCategoryArmy, nCostTypeElixir);
+	ClasherDBContract.ClasherElement.insert(database, "Barracks", nCategoryArmy, nCostTypeElixir);
+	ClasherDBContract.ClasherElement.insert(database, "Dark Barracks", nCategoryArmy, nCostTypeElixir);
+	ClasherDBContract.ClasherElement.insert(database, "Laboratory", nCategoryArmy, nCostTypeElixir);
+	ClasherDBContract.ClasherElement.insert(database, "Spell Factory", nCategoryArmy, nCostTypeElixir);
+	ClasherDBContract.ClasherElement.insert(database, "Barbarian King Alter", nCategoryArmy, nCostTypeElixir);
+	ClasherDBContract.ClasherElement.insert(database, "Archer Queen Alter", nCategoryArmy, nCostTypeElixir);
+
+	// other
+	ClasherDBContract.ClasherElement.insert(database, "Clan Castle", nCategoryOther, nCostTypeGold);
+	ClasherDBContract.ClasherElement.insert(database, "Town Hall", nCategoryOther, nCostTypeGold);
+
 	database.execSQL(ClasherDBContract.ClasherElementData.SQL_DROP_TABLE);
 	database.execSQL(ClasherDBContract.ClasherElementData.SQL_CREATE_TABLE);
 	database.execSQL(ClasherDBContract.ClasherPlayer.SQL_DROP_TABLE);
