@@ -156,22 +156,6 @@ public class Element {
 
 	}
 */
-	/*
-	private void addElement() {		
-		// 2. create ContentValues to add key "column"/value
-		ContentValues values = new ContentValues();
-		values.put(Element.COLUMN_NAME, this.getName()); 
-		values.put(Element.COLUMN_COSTTYPE, this.getCostType());
-		values.put(Element.COLUMN_CATEGORY,  this.getCategory());
-
-		// 3. insert
-		moDB.insert(TABLE_ELEMENT, // table
-				null, //nullColumnHack
-				values); // key/value -> keys = column names/ values = column values
-
-	}
-*/
-	
 	private int loadElement(int id){
 		// 2. build query
 		Cursor cursor = null;
