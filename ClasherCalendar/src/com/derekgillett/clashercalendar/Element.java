@@ -2,9 +2,14 @@ package com.derekgillett.clashercalendar;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.support.v4.util.LongSparseArray;
+import android.util.Log;
 
 public class Element {
+	// TAG for logging
+	private static final String TAG = "Element";
+	
 	// Element table name
 	private static final String TABLE_ELEMENT = "tblElement";
 
@@ -41,16 +46,28 @@ public class Element {
 	// return the maximum level this element can be for the given TH level
 	public int getMaxLevel(int pnTHLevel) {
 		int rtn = 0;
+		Cursor cursor = null;
 		
-		Cursor cursor = moDB.rawQuery("SELECT Max(ElementLevel) FROM tblElementData WHERE ElementID = ? AND THMinLevel <= ?", 
-				new String[] { String.valueOf(mnID), String.valueOf(pnTHLevel) }); 
+		try {
+			cursor = moDB.rawQuery("SELECT Max(ElementLevel) FROM tblElementData WHERE ElementID = ? AND THMinLevel <= ?", 
+					new String[] { String.valueOf(mnID), String.valueOf(pnTHLevel) }); 
+		}
+		catch (SQLiteException e) {
+			Log.e(TAG, e.getMessage());
+		}
+		
 		if (cursor != null) {
-			if (cursor.getCount() > 0) {
-				cursor.moveToFirst();
-				if (cursor.getString(0) != null)
-					rtn = Integer.parseInt(cursor.getString(0));
+			try {
+				if (cursor.getCount() > 0) {
+					cursor.moveToFirst();
+					if (cursor.getString(0) != null)
+						rtn = Integer.parseInt(cursor.getString(0));
+				}
+				cursor.close();
 			}
-			cursor.close();
+			catch (Exception e) {
+				Log.e(TAG, e.getMessage());
+			}
 		}
 		return rtn;
 	}
@@ -62,9 +79,16 @@ public class Element {
 	// maximum level this element can be
 	private int getMaxLevel() {
 		int rtn = 0;
+		Cursor cursor = null;
 		
-		Cursor cursor = moDB.rawQuery("SELECT Max(ElementLevel) FROM tblElementData WHERE ElementID = ?", 
-				new String[] { String.valueOf(mnID) }); 
+		try {
+			cursor = moDB.rawQuery("SELECT Max(ElementLevel) FROM tblElementData WHERE ElementID = ?", 
+					new String[] { String.valueOf(mnID) }); 
+		}
+		catch (SQLiteException e) {
+			Log.e(TAG, e.getMessage());
+		}
+		
 		if (cursor != null) {
 			if (cursor.getCount() > 0) {
 				cursor.moveToFirst();
@@ -148,17 +172,24 @@ public class Element {
 	}
 */
 	
-	private void loadElement(int id){
+	private int loadElement(int id){
 		// 2. build query
-		Cursor cursor = 
-				moDB.query(TABLE_ELEMENT, // a. table
-						COLUMNS, // b. column names
-						" " + COLUMN_ID + " = ?", // c. selections 
-						new String[] { String.valueOf(id) }, // d. selections args
-						null, // e. group by
-						null, // f. having
-						null, // g. order by
-						null); // h. limit
+		Cursor cursor = null;
+		try {
+			cursor = 
+					moDB.query(TABLE_ELEMENT, // a. table
+							COLUMNS, // b. column names
+							" " + COLUMN_ID + " = ?", // c. selections 
+							new String[] { String.valueOf(id) }, // d. selections args
+							null, // e. group by
+							null, // f. having
+							null, // g. order by
+							null); // h. limit
+		}
+		catch (SQLiteException e) {
+			Log.e(TAG, e.getMessage());
+			return 1;
+		}
 		 
 		// 3. if we got results get the first one
 		if (cursor != null) {
@@ -174,8 +205,11 @@ public class Element {
 				}
 				cursor.close();
 			} catch (Exception e) {
-				// TODO: handle exception
+				Log.e(TAG, e.getMessage());
+				return 2;
 			}
 		}
+		
+		return 0;
 	}	
 }

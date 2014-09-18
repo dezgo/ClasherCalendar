@@ -57,9 +57,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
   @Override
   public void onCreate(SQLiteDatabase database) {
-    Log.w(MySQLiteHelper.class.getName(), "Creating database");
+    if (Utils.DEBUG) Log.w(MySQLiteHelper.class.getName(), "Creating database");
     execInitSQL(database, "ddl.sql");
-    Log.w(MySQLiteHelper.class.getName(), "Populating database");
+    if (Utils.DEBUG) Log.w(MySQLiteHelper.class.getName(), "Populating database");
     execInitSQL(database, "dml.sql");
   }
 
