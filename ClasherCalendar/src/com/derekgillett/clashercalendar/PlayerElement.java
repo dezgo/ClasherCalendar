@@ -180,23 +180,13 @@ public class PlayerElement {
 	}
 
 	private void update() {
-		ContentValues values = new ContentValues();
-		values.put(this.COLUMN_LEVEL, mnLevel);
-		values.put(this.COLUMN_ELEMENTID, moElement.getId());
-		if (this.mdUpgradeStart != null)
-			values.put(this.COLUMN_UPGRADESTART, this.mdUpgradeStart.getTime()/1000);
-		Globals.INSTANCE.getDB().update(TABLE_NAME,values, 
-				COLUMN_ID + " = ?", new String[] { String.valueOf(mnPlayerElementID) });
+		ClasherDBContract.ClasherPlayerElement.update(mnPlayerElementID, moElement.getId(), mnLevel,
+				moPlayer.getid(), this.mdUpgradeStart != null ? this.mdUpgradeStart.getTime()/1000 : 0);
 	}
 
 	private boolean insert() {
-		ContentValues values = new ContentValues();
-		values.put(this.COLUMN_LEVEL, mnLevel);
-		values.put(this.COLUMN_ELEMENTID, moElement.getId());
-		values.put(this.COLUMN_PLAYERID, this.moPlayer.getid());
-		if (this.mdUpgradeStart != null) 
-			values.put(this.COLUMN_UPGRADESTART, this.mdUpgradeStart.getTime()/1000);
-		mnPlayerElementID = Globals.INSTANCE.getDB().insert(TABLE_NAME,  null,  values);
+		mnPlayerElementID = ClasherDBContract.ClasherPlayerElement.insert(moElement.getId(), mnLevel,
+				moPlayer.getid(), this.mdUpgradeStart != null ? this.mdUpgradeStart.getTime()/1000 : 0);
 		return mnPlayerElementID != 0;
 	}
 }

@@ -5,18 +5,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.TreeMap;
 
-import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
 import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 
 public class Player {
-	private final String TABLE_NAME = "tblPlayer";
-	private final String COLUMN_ID = "PlayerID";
-	private final String COLUMN_VILLAGENAME = "VillageName";
-	private final String COLUMN_THLEVEL = "THLevel";
-	private final String[] ALL_COLUMNS = { this.COLUMN_ID, this.COLUMN_VILLAGENAME, this.COLUMN_THLEVEL };
-
+	private static final String TAG = "Player.java";
+	
 	private boolean mbRepopulateA = true;	// flag indicating whether to repopulate aggregate array
 	private long mnPlayerID;
 	private String msVillageName;
@@ -338,10 +334,7 @@ public class Player {
 	
 	// for an existing player, load the buildings as saved in tblPlayerElement
 	private void LoadExisting() {
-		String[] selectionArgs = new String[] { String.valueOf(mnPlayerID) };
-		ContentValues values = new ContentValues();
-		values.put(COLUMN_ID, mnPlayerID);
-		Cursor cursor = Globals.INSTANCE.getDB().query("tblPlayerElement", new String[] {"PlayerElementID"}, "PlayerID = ?", selectionArgs, null, null, null);
+		Cursor cursor = ClasherDBContract.ClasherPlayerElement.selectByPlayer(mnPlayerID);
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
@@ -384,38 +377,32 @@ public class Player {
 	}
 	
 	public void delete() {
-		// cheeky reference to PlayerElement table here
-		// didn't want to implement a delete method over there when it's only used here
-		Globals.INSTANCE.getDB().delete("tblPlayerElement", 
-				COLUMN_ID + " = ?", new String[] { String.valueOf(mnPlayerID) });
-		Globals.INSTANCE.getDB().delete(TABLE_NAME, 
-				COLUMN_ID + " = ?", new String[] { String.valueOf(mnPlayerID) });
+		ClasherDBContract.ClasherPlayer.delete(mnPlayerID);
 	}
 
 	private void update() {
-		ContentValues values = new ContentValues();
-		values.put(this.COLUMN_VILLAGENAME, msVillageName);
-		values.put(this.COLUMN_THLEVEL, mnTHLevel);
-		Globals.INSTANCE.getDB().update(TABLE_NAME,values, 
-				COLUMN_ID + " = ?", new String[] { String.valueOf(mnPlayerID) });
+		ClasherDBContract.ClasherPlayer.update(mnPlayerID, msVillageName, mnTHLevel);
 	}
 
 	private boolean insert() {
-		ContentValues values = new ContentValues();
-		values.put("VillageName", msVillageName);
-		values.put("THLevel", mnTHLevel);
-		mnPlayerID = Globals.INSTANCE.getDB().insert("tblPlayer",  null,  values);
+		mnPlayerID = ClasherDBContract.ClasherPlayer.insert(getVillageName(), mnIndexA);
 		return mnPlayerID != 0;
 	}
 	
 	private void select() {
-		String[] selectionArgs = new String[] { String.valueOf(mnPlayerID) };
-		Cursor cursor = Globals.INSTANCE.getDB().query(this.TABLE_NAME, this.ALL_COLUMNS, COLUMN_ID + " = ?", selectionArgs, null, null, null);
+		Cursor cursor = ClasherDBContract.ClasherPlayer.selectSingle(mnPlayerID);
 		if (cursor != null) {
-			cursor.moveToFirst();
-			this.msVillageName = cursor.getString(1) == null ? "" : cursor.getString(1);
-			this.mnTHLevel = cursor.getString(2) == null ? 0 : Integer.parseInt(cursor.getString(2));
-			cursor.close();
+			try {
+				cursor.moveToFirst();
+				this.msVillageName = cursor.getString(1) == null ? "" : cursor.getString(1);
+				this.mnTHLevel = cursor.getString(2) == null ? 0 : Integer.parseInt(cursor.getString(2));
+			}
+			catch (SQLiteException e) {
+				Log.e(TAG, e.getMessage());
+			}
+			finally {
+				cursor.close();
+			}
 		}
 	}
 

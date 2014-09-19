@@ -1,11 +1,18 @@
 package com.derekgillett.clashercalendar;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 public class ClasherDBContract {
-    public static final String TEXT_TYPE = " TEXT";
+	public static final String TAG = "ClasherDBContract";
+	
+	public static final SQLiteDatabase moDB = Globals.INSTANCE.getSQLiteDB();
+
+	public static final String TEXT_TYPE = " TEXT";
     public static final String INTEGER_TYPE = " INTEGER";
     public static final String COMMA_SEP = ",";
 
@@ -70,6 +77,7 @@ public class ClasherDBContract {
         private static final String COLUMN_NAME_ELEMENT_NAME = "ElementName";
         private static final String COLUMN_NAME_COST_TYPE = "CostType";
         private static final String COLUMN_NAME_CATEGORY = "Category";
+    	private static final String[] COLUMNS = {COLUMN_NAME_ELEMENT_NAME, COLUMN_NAME_COST_TYPE, COLUMN_NAME_CATEGORY};
         
         private static final String SQL_CREATE_TABLE = 
         		"CREATE TABLE " + ClasherElement.TABLE_NAME + " (" +
@@ -92,6 +100,26 @@ public class ClasherDBContract {
         	values.put(ClasherElement.COLUMN_NAME_COST_TYPE,  pnCostType);
         	values.put(ClasherElement.COLUMN_NAME_CATEGORY,  pnCategory);
         	return poDB.insert(ClasherElement.TABLE_NAME, null, values);
+        }
+        
+        public static Cursor select(long pnID) {
+        	Cursor cursor = null;
+        	
+        	try {
+				cursor = moDB.query(TABLE_NAME, // a. table
+					COLUMNS, // b. column names
+					"_ID = ?", // c. selections 
+					new String[] { String.valueOf(pnID) }, // d. selections args
+					null, // e. group by
+					null, // f. having
+					null, // g. order by
+					null); // h. limit
+	        }
+        	catch (SQLiteException e) {
+        		Log.e(TAG,e.getMessage());
+        	}
+
+        	return cursor;
         }
     }
 
@@ -139,6 +167,60 @@ public class ClasherDBContract {
         	values.put(ClasherElementData.COLUMN_NAME_TOWNHALL_MIN_LEVEL, pnTownHallMinLevel);
 
         	return poDB.insert(ClasherElementData.TABLE_NAME, null, values);
+        }
+        
+        public static int getMaxLevel(long pnID) {
+        	return getMaxLevel(pnID, 11);
+        }
+
+        public static int getMaxLevel(long pnID, int pnTHLevel) {
+    		int rtn = 0;
+    		Cursor cursor = null;
+        	try {
+				cursor = moDB.rawQuery("SELECT Max(ElementLevel) FROM " + TABLE_NAME + " WHERE ElementID = ? AND THMinLevel <= ?", 
+						new String[] { String.valueOf(pnID), String.valueOf(pnTHLevel) });
+        	}
+        	catch (SQLiteException e) {
+        		Log.e(TAG, e.getMessage());
+        	}
+
+    		if (cursor != null) {
+    			try {
+    				if (cursor.getCount() > 0) {
+    					cursor.moveToFirst();
+    					if (cursor.getString(0) != null)
+    						rtn = Integer.parseInt(cursor.getString(0));
+    				}
+    				cursor.close();
+    			}
+    			catch (Exception e) {
+    				Log.e(TAG, e.getMessage());
+    			}
+    		}
+    		return rtn;
+        }
+        
+        public static void select(long pnElementID, int pnElementLevel, ElementData poElementData) {
+    		Cursor cursor = moDB.rawQuery("SELECT HitPoints, BuildCost, BuildTime, THMinLevel " +
+    				"FROM tblElementData WHERE ElementID = ? AND ElementLevel = ?",
+    				new String[] { String.valueOf(pnElementID), String.valueOf(pnElementLevel) }); 
+    		if (cursor != null) {
+    			try {
+	    			if (cursor.getCount() > 0) {
+	    				cursor.moveToFirst();
+	    				poElementData.setHitPoints(cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0)));
+	    				poElementData.setBuildCost(cursor.getString(1) == null ? 0 : Integer.parseInt(cursor.getString(1)));
+	    				poElementData.setBuildTime(cursor.getString(2) == null ? 0 : Integer.parseInt(cursor.getString(2)));
+	    				poElementData.setTHMinLevel(cursor.getString(3) == null ? 0 : Integer.parseInt(cursor.getString(3)));
+	    			}
+    			}
+    			catch (SQLiteException e) {
+    				Log.e(TAG, e.getMessage());
+    			}
+    			finally {
+    				cursor.close();
+    			}
+    		}
         }
     }
 
@@ -200,11 +282,11 @@ public class ClasherDBContract {
         	poDB.execSQL(SQL_CREATE_TABLE);
         }
         
-        public static long insert(SQLiteDatabase poDB, 
+        public static long insert( 
         		long pnElementID,
         		int pnLevel,
         		long pnPlayerID,
-        		int pnUpgradeStart) {
+        		long pnUpgradeStart) {
 
         	ContentValues values = new ContentValues();
         	values.put(ClasherPlayerElement.COLUMN_NAME_ELEMENT_ID, pnElementID);
@@ -212,15 +294,15 @@ public class ClasherDBContract {
         	values.put(ClasherPlayerElement.COLUMN_NAME_PLAYER_ID, pnPlayerID);
         	values.put(ClasherPlayerElement.COLUMN_NAME_UPGRADE_START, pnUpgradeStart);
 
-        	return poDB.insert(ClasherPlayerElement.TABLE_NAME, null, values);
+        	return moDB.insert(TABLE_NAME, null, values);
         }
 
-        public static long update(SQLiteDatabase poDB,
+        public static long update(
         		long pnID,
         		long pnElementID,
         		int pnLevel,
         		long pnPlayerID,
-        		int pnUpgradeStart) {
+        		long pnUpgradeStart) {
         	
         	ContentValues values = new ContentValues();
         	values.put(ClasherPlayerElement.COLUMN_NAME_ELEMENT_ID, pnElementID);
@@ -228,11 +310,20 @@ public class ClasherDBContract {
         	values.put(ClasherPlayerElement.COLUMN_NAME_PLAYER_ID, pnPlayerID);
         	values.put(ClasherPlayerElement.COLUMN_NAME_UPGRADE_START, pnUpgradeStart);
 
-        	return poDB.update(TABLE_NAME, values, "_ID = " + pnID, null);
+        	return moDB.update(TABLE_NAME, values, "_ID = " + pnID, null);
         }
 
-        public static long delete(SQLiteDatabase poDB, long pnID) {
-        	return poDB.delete(TABLE_NAME, "_ID = " + pnID, null);
+        public static long delete(long pnID) {
+        	return moDB.delete(TABLE_NAME, "_ID = " + pnID, null);
+        }
+        
+        public static long deletePlayer(long pnPlayerID) {
+        	return moDB.delete(TABLE_NAME, COLUMN_NAME_PLAYER_ID + " = " + pnPlayerID, null);
+        }
+
+        public static Cursor selectByPlayer(long pnPlayerID) {
+    		String[] selectionArgs = new String[] { String.valueOf(pnPlayerID) };
+    		return moDB.query(TABLE_NAME, new String[] {_ID}, COLUMN_NAME_PLAYER_ID + " = ?", selectionArgs, null, null, null);        	
         }
     }
 
@@ -240,6 +331,7 @@ public class ClasherDBContract {
         private static final String TABLE_NAME = "tblPlayer";
         private static final String COLUMN_NAME_PLAYER_VILLAGE_NAME = "VillageName";
         private static final String COLUMN_NAME_TOWNHALL_LEVEL = "THLevel";
+    	private static final String[] ALL_COLUMNS = { _ID, COLUMN_NAME_PLAYER_VILLAGE_NAME, COLUMN_NAME_TOWNHALL_LEVEL };
 
         private static final String SQL_CREATE_TABLE = 
         		"CREATE TABLE " + ClasherPlayer.TABLE_NAME + " (" +
@@ -255,35 +347,42 @@ public class ClasherDBContract {
         	poDB.execSQL(SQL_CREATE_TABLE);
         }
         
-        public static long insert(SQLiteDatabase poDB, 
-        		int pnTownhallLevel,
-        		long pnElementID,
-        		int pnQuantity) {
+        public static long insert( 
+        		String psVillageName,
+        		int pnTownhallLevel) {
 
         	ContentValues values = new ContentValues();
-        	values.put(ClasherTHElement.COLUMN_NAME_ELEMENT_ID, pnElementID);
-        	values.put(ClasherTHElement.COLUMN_NAME_QUANTITY, pnQuantity);
-        	values.put(ClasherTHElement.COLUMN_NAME_TOWNHALL_LEVEL, pnTownhallLevel);
+        	values.put(ClasherPlayer.COLUMN_NAME_PLAYER_VILLAGE_NAME, psVillageName);
+        	values.put(ClasherPlayer.COLUMN_NAME_TOWNHALL_LEVEL, pnTownhallLevel);
 
-        	return poDB.insert(ClasherTHElement.TABLE_NAME, null, values);
+        	return moDB.insert(ClasherPlayer.TABLE_NAME, null, values);
         }
         
-        public static long update(SQLiteDatabase poDB,
+        public static long update(
         		long pnPlayerID,
-        		int pnTownhallLevel,
-        		long pnElementID,
-        		int pnQuantity) {
+        		String psVillageName,
+        		int pnTownhallLevel) {
         	
         	ContentValues values = new ContentValues();
-        	values.put(ClasherTHElement.COLUMN_NAME_ELEMENT_ID, pnElementID);
-        	values.put(ClasherTHElement.COLUMN_NAME_QUANTITY, pnQuantity);
-        	values.put(ClasherTHElement.COLUMN_NAME_TOWNHALL_LEVEL, pnTownhallLevel);
+        	values.put(ClasherPlayer.COLUMN_NAME_PLAYER_VILLAGE_NAME, psVillageName);
+        	values.put(ClasherPlayer.COLUMN_NAME_TOWNHALL_LEVEL, pnTownhallLevel);
 
-        	return poDB.update(TABLE_NAME, values, "_ID = " + pnPlayerID, null);
+        	return moDB.update(TABLE_NAME, values, "_ID = " + pnPlayerID, null);
         }
 
-        public static long delete(SQLiteDatabase poDB, long pnPlayerID) {
-        	return poDB.delete(TABLE_NAME, "_ID = " + pnPlayerID, null);
+        public static long delete(long pnPlayerID) {
+        	ClasherPlayerElement.deletePlayer(pnPlayerID);
+        	return moDB.delete(TABLE_NAME, "_ID = " + pnPlayerID, null);
         }
+        
+        public static Cursor selectSingle(long pnPlayerID) {
+    		String[] selectionArgs = new String[] { String.valueOf(pnPlayerID) };
+    		return moDB.query(TABLE_NAME, ALL_COLUMNS, "_ID = ?", selectionArgs, null, null, null);
+        }
+
+        public static Cursor selectAll() {
+    		return moDB.query(TABLE_NAME, ALL_COLUMNS, null, null, null, null, null);
+        }
+        
     }
 }

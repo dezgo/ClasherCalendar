@@ -1,8 +1,6 @@
 package com.derekgillett.clashercalendar;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 
@@ -10,18 +8,6 @@ public class Element {
 	// TAG for logging
 	private static final String TAG = "Element";
 	
-	// Element table name
-	private static final String TABLE_ELEMENT = "tblElement";
-
-	// Element Table Columns names
-	private static final String COLUMN_ID = "ElementID";
-	private static final String COLUMN_NAME = "ElementName";
-	private static final String COLUMN_COSTTYPE = "CostType";
-	private static final String COLUMN_CATEGORY = "Category";
-
-	private static final String[] COLUMNS = {COLUMN_ID, COLUMN_NAME, COLUMN_COSTTYPE, COLUMN_CATEGORY};
-	  
-	private SQLiteDatabase moDB;
 	private int mnID = 0;
 	private String msElementName = "";
 	private int mnCostType;
@@ -30,7 +16,7 @@ public class Element {
 	private LongSparseArray<ElementData> moElementData = new LongSparseArray<ElementData>();
 
 	public Element() {
-		moDB = Globals.INSTANCE.getDB();
+//		moDB = Globals.INSTANCE.getDB();
 	}
 	
 	public Element(int id) {
@@ -45,31 +31,7 @@ public class Element {
 	
 	// return the maximum level this element can be for the given TH level
 	public int getMaxLevel(int pnTHLevel) {
-		int rtn = 0;
-		Cursor cursor = null;
-		
-		try {
-			cursor = moDB.rawQuery("SELECT Max(ElementLevel) FROM tblElementData WHERE ElementID = ? AND THMinLevel <= ?", 
-					new String[] { String.valueOf(mnID), String.valueOf(pnTHLevel) }); 
-		}
-		catch (SQLiteException e) {
-			Log.e(TAG, e.getMessage());
-		}
-		
-		if (cursor != null) {
-			try {
-				if (cursor.getCount() > 0) {
-					cursor.moveToFirst();
-					if (cursor.getString(0) != null)
-						rtn = Integer.parseInt(cursor.getString(0));
-				}
-				cursor.close();
-			}
-			catch (Exception e) {
-				Log.e(TAG, e.getMessage());
-			}
-		}
-		return rtn;
+		return ClasherDBContract.ClasherElementData.getMaxLevel(mnID, pnTHLevel);
 	}
 	
 	public Element clone() {
@@ -78,26 +40,7 @@ public class Element {
 	
 	// maximum level this element can be
 	private int getMaxLevel() {
-		int rtn = 0;
-		Cursor cursor = null;
-		
-		try {
-			cursor = moDB.rawQuery("SELECT Max(ElementLevel) FROM tblElementData WHERE ElementID = ?", 
-					new String[] { String.valueOf(mnID) }); 
-		}
-		catch (SQLiteException e) {
-			Log.e(TAG, e.getMessage());
-		}
-		
-		if (cursor != null) {
-			if (cursor.getCount() > 0) {
-				cursor.moveToFirst();
-				if (cursor.getString(0) != null)
-					rtn = Integer.parseInt(cursor.getString(0));
-			}
-			cursor.close();
-		}
-		return rtn;
+		return ClasherDBContract.ClasherElementData.getMaxLevel(mnID);
 	}
 	
 	public long getId() {
@@ -158,25 +101,13 @@ public class Element {
 */
 	private int loadElement(int id){
 		// 2. build query
-		Cursor cursor = null;
-		try {
-			cursor = 
-					moDB.query(TABLE_ELEMENT, // a. table
-							COLUMNS, // b. column names
-							" " + COLUMN_ID + " = ?", // c. selections 
-							new String[] { String.valueOf(id) }, // d. selections args
-							null, // e. group by
-							null, // f. having
-							null, // g. order by
-							null); // h. limit
-		}
-		catch (SQLiteException e) {
-			Log.e(TAG, e.getMessage());
-			return 1;
-		}
+		Cursor cursor = ClasherDBContract.ClasherElement.select(id);
+		int nRtn = 0;
 		 
 		// 3. if we got results get the first one
-		if (cursor != null) {
+		if (cursor == null)
+			nRtn = 1;
+		else {
 			try {
 				if (cursor.getCount() > 0) {
 					cursor.moveToFirst();
@@ -187,13 +118,16 @@ public class Element {
 					this.setCostType(cursor.getString(2) == null ? 0 : Integer.parseInt(cursor.getString(2)));
 					this.setCategory(cursor.getString(3) == null ? 0 : Integer.parseInt(cursor.getString(3)));
 				}
-				cursor.close();
-			} catch (Exception e) {
+			} 
+			catch (Exception e) {
 				Log.e(TAG, e.getMessage());
-				return 2;
+				nRtn = 2;
+			}
+			finally {
+				cursor.close();
 			}
 		}
 		
-		return 0;
+		return nRtn;
 	}	
 }

@@ -4,21 +4,22 @@ import android.database.Cursor;
 import android.support.v4.util.LongSparseArray;
 
 public class Players {
-	private final String TABLE_NAME = "tblPlayer";
-	private final String COLUMN_ID = "PlayerID";
-	private final String COLUMN_VILLAGENAME = "VillageName";
-	private final String COLUMN_THLEVEL = "THLevel";
-	private final String[] ALL_COLUMNS = { this.COLUMN_ID, this.COLUMN_VILLAGENAME, this.COLUMN_THLEVEL };
-
 	private LongSparseArray<Player> moPlayers = new LongSparseArray<Player>();
 	private int mnIndex = 0;
 	
 	public Players() {
-		this.select();
-	}
-	
-	private void addPlayer(Player poPlayer) {
-		moPlayers.put(poPlayer.getid(),poPlayer);
+		// populate internal array with existing players from database
+		Cursor cursor = ClasherDBContract.ClasherPlayer.selectAll();
+		if (cursor != null) {
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				int nPlayerID = cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0));
+				Player oPlayer = new Player(nPlayerID);
+				moPlayers.put(nPlayerID,oPlayer);
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
 	}
 	
 	public Player getPlayer(long pnPlayerID) {
@@ -28,6 +29,7 @@ public class Players {
 	public void deletePlayer(long pnPlayerID) {
 		moPlayers.get(pnPlayerID).delete();
 		moPlayers.remove(pnPlayerID);
+		ClasherDBContract.ClasherPlayer.delete(pnPlayerID);
 	}
 	
 	public void moveToFirst() {
@@ -54,17 +56,4 @@ public class Players {
 		return moPlayers.size();
 	}
 	
-	private void select() {
-		Cursor cursor = Globals.INSTANCE.getDB().query(this.TABLE_NAME, this.ALL_COLUMNS, null, null, null, null, null);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			while (!cursor.isAfterLast()) {
-				int nPlayerID = cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0));
-				this.addPlayer(new Player(nPlayerID));
-				cursor.moveToNext();
-			}
-			cursor.close();
-		}
-	}
-
 }

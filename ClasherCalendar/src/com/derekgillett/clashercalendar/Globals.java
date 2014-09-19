@@ -14,7 +14,7 @@ public enum Globals {
     	db = SQLiteHelper.getWritableDatabase();
     }
     
-    public SQLiteDatabase getDB() {
+    public SQLiteDatabase getSQLiteDB() {
     	return db;
     }
     
