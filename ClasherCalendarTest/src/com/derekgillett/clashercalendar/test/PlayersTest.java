@@ -2,6 +2,7 @@ package com.derekgillett.clashercalendar.test;
 
 import android.util.Log;
 
+import com.derekgillett.clashercalendar.Globals;
 import com.derekgillett.clashercalendar.Players;
 
 import junit.framework.TestCase;
@@ -22,6 +23,7 @@ public class PlayersTest extends TestCase {
 
 	public void testGetPlayer() {
 		Log.v("PlayersTest.testGetPlayer","Start test");
+		Globals.INSTANCE.init();
 		Players oPlayers = new Players();
 		oPlayers.moveToFirst();
 		while (!oPlayers.IsAfterLast()) {

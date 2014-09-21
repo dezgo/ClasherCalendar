@@ -5,13 +5,15 @@ import android.database.sqlite.SQLiteDatabase;
 public enum Globals {
 	INSTANCE;
 
-	private SQLiteDatabase db;
+	private SQLiteDatabase db = null;
 	private Player player;
 	private Players players;
 
-    Globals(){
-    	MySQLiteHelper SQLiteHelper = new MySQLiteHelper();
-    	db = SQLiteHelper.getWritableDatabase();
+    public void init() {
+    	if (db == null) {
+	    	MySQLiteHelper SQLiteHelper = new MySQLiteHelper();
+	    	db = SQLiteHelper.getWritableDatabase();
+    	}
     }
     
     public SQLiteDatabase getSQLiteDB() {

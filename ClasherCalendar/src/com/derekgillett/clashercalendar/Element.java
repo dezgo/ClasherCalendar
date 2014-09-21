@@ -8,19 +8,14 @@ public class Element {
 	// TAG for logging
 	private static final String TAG = "Element";
 	
-	private int mnID = 0;
+	private long mnID = 0;
 	private String msElementName = "";
 	private int mnCostType;
 	private int mnCategory;
 	private int mnMaxLevel;
 	private LongSparseArray<ElementData> moElementData = new LongSparseArray<ElementData>();
 
-	public Element() {
-//		moDB = Globals.INSTANCE.getDB();
-	}
-	
-	public Element(int id) {
-		this();
+	public Element(long id) {
 		this.loadElement(id);
 		mnMaxLevel = getMaxLevel();
 		for (int i=0; i<mnMaxLevel; i++) {
@@ -45,10 +40,6 @@ public class Element {
 	
 	public long getId() {
 		return mnID;
-	}
-	
-	public void setId(int pid) {
-		mnID = pid;
 	}
 	
 	public String getName() {
@@ -99,7 +90,7 @@ public class Element {
 
 	}
 */
-	private int loadElement(int id){
+	private int loadElement(long id){
 		// 2. build query
 		Cursor cursor = ClasherDBContract.ClasherElement.select(id);
 		int nRtn = 0;
@@ -113,7 +104,7 @@ public class Element {
 					cursor.moveToFirst();
 				 
 					// 4. build element object
-					this.setId(cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0)));
+					this.mnID = cursor.getLong(0);
 					this.setName(cursor.getString(1) == null ? "" : cursor.getString(1));
 					this.setCostType(cursor.getString(2) == null ? 0 : Integer.parseInt(cursor.getString(2)));
 					this.setCategory(cursor.getString(3) == null ? 0 : Integer.parseInt(cursor.getString(3)));

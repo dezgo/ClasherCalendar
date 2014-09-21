@@ -5,27 +5,22 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.util.LongSparseArray;
 
 public class THElements {
-	private SQLiteDatabase moDB;
 	private LongSparseArray<THElement> moTHElements = new LongSparseArray<THElement>();
 	private int mnIndex = 0;
 	
 	public THElements(int pnLevel) {
 		THElement oTHElement;
-		int nElementID;
-		int nQuantity;
+		long nID;
 
-		moDB = Globals.INSTANCE.getDB();
-		Cursor cursor = moDB.rawQuery("SELECT ElementID,Quantity FROM tblTHElement WHERE THLevel = ?",
-				new String[] { String.valueOf(pnLevel) }); 
+		Cursor cursor = ClasherDBContract.ClasherTHElement.selectByTHLevel(pnLevel);
 		if (cursor != null) {
 			if (cursor.getCount() > 0) {
 				cursor.moveToFirst();
 				while (!cursor.isAfterLast())
 				{
-					nElementID = cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0));
-					nQuantity = cursor.getString(1) == null ? 0 : Integer.parseInt(cursor.getString(1));
-					oTHElement = new THElement(pnLevel, nElementID, nQuantity);
-					moTHElements.put(nElementID, oTHElement);
+					nID = cursor.getLong(0);
+					oTHElement = new THElement(nID);
+					moTHElements.put(nID, oTHElement);
 					cursor.moveToNext();
 				}
 			}

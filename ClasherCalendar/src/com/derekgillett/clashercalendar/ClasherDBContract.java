@@ -10,8 +10,6 @@ import android.util.Log;
 public class ClasherDBContract {
 	public static final String TAG = "ClasherDBContract";
 	
-	public static final SQLiteDatabase moDB = Globals.INSTANCE.getSQLiteDB();
-
 	public static final String TEXT_TYPE = " TEXT";
     public static final String INTEGER_TYPE = " INTEGER";
     public static final String COMMA_SEP = ",";
@@ -73,6 +71,8 @@ public class ClasherDBContract {
     }
     
     public static abstract class ClasherElement implements BaseColumns {
+    	private static final SQLiteDatabase moDB = Globals.INSTANCE.getSQLiteDB();
+
         private static final String TABLE_NAME = "tblElement";
         private static final String COLUMN_NAME_ELEMENT_NAME = "ElementName";
         private static final String COLUMN_NAME_COST_TYPE = "CostType";
@@ -124,6 +124,8 @@ public class ClasherDBContract {
     }
 
     public static abstract class ClasherElementData implements BaseColumns {
+    	private static final SQLiteDatabase moDB = Globals.INSTANCE.getSQLiteDB();
+
         private static final String TABLE_NAME = "tblElementData";
         private static final String COLUMN_NAME_ELEMENT_ID = "ElementID";
         private static final String COLUMN_NAME_ELEMENT_LEVEL = "ElementLevel";
@@ -225,48 +227,36 @@ public class ClasherDBContract {
     }
 
     public static abstract class ClasherTHElement implements BaseColumns {
-        private static final String TABLE_NAME = "tblTHElement";
-        private static final String COLUMN_NAME_TOWNHALL_LEVEL = "THLevel";
-        private static final String COLUMN_NAME_ELEMENT_ID = "ElementID";
-        private static final String COLUMN_NAME_QUANTITY = "Quantity";
+    	public static final SQLiteDatabase moDB = Globals.INSTANCE.getSQLiteDB();
 
-        private static final String SQL_CREATE_TABLE = 
+        public static final String TABLE_NAME = "tblTHElement";
+        public static final String COLUMN_NAME_TOWNHALL_LEVEL = "THLevel";
+        public static final String COLUMN_NAME_ELEMENT_ID = "ElementID";
+        public static final String COLUMN_NAME_QUANTITY = "Quantity";
+    	public static final String[] ALL_COLUMNS = { _ID, COLUMN_NAME_TOWNHALL_LEVEL, COLUMN_NAME_ELEMENT_ID, COLUMN_NAME_QUANTITY };
+
+        public static final String SQL_CREATE_TABLE = 
         		"CREATE TABLE " + ClasherTHElement.TABLE_NAME + " (" +
         				ClasherTHElement._ID + " INTEGER PRIMARY KEY," + 
         				ClasherTHElement.COLUMN_NAME_ELEMENT_ID + INTEGER_TYPE + COMMA_SEP +  
         				ClasherTHElement.COLUMN_NAME_QUANTITY + INTEGER_TYPE + COMMA_SEP +  
         				ClasherTHElement.COLUMN_NAME_TOWNHALL_LEVEL + INTEGER_TYPE + " )";
         
-        private static final String SQL_DROP_TABLE =
+        public static final String SQL_DROP_TABLE =
         		"DROP TABLE IF EXISTS " + ClasherTHElement.TABLE_NAME;
-
-        public static void createTable(SQLiteDatabase poDB) {
-        	poDB.execSQL(SQL_DROP_TABLE);
-        	poDB.execSQL(SQL_CREATE_TABLE);
-        }
-        
-        public static long insert(SQLiteDatabase poDB, 
-        		int pnTownhallLevel,
-        		long pnElementID,
-        		int pnQuantity) {
-
-        	ContentValues values = new ContentValues();
-        	values.put(ClasherTHElement.COLUMN_NAME_ELEMENT_ID, pnElementID);
-        	values.put(ClasherTHElement.COLUMN_NAME_QUANTITY, pnQuantity);
-        	values.put(ClasherTHElement.COLUMN_NAME_TOWNHALL_LEVEL, pnTownhallLevel);
-
-        	return poDB.insert(ClasherTHElement.TABLE_NAME, null, values);
-        }
     }
 
     public static abstract class ClasherPlayerElement implements BaseColumns {
-        private static final String TABLE_NAME = "tblPlayerElement";
-        private static final String COLUMN_NAME_PLAYER_ID = "PlayerID";
-        private static final String COLUMN_NAME_ELEMENT_ID = "ElementID";
-        private static final String COLUMN_NAME_LEVEL = "Level";
-        private static final String COLUMN_NAME_UPGRADE_START = "UpgradeStart";
+    	public static final SQLiteDatabase moDB = Globals.INSTANCE.getSQLiteDB();
 
-        private static final String SQL_CREATE_TABLE = 
+        public static final String TABLE_NAME = "tblPlayerElement";
+        public static final String COLUMN_NAME_PLAYER_ID = "PlayerID";
+        public static final String COLUMN_NAME_ELEMENT_ID = "ElementID";
+        public static final String COLUMN_NAME_LEVEL = "Level";
+        public static final String COLUMN_NAME_UPGRADE_START = "UpgradeStart";
+    	public static final String[] ALL_COLUMNS = { _ID, COLUMN_NAME_PLAYER_ID, COLUMN_NAME_ELEMENT_ID, COLUMN_NAME_LEVEL, COLUMN_NAME_UPGRADE_START };
+
+        public static final String SQL_CREATE_TABLE = 
         		"CREATE TABLE " + ClasherPlayerElement.TABLE_NAME + " (" +
         				ClasherPlayerElement._ID + " INTEGER PRIMARY KEY," + 
         				ClasherPlayerElement.COLUMN_NAME_ELEMENT_ID + INTEGER_TYPE + COMMA_SEP +  
@@ -274,60 +264,13 @@ public class ClasherDBContract {
         				ClasherPlayerElement.COLUMN_NAME_PLAYER_ID + INTEGER_TYPE + COMMA_SEP +  
         				ClasherPlayerElement.COLUMN_NAME_UPGRADE_START + INTEGER_TYPE + " )";
         
-        private static final String SQL_DROP_TABLE =
+        public static final String SQL_DROP_TABLE =
         		"DROP TABLE IF EXISTS " + ClasherPlayerElement.TABLE_NAME;
-
-        public static void createTable(SQLiteDatabase poDB) {
-        	poDB.execSQL(SQL_DROP_TABLE);
-        	poDB.execSQL(SQL_CREATE_TABLE);
-        }
-        
-        public static long insert( 
-        		long pnElementID,
-        		int pnLevel,
-        		long pnPlayerID,
-        		long pnUpgradeStart) {
-
-        	ContentValues values = new ContentValues();
-        	values.put(ClasherPlayerElement.COLUMN_NAME_ELEMENT_ID, pnElementID);
-        	values.put(ClasherPlayerElement.COLUMN_NAME_LEVEL, pnLevel);
-        	values.put(ClasherPlayerElement.COLUMN_NAME_PLAYER_ID, pnPlayerID);
-        	values.put(ClasherPlayerElement.COLUMN_NAME_UPGRADE_START, pnUpgradeStart);
-
-        	return moDB.insert(TABLE_NAME, null, values);
-        }
-
-        public static long update(
-        		long pnID,
-        		long pnElementID,
-        		int pnLevel,
-        		long pnPlayerID,
-        		long pnUpgradeStart) {
-        	
-        	ContentValues values = new ContentValues();
-        	values.put(ClasherPlayerElement.COLUMN_NAME_ELEMENT_ID, pnElementID);
-        	values.put(ClasherPlayerElement.COLUMN_NAME_LEVEL, pnLevel);
-        	values.put(ClasherPlayerElement.COLUMN_NAME_PLAYER_ID, pnPlayerID);
-        	values.put(ClasherPlayerElement.COLUMN_NAME_UPGRADE_START, pnUpgradeStart);
-
-        	return moDB.update(TABLE_NAME, values, "_ID = " + pnID, null);
-        }
-
-        public static long delete(long pnID) {
-        	return moDB.delete(TABLE_NAME, "_ID = " + pnID, null);
-        }
-        
-        public static long deletePlayer(long pnPlayerID) {
-        	return moDB.delete(TABLE_NAME, COLUMN_NAME_PLAYER_ID + " = " + pnPlayerID, null);
-        }
-
-        public static Cursor selectByPlayer(long pnPlayerID) {
-    		String[] selectionArgs = new String[] { String.valueOf(pnPlayerID) };
-    		return moDB.query(TABLE_NAME, new String[] {_ID}, COLUMN_NAME_PLAYER_ID + " = ?", selectionArgs, null, null, null);        	
-        }
     }
 
     public static abstract class ClasherPlayer implements BaseColumns {
+    	private static final SQLiteDatabase moDB = Globals.INSTANCE.getSQLiteDB();
+
         private static final String TABLE_NAME = "tblPlayer";
         private static final String COLUMN_NAME_PLAYER_VILLAGE_NAME = "VillageName";
         private static final String COLUMN_NAME_TOWNHALL_LEVEL = "THLevel";
