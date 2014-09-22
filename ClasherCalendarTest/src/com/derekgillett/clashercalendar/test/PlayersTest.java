@@ -29,7 +29,7 @@ public class PlayersTest extends TestCase {
 
 	public void testGetPlayer() {
 		Log.v("PlayersTest.testGetPlayer","Start test");
-		Players oPlayers = new Players(moDB);
+		Players oPlayers = new Players();
 		oPlayers.moveToFirst();
 		while (!oPlayers.IsAfterLast()) {
 			Log.v("PlayersTest.testGetPlayer", oPlayers.getPlayer().getVillageName());

@@ -30,6 +30,7 @@ public class Element {
 	}
 	
 	public Element(SQLiteDatabase poDB, String psElementName, Category poCategory, CostType poCostType) {
+		moDB = poDB;
 		msElementName = psElementName;
 		moCostType = poCostType;
 		moCategory = poCategory;

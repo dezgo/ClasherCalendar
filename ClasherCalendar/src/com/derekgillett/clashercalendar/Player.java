@@ -40,7 +40,8 @@ public class Player {
 		Globals.INSTANCE.setPlayer(this);
 	}
 	
-	public Player(int pnTHLevel, String psVillageName) {
+	public Player(SQLiteDatabase poDB, int pnTHLevel, String psVillageName) {
+		moDB = poDB;
 		mnTHLevel = pnTHLevel;
 		msVillageName = psVillageName;
 		this.insert();
@@ -172,7 +173,7 @@ public class Player {
 	}
 	
 	private void addPlayerElement(Element poElement, int pnLevel) {
-		PlayerElement oPlayerElement = new PlayerElement(this, poElement, pnLevel);
+		PlayerElement oPlayerElement = new PlayerElement(moDB, this, poElement, pnLevel);
 		addPlayerElement(oPlayerElement);
 	}
 	
@@ -251,25 +252,10 @@ public class Player {
 	public ElementA getElementA() {
 		ElementA oElementA = null;
 
-		/*
-		if (this.mnIndexA < this.moElementsA.size()) {
-			oElementA = this.moElementsA.valueAt(mnIndexA);
-			this.mnIndexA++;
-		}*/
-		
 		if (this.mnIndexA < this.moElementsASorted.size()) {
 			oElementA = this.moElementsASorted.get(mnIndexA);
-			//this.mnIndexA++;
 		}
 		
-		/*
-		// do this if using an iterator
-		if (moElementsAIterator.hasNext()) {
-			oElementA = (ElementA) moElementsAIterator.next();
-			moElementsAIterator.remove(); // avoids a ConcurrentModificationException
-		}
-		*/
-				
 		return oElementA;
 	}
 	
@@ -284,10 +270,15 @@ public class Player {
 		Collections.sort(moElementsASorted, new Comparator<ElementA>() {
 			@Override
 			public int compare(ElementA arg0, ElementA arg1) {
-				if (pbAscending)
-					return arg0.getElement().getName().compareTo(arg1.getElement().getName());
+				String name0 = arg0.getElement().getName();
+				String name1 = arg1.getElement().getName();
+				if (name0 != null && name1 != null)
+					if (pbAscending)
+						return name0.compareTo(name1);
+					else
+						return name1.compareTo(name0);
 				else
-					return arg1.getElement().getName().compareTo(arg0.getElement().getName());
+					return 0;
 			}
 		});
 	}

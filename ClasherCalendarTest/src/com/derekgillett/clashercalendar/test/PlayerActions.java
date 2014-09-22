@@ -1,7 +1,9 @@
 package com.derekgillett.clashercalendar.test;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.derekgillett.clashercalendar.MySQLiteHelper;
 import com.derekgillett.clashercalendar.Player;
 import com.derekgillett.clashercalendar.PlayerElement;
 
@@ -9,6 +11,8 @@ import junit.framework.TestCase;
 
 public class PlayerActions extends TestCase {
 
+	private SQLiteDatabase moDB;
+	
 	private Player moPlayer;
 	private int mnTHLevel = 3;
 	
@@ -18,7 +22,9 @@ public class PlayerActions extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		moPlayer = new Player(mnTHLevel, "Test Village");
+		MySQLiteHelper mySQLiteHelper = new MySQLiteHelper();
+		moDB = mySQLiteHelper.getWritableDatabase();
+		moPlayer = new Player(moDB, mnTHLevel, "Test Village");
 	}
 
 	protected void tearDown() throws Exception {

@@ -40,7 +40,8 @@ public class PlayerElement {
 	}
 	
 	// create a new player element
-	public PlayerElement(Player poPlayer, Element poElement, int pnLevel) {
+	public PlayerElement(SQLiteDatabase poDB, Player poPlayer, Element poElement, int pnLevel) {
+		moDB = poDB;
 		moElement = poElement;
 		mnLevel = pnLevel;
 		moPlayer = poPlayer;
@@ -161,7 +162,7 @@ public class PlayerElement {
 	}
 	
 	public PlayerElement clone() {
-		return new PlayerElement(moPlayer, moElement, mnLevel);
+		return new PlayerElement(moDB, moPlayer, moElement, mnLevel);
 	}
 	
     public void createTable() {

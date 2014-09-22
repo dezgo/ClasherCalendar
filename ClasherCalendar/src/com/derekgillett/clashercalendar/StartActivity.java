@@ -111,7 +111,7 @@ public class StartActivity extends ActionBarActivity {
 	                Toast.LENGTH_LONG).show();
 		} else {
 			Spinner spTHLevel = (Spinner) this.findViewById(R.id.spTHLevel);
-	        new Player( Integer.parseInt(spTHLevel.getSelectedItem().toString()) , et.getText().toString() );
+	        new Player(moDB, Integer.parseInt(spTHLevel.getSelectedItem().toString()) , et.getText().toString() );
 	        GoToMain_(false);
 		}
 	}
