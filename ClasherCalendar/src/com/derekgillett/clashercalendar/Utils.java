@@ -7,11 +7,11 @@ public class Utils {
 	static public boolean DEBUG = true;
 	static private ProgressDialog dialog;
 	
-	static public enum CostType {
+	static public enum CostTypeEnum {
 		Gold(1),
 		Elixir(2);
 		private int costType;
-		private CostType(int costType) {
+		private CostTypeEnum(int costType) {
 			this.costType = costType;
 		}
 		public int getId() {
@@ -19,7 +19,7 @@ public class Utils {
 		}
 	}
 	
-	static public enum Category {
+	static public enum CategoryEnum {
 		Trap(5),
 		Troop(6),
 		Defence(1),
@@ -27,7 +27,7 @@ public class Utils {
 		Army(3),
 		Other(4);
 		private int categoryID;
-		private Category(int categoryID) {
+		private CategoryEnum(int categoryID) {
 			this.categoryID = categoryID;
 		}
 		public int getId() {

@@ -5,12 +5,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.TreeMap;
 
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 
 public class Player {
+	private SQLiteDatabase moDB;
 	private static final String TAG = "Player.java";
 	
 	private boolean mbRepopulateA = true;	// flag indicating whether to repopulate aggregate array
@@ -29,7 +32,8 @@ public class Player {
 	private int mnIndex = 0;
 	private int mnIndexA = 0;
 	
-	public Player(long pnPlayerID) {
+	public Player(SQLiteDatabase poDB, long pnPlayerID) {
+		moDB = poDB;
 		mnPlayerID = pnPlayerID;
 		this.select();
 		this.LoadExisting();
@@ -57,8 +61,8 @@ public class Player {
 		this.update();
 		
 		// now add in the new items
-		THElements oTHElements = new THElements(mnTHLevel);
-		THElements oTHElementsPrev = new THElements(mnTHLevel-1);
+		THElements oTHElements = new THElements(moDB, mnTHLevel);
+		THElements oTHElementsPrev = new THElements(moDB, mnTHLevel-1);
 		oTHElements.moveToFirst();
 		while (!oTHElements.isAfterLast()) {
 			// get all th elements for this new th level
@@ -162,8 +166,8 @@ public class Player {
 		return this.mnPlayerID;
 	}
 	
-	private void addPlayerElement(int pnPlayerElementID) {
-		PlayerElement oPlayerElement = new PlayerElement(this, pnPlayerElementID);
+	private void addPlayerElement(long pnPlayerElementID) {
+		PlayerElement oPlayerElement = new PlayerElement(moDB, pnPlayerElementID);
 		addPlayerElement(oPlayerElement);
 	}
 	
@@ -312,7 +316,7 @@ public class Player {
 	
 	// for a newly created player, add in the default buildings that come with the given TH level
 	private void LoadDefaults() {
-        THElements oTHElements = new THElements(mnTHLevel);
+        THElements oTHElements = new THElements(moDB, mnTHLevel);
 
         for (int i=0; i<oTHElements.size(); i++) {
         	THElement thElement = oTHElements.getTHElement();
@@ -334,11 +338,11 @@ public class Player {
 	
 	// for an existing player, load the buildings as saved in tblPlayerElement
 	private void LoadExisting() {
-		Cursor cursor = ClasherDBContract.ClasherPlayerElement.selectByPlayer(mnPlayerID);
+		Cursor cursor = this.selectPlayerElements();
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				int nPlayerElementID = cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0));
+				long nPlayerElementID = cursor.getLong(0);
 				if (nPlayerElementID != 0)
 					this.addPlayerElement(nPlayerElementID);
 				cursor.moveToNext();
@@ -376,26 +380,16 @@ public class Player {
 		return moPlayerElements.size();
 	}
 	
-	public void delete() {
-		ClasherDBContract.ClasherPlayer.delete(mnPlayerID);
-	}
-
-	private void update() {
-		ClasherDBContract.ClasherPlayer.update(mnPlayerID, msVillageName, mnTHLevel);
-	}
-
-	private boolean insert() {
-		mnPlayerID = ClasherDBContract.ClasherPlayer.insert(getVillageName(), mnIndexA);
-		return mnPlayerID != 0;
-	}
-	
 	private void select() {
-		Cursor cursor = ClasherDBContract.ClasherPlayer.selectSingle(mnPlayerID);
+		int colIndex;
+		Cursor cursor = selectSingle();
 		if (cursor != null) {
 			try {
 				cursor.moveToFirst();
-				this.msVillageName = cursor.getString(1) == null ? "" : cursor.getString(1);
-				this.mnTHLevel = cursor.getString(2) == null ? 0 : Integer.parseInt(cursor.getString(2));
+				colIndex = cursor.getColumnIndexOrThrow(ClasherDBContract.ClasherPlayer.COLUMN_NAME_PLAYER_VILLAGE_NAME);
+				this.msVillageName = cursor.getString(colIndex);
+				colIndex = cursor.getColumnIndexOrThrow(ClasherDBContract.ClasherPlayer.COLUMN_NAME_TOWNHALL_LEVEL);
+				this.mnTHLevel = cursor.getInt(colIndex);
 			}
 			catch (SQLiteException e) {
 				Log.e(TAG, e.getMessage());
@@ -405,5 +399,67 @@ public class Player {
 			}
 		}
 	}
+
+	public void createTable() {
+    	moDB.execSQL(ClasherDBContract.ClasherPlayer.SQL_DROP_TABLE);
+    	moDB.execSQL(ClasherDBContract.ClasherPlayer.SQL_CREATE_TABLE);
+    }
+    
+    private boolean insert() {
+    	ContentValues values = new ContentValues();
+    	values.put(ClasherDBContract.ClasherPlayer.COLUMN_NAME_PLAYER_VILLAGE_NAME, this.msVillageName);
+    	values.put(ClasherDBContract.ClasherPlayer.COLUMN_NAME_TOWNHALL_LEVEL, this.mnTHLevel);
+
+    	mnPlayerID = moDB.insert(ClasherDBContract.ClasherPlayer.TABLE_NAME, null, values);
+		return mnPlayerID != 0;
+    }
+
+    private int update() {
+    	ContentValues values = new ContentValues();
+    	values.put(ClasherDBContract.ClasherPlayer.COLUMN_NAME_PLAYER_VILLAGE_NAME, this.msVillageName);
+    	values.put(ClasherDBContract.ClasherPlayer.COLUMN_NAME_TOWNHALL_LEVEL, this.mnTHLevel);
+
+    	String selection = "_id = ?";
+		String[] selectionArgs = new String[] { String.valueOf(mnPlayerID) };
+
+		return moDB.update(
+    			ClasherDBContract.ClasherPlayer.TABLE_NAME, 
+    			values, 
+				selection, 
+				selectionArgs); 
+    }
+
+    public int delete() {
+    	String selection = "_id = ?";
+		String[] selectionArgs = new String[] { String.valueOf(mnPlayerID) };
+    	return moDB.delete(
+    			ClasherDBContract.ClasherPlayer.TABLE_NAME, 
+				selection, 
+				selectionArgs); 
+    }
+
+    private Cursor selectSingle() {
+    	String[] columns = ClasherDBContract.ClasherPlayer.ALL_COLUMNS;
+    	String selection = "_id = ?";
+		String[] selectionArgs = new String[] { String.valueOf(this.mnPlayerID) };
+		return moDB.query(
+				ClasherDBContract.ClasherPlayer.TABLE_NAME, 
+				columns, 
+				selection, 
+				selectionArgs, 
+				null, null, null);        	
+    }		
+
+    private Cursor selectPlayerElements() {
+    	String[] columns = new String[] {"_id"};
+    	String selection = ClasherDBContract.ClasherPlayerElement.COLUMN_NAME_PLAYER_ID + " = ?";
+		String[] selectionArgs = new String[] { String.valueOf(this.mnPlayerID) };
+		return moDB.query(
+				ClasherDBContract.ClasherPlayerElement.TABLE_NAME, 
+				columns, 
+				selection, 
+				selectionArgs, 
+				null, null, null);        	
+    }	
 
 }

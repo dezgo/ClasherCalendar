@@ -7,14 +7,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 public class THElement {
-	private SQLiteDatabase moDB = Globals.INSTANCE.getSQLiteDB();
+	private SQLiteDatabase moDB;
 	
 	private long mnID;
 	private int mnTHLevel;
 	private Element moElement;
 	private int mnQuantity;
 
-	public THElement(long pnID) {
+	public THElement(SQLiteDatabase poDB, long pnID) {
+		moDB = poDB;
 		mnID = pnID;
 		Cursor cursor = selectSingle(pnID);
 		if (cursor != null) {
@@ -22,19 +23,20 @@ public class THElement {
 				cursor.moveToFirst();
 				this.mnQuantity = cursor.getInt(0);
 				this.mnTHLevel = cursor.getInt(1);
-				this.moElement = new Element(cursor.getLong(2));
+				this.moElement = new Element(moDB, cursor.getLong(2));
 				this.mnQuantity = cursor.getInt(3);
 			}
 			cursor.close();
 		}
 	}
 	
-	public THElement(
+	public THElement(SQLiteDatabase poDB, 
 			int pnTownhallLevel,
-    		long pnElementID,
+    		Element poElement,
     		int pnQuantity) {
+		moDB = poDB;
 		this.mnTHLevel = pnTownhallLevel;
-		this.moElement = new Element(pnElementID);
+		this.moElement = poElement;
 		this.mnQuantity = pnQuantity;
 		mnID = this.insert();
 	}
@@ -77,10 +79,5 @@ public class THElement {
     public Cursor selectSingle(long pnID) {
 		String[] selectionArgs = new String[] { String.valueOf(pnID) };
 		return moDB.query(ClasherDBContract.ClasherTHElement.TABLE_NAME, ClasherDBContract.ClasherTHElement.ALL_COLUMNS, "_ID = ?", selectionArgs, null, null, null);        	
-    }
-    
-    public Cursor selectByTHLevel(int pnTHLevel) {
-		String[] selectionArgs = new String[] { String.valueOf(pnTHLevel) };
-		return moDB.query(ClasherDBContract.ClasherTHElement.TABLE_NAME, ClasherDBContract.ClasherTHElement.ALL_COLUMNS, ClasherDBContract.ClasherTHElement.COLUMN_NAME_TOWNHALL_LEVEL + " = ?", selectionArgs, null, null, null);        	
     }
 }

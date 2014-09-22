@@ -476,13 +476,13 @@ public class MainActivity extends ActionBarActivity {
             // check on the filter. if this item should be excluded, do it now
             boolean bExclude = false;
             if (oPlayerElement.isMax() && !this.mbMaxed) bExclude = true;
-            if (oElement.getCostType() == Utils.CostType.Elixir.getId() && !this.mbElixir) bExclude = true;
-            if (oElement.getCostType() == Utils.CostType.Gold.getId() && !this.mbGold) bExclude = true;
-            if (oElement.getCategory() == Utils.Category.Army.getId() && !this.mbArmy) bExclude = true;
-            if (oElement.getCategory() == Utils.Category.Defence.getId() && !this.mbDefence) bExclude = true;
-            if (oElement.getCategory() == Utils.Category.Other.getId() && !this.mbOther) bExclude = true;
-            if (oElement.getCategory() == Utils.Category.Resource.getId() && !this.mbResource) bExclude = true;
-            if (oElement.getCategory() == Utils.Category.Trap.getId() && !this.mbTrap) bExclude = true;
+            if (oElement.getCostType().getID() == Utils.CostTypeEnum.Elixir.getId() && !this.mbElixir) bExclude = true;
+            if (oElement.getCostType().getID() == Utils.CostTypeEnum.Gold.getId() && !this.mbGold) bExclude = true;
+            if (oElement.getCategory().getID() == Utils.CategoryEnum.Army.getId() && !this.mbArmy) bExclude = true;
+            if (oElement.getCategory().getID() == Utils.CategoryEnum.Defence.getId() && !this.mbDefence) bExclude = true;
+            if (oElement.getCategory().getID() == Utils.CategoryEnum.Other.getId() && !this.mbOther) bExclude = true;
+            if (oElement.getCategory().getID() == Utils.CategoryEnum.Resource.getId() && !this.mbResource) bExclude = true;
+            if (oElement.getCategory().getID() == Utils.CategoryEnum.Trap.getId() && !this.mbTrap) bExclude = true;
             
             // now if the item is excluded, update that in the players global var
         	player.setExclude(oElementA, bExclude);
@@ -526,20 +526,8 @@ public class MainActivity extends ActionBarActivity {
 	
 	        	// element cost type
 	        	ImageView iv1 = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
-	        	switch (oElement.getCostType()) {
-		        	case 1:
-		        		iv1.setImageResource(R.drawable.gold);
-		        		break;
-		        		
-		        	case 2:
-		        		iv1.setImageResource(R.drawable.elixir);
-		        		break;
-		        		
-		        	case 3:
-		        		iv1.setImageResource(R.drawable.dark_elixir);
-		        		break;
+	        	iv1.setImageResource(oElement.getCostType().getResID());
 	
-	        	}
 	        	ll.addView(iv1);
 	        	vwMainLayout.addView(ll);
 	        	

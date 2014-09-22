@@ -3,8 +3,6 @@ package com.derekgillett.clashercalendar;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.derekgillett.clashercalendar.ClasherDBContract.ClasherPlayerElement;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,19 +17,30 @@ public class PlayerElement {
 	private Date mdUpgradeStart = null;
 	private boolean mbExclude = false;
 
-	private void init() {
-		moDB = Globals.INSTANCE.getSQLiteDB();
-	}
-	
-	public PlayerElement(Player poPlayer, long pnPlayerElementID) {
-		init();
+	// load an existing player element
+	public PlayerElement(SQLiteDatabase poDB, long pnPlayerElementID) {
+		moDB = poDB;
 		mnPlayerElementID = pnPlayerElementID;
-		moPlayer = poPlayer;
-		Load();
+
+		int colIndex;
+		Cursor cursor = this.selectSingle();
+
+		if (cursor != null) {
+			cursor.moveToFirst();
+			colIndex = cursor.getColumnIndexOrThrow(ClasherDBContract.ClasherPlayerElement.COLUMN_NAME_PLAYER_ID);
+			this.moPlayer = new Player(moDB, cursor.getLong(colIndex));
+			colIndex = cursor.getColumnIndexOrThrow(ClasherDBContract.ClasherPlayerElement.COLUMN_NAME_ELEMENT_ID);
+			this.moElement = new Element(moDB, cursor.getLong(colIndex));
+			colIndex = cursor.getColumnIndexOrThrow(ClasherDBContract.ClasherPlayerElement.COLUMN_NAME_LEVEL);
+			this.mnLevel = cursor.getInt(colIndex);
+			colIndex = cursor.getColumnIndexOrThrow(ClasherDBContract.ClasherPlayerElement.COLUMN_NAME_UPGRADE_START);
+			this.mdUpgradeStart = new Date(cursor.getInt(colIndex)*1000);
+			cursor.close();
+		}
 	}
 	
+	// create a new player element
 	public PlayerElement(Player poPlayer, Element poElement, int pnLevel) {
-		init();
 		moElement = poElement;
 		mnLevel = pnLevel;
 		moPlayer = poPlayer;
@@ -152,25 +161,12 @@ public class PlayerElement {
 	}
 	
 	public PlayerElement clone() {
-		return new PlayerElement(this.moPlayer, this.mnPlayerElementID);
+		return new PlayerElement(moPlayer, moElement, mnLevel);
 	}
 	
-	private void Load() {
-		Cursor cursor = moDB.query(ClasherDBContract.ClasherPlayerElement.TABLE_NAME, ClasherDBContract.ClasherPlayerElement.ALL_COLUMNS, "_ID = ?", 
-				new String[] { String.valueOf(mnPlayerElementID) }, null, null, null );
-
-		if (cursor != null) {
-			cursor.moveToFirst();
-			this.moElement = new Element(cursor.getInt(this.COLUMN_ELEMENTID_NUM));
-			this.mnLevel = cursor.getInt(this.COLUMN_LEVEL_NUM);
-			this.mdUpgradeStart = new Date(cursor.getInt(this.COLUMN_UPGRADESTART_NUM)*1000);
-			cursor.close();
-		}
-	}
-
-    private void createTable(SQLiteDatabase poDB) {
-    	poDB.execSQL(ClasherDBContract.ClasherPlayerElement.SQL_DROP_TABLE);
-    	poDB.execSQL(ClasherDBContract.ClasherPlayerElement.SQL_CREATE_TABLE);
+    public void createTable() {
+    	moDB.execSQL(ClasherDBContract.ClasherPlayerElement.SQL_DROP_TABLE);
+    	moDB.execSQL(ClasherDBContract.ClasherPlayerElement.SQL_CREATE_TABLE);
     }
     
     private boolean insert() {
@@ -191,19 +187,34 @@ public class PlayerElement {
     	values.put(ClasherDBContract.ClasherPlayerElement.COLUMN_NAME_PLAYER_ID, moPlayer.getid());
     	values.put(ClasherDBContract.ClasherPlayerElement.COLUMN_NAME_UPGRADE_START, this.mdUpgradeStart != null ? this.mdUpgradeStart.getTime()/1000 : 0);
 
-    	return moDB.update(ClasherDBContract.ClasherPlayerElement.TABLE_NAME, values, "_ID = " + mnPlayerElementID, null);
+    	String selection = "_id = ?";
+		String[] selectionArgs = new String[] { String.valueOf(mnPlayerElementID) };
+
+		return moDB.update(
+    			ClasherDBContract.ClasherPlayerElement.TABLE_NAME, 
+    			values, 
+				selection, 
+				selectionArgs); 
     }
 
-    private long delete() {
-    	return moDB.delete(ClasherDBContract.ClasherPlayerElement.TABLE_NAME, "_ID = " + mnPlayerElementID, null);
-    }
-    
-    private long deletePlayer() {
-    	return moDB.delete(ClasherDBContract.ClasherPlayerElement.TABLE_NAME, ClasherDBContract.ClasherPlayerElement.COLUMN_NAME_PLAYER_ID + " = " + moPlayer.getid(), null);
+    private int deletePlayer() {
+    	String selection = ClasherDBContract.ClasherPlayerElement.COLUMN_NAME_PLAYER_ID + " = ?";
+		String[] selectionArgs = new String[] { String.valueOf(moPlayer.getid()) };
+    	return moDB.delete(
+    			ClasherDBContract.ClasherPlayerElement.TABLE_NAME, 
+				selection, 
+				selectionArgs); 
     }
 
-    public Cursor selectByPlayer(long pnPlayerID) {
-		String[] selectionArgs = new String[] { String.valueOf(pnPlayerID) };
-		return moDB.query(TABLE_NAME, new String[] {"_ID"}, ClasherDBContract.ClasherPlayerElement.COLUMN_NAME_PLAYER_ID + " = ?", selectionArgs, null, null, null);        	
+    private Cursor selectSingle() {
+    	String[] columns = ClasherDBContract.ClasherPlayerElement.ALL_COLUMNS;
+    	String selection = "_id = ?";
+		String[] selectionArgs = new String[] { String.valueOf(this.mnPlayerElementID) };
+		return moDB.query(
+				ClasherDBContract.ClasherPlayerElement.TABLE_NAME, 
+				columns, 
+				selection, 
+				selectionArgs, 
+				null, null, null);        	
     }	
 }
