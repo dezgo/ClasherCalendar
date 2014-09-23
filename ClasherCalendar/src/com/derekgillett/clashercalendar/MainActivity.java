@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -33,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
+	private SQLiteDatabase moDB;
 	
 	// holds list of all textviews showing the countdown times
 	@SuppressLint("UseSparseArrays")
@@ -178,7 +180,10 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.nav_drawer);
         
-        // get extra info - is this an existing player?
+		MySQLiteHelper mySQLiteHelper = new MySQLiteHelper();
+		moDB = mySQLiteHelper.getWritableDatabase();
+
+		// get extra info - is this an existing player?
         /*mbIsExisting = false;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {

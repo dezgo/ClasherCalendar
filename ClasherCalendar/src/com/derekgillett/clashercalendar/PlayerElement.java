@@ -18,7 +18,7 @@ public class PlayerElement {
 	private boolean mbExclude = false;
 
 	// load an existing player element
-	public PlayerElement(SQLiteDatabase poDB, long pnPlayerElementID) {
+	public PlayerElement(SQLiteDatabase poDB, long pnPlayerElementID, Player poPlayer) {
 		moDB = poDB;
 		mnPlayerElementID = pnPlayerElementID;
 
@@ -27,8 +27,7 @@ public class PlayerElement {
 
 		if (cursor != null) {
 			cursor.moveToFirst();
-			colIndex = cursor.getColumnIndexOrThrow(ClasherDBContract.ClasherPlayerElement.COLUMN_NAME_PLAYER_ID);
-			this.moPlayer = new Player(moDB, cursor.getLong(colIndex));
+			this.moPlayer = poPlayer;
 			colIndex = cursor.getColumnIndexOrThrow(ClasherDBContract.ClasherPlayerElement.COLUMN_NAME_ELEMENT_ID);
 			this.moElement = new Element(moDB, cursor.getLong(colIndex));
 			colIndex = cursor.getColumnIndexOrThrow(ClasherDBContract.ClasherPlayerElement.COLUMN_NAME_LEVEL);
@@ -197,7 +196,7 @@ public class PlayerElement {
 				selection, 
 				selectionArgs); 
     }
-
+/*
     private int deletePlayer() {
     	String selection = ClasherDBContract.ClasherPlayerElement.COLUMN_NAME_PLAYER_ID + " = ?";
 		String[] selectionArgs = new String[] { String.valueOf(moPlayer.getid()) };
@@ -206,10 +205,10 @@ public class PlayerElement {
 				selection, 
 				selectionArgs); 
     }
-
+*/
     private Cursor selectSingle() {
     	String[] columns = ClasherDBContract.ClasherPlayerElement.ALL_COLUMNS;
-    	String selection = "_id = ?";
+    	String selection = ClasherDBContract.ClasherPlayerElement.COLUMN_NAME_ID + " = ?";
 		String[] selectionArgs = new String[] { String.valueOf(this.mnPlayerElementID) };
 		return moDB.query(
 				ClasherDBContract.ClasherPlayerElement.TABLE_NAME, 

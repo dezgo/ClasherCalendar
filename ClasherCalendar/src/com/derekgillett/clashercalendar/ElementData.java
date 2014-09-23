@@ -159,7 +159,7 @@ public class ElementData {
     	mnID = moDB.insert(ClasherDBContract.ClasherElementData.TABLE_NAME, null, values);
 		return mnID != 0;
     }
-
+/*
     private int update() {
     	ContentValues values = new ContentValues();
     	values.put(ClasherDBContract.ClasherElementData.COLUMN_NAME_BUILD_COST, this.mnBuildCost);
@@ -198,5 +198,5 @@ public class ElementData {
 				selection, 
 				selectionArgs, 
 				null, null, null);        	
-    }		
+    }		*/
 }

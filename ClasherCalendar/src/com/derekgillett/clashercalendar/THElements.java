@@ -6,6 +6,7 @@ import android.support.v4.util.LongSparseArray;
 
 public class THElements {
 	private SQLiteDatabase moDB;
+	@SuppressWarnings("unused")
 	private static final String TAG = "THElements";
 	
 	private LongSparseArray<THElement> moTHElements = new LongSparseArray<THElement>();

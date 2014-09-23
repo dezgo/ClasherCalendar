@@ -179,7 +179,7 @@ public class Element {
     	mnID = moDB.insert(ClasherDBContract.ClasherElement.TABLE_NAME, null, values);
 		return mnID != 0;
     }
-
+/*
     private int update() {
     	ContentValues values = new ContentValues();
     	values.put(ClasherDBContract.ClasherElement.COLUMN_NAME_CATEGORY, this.moCategory.getID());
@@ -195,7 +195,8 @@ public class Element {
 				selection, 
 				selectionArgs); 
     }
-
+*/
+/*
     private int delete() {
     	String selection = ClasherDBContract.ClasherElement.COLUMN_NAME_ID + " = ?";
 		String[] selectionArgs = new String[] { String.valueOf(mnID) };
@@ -204,7 +205,7 @@ public class Element {
 				selection, 
 				selectionArgs); 
     }
-
+*/
     private Cursor selectSingle() {
     	String[] columns = ClasherDBContract.ClasherElement.ALL_COLUMNS;
     	String selection = ClasherDBContract.ClasherElement.COLUMN_NAME_ID + " = ?";

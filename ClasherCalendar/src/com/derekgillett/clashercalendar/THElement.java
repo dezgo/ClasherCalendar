@@ -17,7 +17,7 @@ public class THElement {
 	public THElement(SQLiteDatabase poDB, long pnID) {
 		moDB = poDB;
 		mnID = pnID;
-		Cursor cursor = selectSingle(pnID);
+		Cursor cursor = selectSingle();
 		if (cursor != null) {
 			if (cursor.getCount() > 0) {
 				cursor.moveToFirst();
@@ -38,7 +38,7 @@ public class THElement {
 		this.mnTHLevel = pnTownhallLevel;
 		this.moElement = poElement;
 		this.mnQuantity = pnQuantity;
-		mnID = this.insert();
+		this.insert();
 	}
 	
 	public int getTHLevel() {
@@ -58,15 +58,16 @@ public class THElement {
     	poDB.execSQL(ClasherDBContract.ClasherTHElement.SQL_CREATE_TABLE);
     }
     
-    private long insert() {
+    private boolean insert() {
     	ContentValues values = new ContentValues();
     	values.put(ClasherTHElement.COLUMN_NAME_ELEMENT_ID, moElement.getId());
     	values.put(ClasherTHElement.COLUMN_NAME_QUANTITY, mnQuantity);
     	values.put(ClasherTHElement.COLUMN_NAME_TOWNHALL_LEVEL, this.mnTHLevel);
 
-    	return moDB.insert(ClasherTHElement.TABLE_NAME, null, values);
+    	mnID = moDB.insert(ClasherTHElement.TABLE_NAME, null, values);
+    	return mnID != 0;
     }
-
+/*
     // only allow update of quantity
     private long update() {
 
@@ -75,9 +76,9 @@ public class THElement {
 
     	return moDB.update(ClasherDBContract.ClasherTHElement.TABLE_NAME, values, "_ID = " + mnID, null);
     }
-    
-    public Cursor selectSingle(long pnID) {
-		String[] selectionArgs = new String[] { String.valueOf(pnID) };
+  */  
+    private Cursor selectSingle() {
+		String[] selectionArgs = new String[] { String.valueOf(mnID) };
 		return moDB.query(ClasherDBContract.ClasherTHElement.TABLE_NAME, ClasherDBContract.ClasherTHElement.ALL_COLUMNS, "_ID = ?", selectionArgs, null, null, null);        	
     }
 }

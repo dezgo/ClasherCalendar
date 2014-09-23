@@ -21,7 +21,7 @@ public class ClasherDBContract {
         
         public static final String SQL_CREATE_TABLE = 
         		"CREATE TABLE " + ClasherCategory.TABLE_NAME + " (" +
-        		ClasherCategory._ID + " INTEGER PRIMARY KEY," + 
+        		ClasherCategory._ID + INTEGER_TYPE + " PRIMARY KEY," + 
         		ClasherCategory.COLUMN_NAME_CATEGORY_NAME + TEXT_TYPE + " )";
         
         public static final String SQL_DROP_TABLE =
@@ -36,7 +36,7 @@ public class ClasherDBContract {
         
         public static final String SQL_CREATE_TABLE = 
         		"CREATE TABLE " + ClasherCostType.TABLE_NAME + " (" +
-        				ClasherCostType._ID + " INTEGER PRIMARY KEY," + 
+        				ClasherCostType._ID + INTEGER_TYPE + " PRIMARY KEY," + 
         				ClasherCostType.COLUMN_NAME_COST_TYPE_NAME + TEXT_TYPE + " )";
         
         public static final String SQL_DROP_TABLE =
@@ -53,7 +53,7 @@ public class ClasherDBContract {
         
         public static final String SQL_CREATE_TABLE = 
         		"CREATE TABLE " + ClasherElement.TABLE_NAME + " (" +
-        				ClasherElement._ID + " INTEGER PRIMARY KEY," + 
+        				ClasherElement._ID + INTEGER_TYPE + " PRIMARY KEY," + 
         				ClasherElement.COLUMN_NAME_ELEMENT_NAME + TEXT_TYPE + COMMA_SEP +  
         				ClasherElement.COLUMN_NAME_COST_TYPE + INTEGER_TYPE + COMMA_SEP +  
         				ClasherElement.COLUMN_NAME_CATEGORY + INTEGER_TYPE + " )";
@@ -75,7 +75,7 @@ public class ClasherDBContract {
         
         public static final String SQL_CREATE_TABLE = 
         		"CREATE TABLE " + ClasherElementData.TABLE_NAME + " (" +
-        				ClasherElementData._ID + " INTEGER PRIMARY KEY," + 
+        				ClasherElementData._ID + INTEGER_TYPE + " PRIMARY KEY," + 
         				ClasherElementData.COLUMN_NAME_ELEMENT_ID + TEXT_TYPE + COMMA_SEP +  
         				ClasherElementData.COLUMN_NAME_ELEMENT_LEVEL + INTEGER_TYPE + COMMA_SEP +  
         				ClasherElementData.COLUMN_NAME_HIT_POINTS + INTEGER_TYPE + COMMA_SEP +  
@@ -97,7 +97,7 @@ public class ClasherDBContract {
 
         public static final String SQL_CREATE_TABLE = 
         		"CREATE TABLE " + ClasherTHElement.TABLE_NAME + " (" +
-        				ClasherTHElement._ID + " INTEGER PRIMARY KEY," + 
+        				ClasherTHElement._ID + INTEGER_TYPE + " PRIMARY KEY," + 
         				ClasherTHElement.COLUMN_NAME_ELEMENT_ID + INTEGER_TYPE + COMMA_SEP +  
         				ClasherTHElement.COLUMN_NAME_QUANTITY + INTEGER_TYPE + COMMA_SEP +  
         				ClasherTHElement.COLUMN_NAME_TOWNHALL_LEVEL + INTEGER_TYPE + " )";
@@ -117,7 +117,7 @@ public class ClasherDBContract {
 
         public static final String SQL_CREATE_TABLE = 
         		"CREATE TABLE " + ClasherPlayerElement.TABLE_NAME + " (" +
-        				ClasherPlayerElement._ID + " INTEGER PRIMARY KEY," + 
+        				ClasherPlayerElement._ID + INTEGER_TYPE + " PRIMARY KEY," + 
         				ClasherPlayerElement.COLUMN_NAME_ELEMENT_ID + INTEGER_TYPE + COMMA_SEP +  
         				ClasherPlayerElement.COLUMN_NAME_LEVEL + INTEGER_TYPE + COMMA_SEP +  
         				ClasherPlayerElement.COLUMN_NAME_PLAYER_ID + INTEGER_TYPE + COMMA_SEP +  
@@ -136,7 +136,7 @@ public class ClasherDBContract {
 
         public static final String SQL_CREATE_TABLE = 
         		"CREATE TABLE " + ClasherPlayer.TABLE_NAME + " (" +
-        				ClasherPlayer._ID + " INTEGER PRIMARY KEY," + 
+        				ClasherPlayer._ID + INTEGER_TYPE + " PRIMARY KEY," + 
         				ClasherPlayer.COLUMN_NAME_PLAYER_VILLAGE_NAME + INTEGER_TYPE + COMMA_SEP +
 						ClasherPlayer.COLUMN_NAME_TOWNHALL_LEVEL + INTEGER_TYPE + " )";
         

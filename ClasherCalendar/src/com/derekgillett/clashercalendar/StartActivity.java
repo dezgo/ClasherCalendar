@@ -40,6 +40,9 @@ public class StartActivity extends ActionBarActivity {
 		
 		// start task to init players object in background
 		new GetPlayersTask().execute();
+		
+		MySQLiteHelper mySQLiteHelper = new MySQLiteHelper();
+		moDB = mySQLiteHelper.getWritableDatabase();
 	}
 	
 	//http://androidresearch.wordpress.com/2012/03/17/understanding-asynctask-once-and-forever/

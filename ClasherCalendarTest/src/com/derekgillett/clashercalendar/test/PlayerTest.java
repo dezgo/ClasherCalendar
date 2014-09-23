@@ -33,7 +33,7 @@ public class PlayerTest extends TestCase {
 		String[] elements = {
 				"Army Camp",
 				"Barracks",
-				"Cannon",
+				"Canon",
 				"Elixir Collector",
 				"Elixir Storage",
 				"Gold Mine",
@@ -44,7 +44,7 @@ public class PlayerTest extends TestCase {
 		int[] elementQtys = {
 				1,	// Army Camp
 				1,	// Barracks
-				2,	// Cannon
+				2,	// Canon
 				1,	// Elixir Collector
 				1,	// Elixir Storage
 				1,	// Gold Mine
@@ -60,7 +60,7 @@ public class PlayerTest extends TestCase {
 				"Archer Tower",
 				"Army Camp",
 				"Barracks",
-				"Cannon",
+				"Canon",
 				"Elixir Collector",
 				"Elixir Storage",
 				"Gold Mine",
@@ -73,7 +73,7 @@ public class PlayerTest extends TestCase {
 				1,	// Archer Tower
 				1,	// Army Camp
 				2,	// Barracks
-				2,	// Cannon
+				2,	// Canon
 				2,	// Elixir Collector
 				1,	// Elixir Storage
 				2,	// Gold Mine
@@ -91,7 +91,7 @@ public class PlayerTest extends TestCase {
 				"Army Camp",
 				"Barracks",
 				"Bomb",
-				"Cannon",
+				"Canon",
 				"Elixir Collector",
 				"Elixir Storage",
 				"Gold Mine",
@@ -107,7 +107,7 @@ public class PlayerTest extends TestCase {
 				2,	// Army Camp
 				2,	// Barracks
 				2,	// Bomb
-				2,	// Cannon
+				2,	// Canon
 				3,	// Elixir Collector
 				2,	// Elixir Storage
 				3,	// Gold Mine
@@ -128,19 +128,36 @@ public class PlayerTest extends TestCase {
 				"Army Camp",
 				"Barracks",
 				"Bomb",
-				"Cannon",
+				"Canon",
 				"Elixir Collector",
 				"Elixir Storage",
 				"Gold Mine",
 				"Gold Storage",
 				"Laboratory",
 				"Mortar",
+				"Spring Trap",
 				"Town Hall",
-				"Wall",
-				"Spring Trap"
+				"Wall"
 		};
 
-		int[] elementQtys = { 1,2,2,3,2,2,4,2,4,2,1,1,1,75,2 };		
+		int[] elementQtys = {
+				1,	// Air Defence
+				2,	// Archer Tower
+				2,	// Army Camp
+				3,	// Barracks
+				2,	// Bomb
+				2,	// Canon
+				4,	// Elixir Collector
+				2,	// Elixir Storage
+				4,	// Gold Mine
+				2,	// Gold Storage
+				1,	// Laboratory
+				1,	// Mortar
+				2,	// Spring Trap
+				1,	// Town Hall
+				75	// Wall
+		};
+
 		CreatePlayer(4, "Dezgoville TH4", elements, elementQtys);
 	}
 
@@ -152,7 +169,7 @@ public class PlayerTest extends TestCase {
 				"Army Camp",
 				"Barracks",
 				"Bomb",
-				"Cannon",
+				"Canon",
 				"Elixir Collector",
 				"Elixir Storage",
 				"Gold Mine",
@@ -160,10 +177,10 @@ public class PlayerTest extends TestCase {
 				"Laboratory",
 				"Mortar",
 				"Spell Factory",
-				"Wizard Tower",
+				"Spring Trap",
 				"Town Hall",
 				"Wall",
-				"Spring Trap"
+				"Wizard Tower"
 		};
 
 		int[] elementQtys = {
@@ -173,7 +190,7 @@ public class PlayerTest extends TestCase {
 				3,   // Army Camp
 				3,   // Barracks
 				4,   // Bomb
-				3,   // Cannon
+				3,   // Canon
 				5,   // Elixir Collector
 				2,   // Elixir Storage
 				5,   // Gold Mine
@@ -181,10 +198,10 @@ public class PlayerTest extends TestCase {
 				1,   // Laboratory
 				1,   // Mortar
 				1,   // Spell Factory
-				1,   // Wizard Tower
+				2,   // Spring Trap
 				1,   // Town Hall
 				100,   // Wall
-				2   // Spring Trap
+				1   // Wizard Tower
 		};		
 		CreatePlayer(5, "Dezgoville TH5", elements, elementQtys);
 	}
@@ -197,7 +214,7 @@ public class PlayerTest extends TestCase {
 				"Army Camp",
 				"Barracks",
 				"Bomb",
-				"Cannon",
+				"Canon",
 				"Elixir Collector",
 				"Elixir Storage",
 				"Giant Bomb",
@@ -206,10 +223,10 @@ public class PlayerTest extends TestCase {
 				"Laboratory",
 				"Mortar",
 				"Spell Factory",
-				"Wizard Tower",
+				"Spring Trap",
 				"Town Hall",
 				"Wall",
-				"Spring Trap"
+				"Wizard Tower"
 		};
 
 		int[] elementQtys = {
@@ -219,7 +236,7 @@ public class PlayerTest extends TestCase {
 				3,   // Army Camp
 				3,   // Barracks
 				4,   // Bomb
-				3,   // Cannon
+				3,   // Canon
 				6,   // Elixir Collector
 				2,   // Elixir Storage
 				1,   // Giant Bomb
@@ -228,10 +245,10 @@ public class PlayerTest extends TestCase {
 				1,   // Laboratory
 				2,   // Mortar
 				1,   // Spell Factory
-				2,   // Wizard Tower
+				4,   // Spring Trap
 				1,   // Town Hall
 				125,   // Wall
-				4   // Spring Trap
+				2   // Wizard Tower
 		};		
 		CreatePlayer(6, "Dezgoville TH6", elements, elementQtys);
 	}
@@ -242,9 +259,10 @@ public class PlayerTest extends TestCase {
 				"Air Defence",
 				"Archer Tower",
 				"Army Camp",
+				"Barbarian King Alter",
 				"Barracks",
 				"Bomb",
-				"Cannon",
+				"Canon",
 				"Dark Barracks",
 				"Dark Elixir Storage",
 				"Elixir Collector",
@@ -257,11 +275,10 @@ public class PlayerTest extends TestCase {
 				"Mortar",
 				"Seeking Air Mine",
 				"Spell Factory",
-				"Wizard Tower",
+				"Spring Trap",
 				"Town Hall",
 				"Wall",
-				"Spring Trap",
-				"Barbarian King Alter"
+				"Wizard Tower",
 		};
 
 		int[] elementQtys = {
@@ -269,9 +286,10 @@ public class PlayerTest extends TestCase {
 				2,   // Air Defence
 				4,   // Archer Tower
 				4,   // Army Camp
+				1,   // Barbarian King Alter
 				4,   // Barracks
 				6,   // Bomb
-				5,   // Cannon
+				5,   // Canon
 				1,   // Dark Barracks
 				1,   // Dark Elixir Storage
 				6,   // Elixir Collector
@@ -284,11 +302,10 @@ public class PlayerTest extends TestCase {
 				3,   // Mortar
 				1,   // Seeking Air Mine
 				1,   // Spell Factory
-				2,   // Wizard Tower
-				1,   // Town Hall
-				175,   // Wall
 				4,   // Spring Trap
-				1   // Barbarian King Alter
+				1,   // Town Hall
+				175, // Wall
+				2,   // Wizard Tower
 		};		
 
 		CreatePlayer(7, "Dezgoville TH7", elements, elementQtys);
@@ -300,10 +317,12 @@ public class PlayerTest extends TestCase {
 				"Air Defence",
 				"Archer Tower",
 				"Army Camp",
+				"Barbarian King Alter",
 				"Barracks",
 				"Bomb",
-				"Cannon",
+				"Canon",
 				"Dark Barracks",
+				"Dark Elixir Drill",
 				"Dark Elixir Storage",
 				"Elixir Collector",
 				"Elixir Storage",
@@ -315,12 +334,10 @@ public class PlayerTest extends TestCase {
 				"Mortar",
 				"Seeking Air Mine",
 				"Spell Factory",
-				"Wizard Tower",
-				"Dark Elixir Drill",
+				"Spring Trap",
 				"Town Hall",
 				"Wall",
-				"Spring Trap",
-				"Barbarian King Alter"
+				"Wizard Tower"
 		};
 
 		int[] elementQtys = {
@@ -328,10 +345,12 @@ public class PlayerTest extends TestCase {
 				3,   // Air Defence
 				5,   // Archer Tower
 				4,   // Army Camp
+				1,   // Barbarian King Alter
 				4,   // Barracks
 				6,   // Bomb
-				5,   // Cannon
+				5,   // Canon
 				2,   // Dark Barracks
+				1,   // Dark Elixir Drill
 				1,   // Dark Elixir Storage
 				6,   // Elixir Collector
 				3,   // Elixir Storage
@@ -343,12 +362,10 @@ public class PlayerTest extends TestCase {
 				3,   // Mortar
 				2,   // Seeking Air Mine
 				1,   // Spell Factory
-				3,   // Wizard Tower
-				1,   // Dark Elixir Drill
+				6,   // Spring Trap
 				1,   // Town Hall
 				225,   // Wall
-				6,   // Spring Trap
-				1   // Barbarian King Alter
+				3   // Wizard Tower
 		};		
 		
 		CreatePlayer(8, "Dezgoville TH8", elements, elementQtys);
@@ -358,12 +375,15 @@ public class PlayerTest extends TestCase {
 		String[] elements = {
 				"Air Bomb",
 				"Air Defence",
+				"Archer Queen Alter",
 				"Archer Tower",
 				"Army Camp",
+				"Barbarian King Alter",
 				"Barracks",
 				"Bomb",
-				"Cannon",
+				"Canon",
 				"Dark Barracks",
+				"Dark Elixir Drill",
 				"Dark Elixir Storage",
 				"Elixir Collector",
 				"Elixir Storage",
@@ -375,25 +395,25 @@ public class PlayerTest extends TestCase {
 				"Mortar",
 				"Seeking Air Mine",
 				"Spell Factory",
-				"Wizard Tower",
-				"Dark Elixir Drill",
-				"Town Hall",
-				"X-Bow",
-				"Wall",
 				"Spring Trap",
-				"Barbarian King Alter",
-				"Archer Queen Alter"
+				"Town Hall",
+				"Wall",
+				"Wizard Tower",
+				"X-Bow",
 		};
 
 		int[] elementQtys = {
 				4,   // Air Bomb
 				4,   // Air Defence
+				1,   // Archer Queen Alter
 				6,   // Archer Tower
 				4,   // Army Camp
+				1,   // Barbarian King Alter
 				4,   // Barracks
 				6,   // Bomb
-				5,   // Cannon
+				5,   // Canon
 				2,   // Dark Barracks
+				2,   // Dark Elixir Drill
 				1,   // Dark Elixir Storage
 				6,   // Elixir Collector
 				4,   // Elixir Storage
@@ -405,14 +425,11 @@ public class PlayerTest extends TestCase {
 				3,   // Mortar
 				4,   // Seeking Air Mine
 				1,   // Spell Factory
-				4,   // Wizard Tower
-				2,   // Dark Elixir Drill
-				1,   // Town Hall
-				2,   // X-Bow
-				250,   // Wall
 				6,   // Spring Trap
-				1,   // Barbarian King Alter
-				1   // Archer Queen Alter
+				1,   // Town Hall
+				250,   // Wall
+				4,   // Wizard Tower
+				2   // X-Bow
 		};		
 
 		CreatePlayer(9, "Dezgoville TH9", elements, elementQtys);
@@ -422,12 +439,15 @@ public class PlayerTest extends TestCase {
 		String[] elements = {
 				"Air Bomb",
 				"Air Defence",
+				"Archer Queen Alter",
 				"Archer Tower",
 				"Army Camp",
+				"Barbarian King Alter",
 				"Barracks",
 				"Bomb",
-				"Cannon",
+				"Canon",
 				"Dark Barracks",
+				"Dark Elixir Drill",
 				"Dark Elixir Storage",
 				"Elixir Collector",
 				"Elixir Storage",
@@ -435,30 +455,30 @@ public class PlayerTest extends TestCase {
 				"Gold Mine",
 				"Gold Storage",
 				"Hidden Tesla",
+				"Inferno Tower",
 				"Laboratory",
 				"Mortar",
 				"Seeking Air Mine",
 				"Spell Factory",
-				"Wizard Tower",
-				"Dark Elixir Drill",
-				"Town Hall",
-				"X-Bow",
-				"Wall",
-				"Inferno Tower",
 				"Spring Trap",
-				"Barbarian King Alter",
-				"Archer Queen Alter"
+				"Town Hall",
+				"Wall",
+				"Wizard Tower",
+				"X-Bow"
 		};
 
 		int[] elementQtys = {
 				5,   // Air Bomb
 				4,   // Air Defence
+				1,    // Archer Queen Alter,
 				7,   // Archer Tower
 				4,   // Army Camp
+				1,   // Barbarian King Alter
 				4,   // Barracks
 				6,   // Bomb
-				6,   // Cannon
+				6,   // Canon
 				2,   // Dark Barracks
+				3,   // Dark Elixir Drill
 				1,   // Dark Elixir Storage
 				7,   // Elixir Collector
 				4,   // Elixir Storage
@@ -466,19 +486,16 @@ public class PlayerTest extends TestCase {
 				7,   // Gold Mine
 				4,   // Gold Storage
 				4,   // Hidden Tesla
+				2,   // Inferno Tower
 				1,   // Laboratory
 				3,   // Mortar
 				5,   // Seeking Air Mine
 				1,   // Spell Factory
-				4,   // Wizard Tower
-				3,   // Dark Elixir Drill
-				1,   // Town Hall
-				3,   // X-Bow
-				250,   // Wall
-				2,   // Inferno Tower
 				6,   // Spring Trap
-				1,   // Barbarian King Alter
-				1   // Archer Queen Alter
+				1,   // Town Hall
+				250,   // Wall
+				4,   // Wizard Tower
+				3   // X-Bow
 		};		
 
 		CreatePlayer(10, "Dezgoville TH10", elements, elementQtys);
@@ -503,10 +520,11 @@ public class PlayerTest extends TestCase {
 			if (numElements_Actual < numElements_Expected) {
 				Log.v(TAG, "Expecting " + poElementQtys[numElements_Actual] + "x" + poElements[numElements_Actual] + 
 						 ", retrieved " + oElementA.getQuantity() + "x" + oElement.getName());
-				/*assertTrue("Expecting " + poElementQtys[numElements_Actual] + "x" + poElements[numElements_Actual] + 
+				
+				assertTrue("Expecting " + poElementQtys[numElements_Actual] + "x" + poElements[numElements_Actual] + 
 						 ", retrieved " + oElementA.getQuantity() + "x" + oElement.getName(),
 						oElement.getName().equals(poElements[numElements_Actual]) && 
-						oElementA.getQuantity() == poElementQtys[numElements_Actual]);*/
+						oElementA.getQuantity() == poElementQtys[numElements_Actual]);
 			}
 			numElements_Actual++;
 			oPlayer.moveToNextA();

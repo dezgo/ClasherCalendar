@@ -119,7 +119,7 @@ public class Player {
 		}
 		mbRepopulateA = false;
 		moElementsASorted = new ArrayList<ElementA>(this.moElementsA.values());
-		//this.sortByName(true);
+		this.sortByName(true);
 		//this.sortByCost(true);
 	}
 	
@@ -168,7 +168,7 @@ public class Player {
 	}
 	
 	private void addPlayerElement(long pnPlayerElementID) {
-		PlayerElement oPlayerElement = new PlayerElement(moDB, pnPlayerElementID);
+		PlayerElement oPlayerElement = new PlayerElement(moDB, pnPlayerElementID, this);
 		addPlayerElement(oPlayerElement);
 	}
 	
@@ -372,12 +372,20 @@ public class Player {
 	}
 	
 	private void select() {
-		int colIndex;
-		Cursor cursor = selectSingle();
+    	String[] columns = ClasherDBContract.ClasherPlayer.ALL_COLUMNS;
+    	String selection = ClasherDBContract.ClasherPlayer.COLUMN_NAME_ID + " = ?";
+		String[] selectionArgs = new String[] { String.valueOf(this.mnPlayerID) };
+		Cursor cursor = moDB.query(
+				ClasherDBContract.ClasherPlayer.TABLE_NAME, 
+				columns, 
+				selection, 
+				selectionArgs, 
+				null, null, null);
+		
 		if (cursor != null) {
 			try {
 				cursor.moveToFirst();
-				colIndex = cursor.getColumnIndexOrThrow(ClasherDBContract.ClasherPlayer.COLUMN_NAME_PLAYER_VILLAGE_NAME);
+				int colIndex = cursor.getColumnIndexOrThrow(ClasherDBContract.ClasherPlayer.COLUMN_NAME_PLAYER_VILLAGE_NAME);
 				this.msVillageName = cursor.getString(colIndex);
 				colIndex = cursor.getColumnIndexOrThrow(ClasherDBContract.ClasherPlayer.COLUMN_NAME_TOWNHALL_LEVEL);
 				this.mnTHLevel = cursor.getInt(colIndex);
@@ -428,18 +436,6 @@ public class Player {
 				selection, 
 				selectionArgs); 
     }
-
-    private Cursor selectSingle() {
-    	String[] columns = ClasherDBContract.ClasherPlayer.ALL_COLUMNS;
-    	String selection = "_id = ?";
-		String[] selectionArgs = new String[] { String.valueOf(this.mnPlayerID) };
-		return moDB.query(
-				ClasherDBContract.ClasherPlayer.TABLE_NAME, 
-				columns, 
-				selection, 
-				selectionArgs, 
-				null, null, null);        	
-    }		
 
     private Cursor selectPlayerElements() {
     	String[] columns = new String[] {"_id"};
