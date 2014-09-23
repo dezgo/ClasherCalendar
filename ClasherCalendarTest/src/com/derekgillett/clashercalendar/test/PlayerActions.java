@@ -10,9 +10,8 @@ import com.derekgillett.clashercalendar.PlayerElement;
 import junit.framework.TestCase;
 
 public class PlayerActions extends TestCase {
+	private static final String TAG = "PlayerActions";
 
-	private SQLiteDatabase moDB;
-	
 	private Player moPlayer;
 	private int mnTHLevel = 3;
 	
@@ -23,8 +22,8 @@ public class PlayerActions extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		MySQLiteHelper mySQLiteHelper = new MySQLiteHelper();
-		moDB = mySQLiteHelper.getWritableDatabase();
-		moPlayer = new Player(moDB, mnTHLevel, "Test Village");
+		SQLiteDatabase poDB = mySQLiteHelper.getWritableDatabase();
+		moPlayer = new Player(poDB, mnTHLevel, "Test Village");
 	}
 
 	protected void tearDown() throws Exception {
@@ -38,6 +37,7 @@ public class PlayerActions extends TestCase {
 	}
 
 	public void testGetPlayerElements() {
+		moPlayer.moveToFirst();
 		while (!moPlayer.isAfterLast()) {
 			PlayerElement oPlayerElement = moPlayer.getPlayerElement();
 			Log.v("PlayerActions.testGetPlayerElements",oPlayerElement.getElement().getName() + ", lvl " + oPlayerElement.getLevel());
@@ -52,5 +52,26 @@ public class PlayerActions extends TestCase {
 	
 	public void testOrderByName() {
 		moPlayer.sortByName(true);
+	}
+	
+	public void testIsMax() {
+		moPlayer.moveToFirst();
+		while (!moPlayer.isAfterLast()) {
+			PlayerElement playerElement = moPlayer.getPlayerElement();
+			String elementName = playerElement.getElement().getName();
+			int level = playerElement.getLevel();
+			int maxLevel = playerElement.getElement().getMaxLevel();
+			boolean isMax = playerElement.isMax();
+			String sMsg = elementName + ", level " + level + ", " +
+					"max level " + maxLevel + " - isMax? " + (isMax ? "Yes" : "No");
+			Log.v(TAG, sMsg);
+			
+			if (isMax)
+				assertTrue(sMsg, level == maxLevel);
+			else
+				assertTrue(sMsg, level < maxLevel);
+			
+			moPlayer.moveToNext();
+		}
 	}
 }

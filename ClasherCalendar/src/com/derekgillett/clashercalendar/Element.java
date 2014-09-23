@@ -24,7 +24,7 @@ public class Element {
 		this.loadElement();
 		mnMaxLevel = getMaxLevel();
 		for (int i=0; i<mnMaxLevel; i++) {
-			ElementData oElementData = new ElementData(this,i+1);
+			ElementData oElementData = new ElementData(moDB, this,i+1);
 			moElementData.put(i+1, oElementData);
 		}
 	}
@@ -132,7 +132,7 @@ public class Element {
 	}	
 
 	public int getMaxLevel() {
-    	return getMaxLevel(11);
+    	return getMaxLevel(10);
     }
 
     public int getMaxLevel(int pnTHLevel) {
@@ -140,7 +140,7 @@ public class Element {
 		Cursor cursor = null;
 		String[] columns = new String[] {"MAX(" + ClasherDBContract.ClasherElementData.COLUMN_NAME_ELEMENT_LEVEL + ")" };
     	String selection = ClasherDBContract.ClasherElementData.COLUMN_NAME_ELEMENT_ID + " = ? AND " + 
-    			ClasherDBContract.ClasherElementData.COLUMN_NAME_TOWNHALL_MIN_LEVEL + " = ?";
+    			ClasherDBContract.ClasherElementData.COLUMN_NAME_TOWNHALL_MIN_LEVEL + " <= ?";
 		String[] selectionArgs = new String[] { String.valueOf(mnID), String.valueOf(pnTHLevel) };
     	try {
     		cursor = moDB.query(

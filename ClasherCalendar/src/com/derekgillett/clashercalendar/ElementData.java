@@ -19,7 +19,8 @@ public class ElementData {
 	private int mnTHMinLevel = 0;
 	
 
-	public ElementData(Element poElement, int pnElementLevel) {
+	public ElementData(SQLiteDatabase poDB, Element poElement, int pnElementLevel) {
+		moDB = poDB;
 		mnElementLevel = pnElementLevel;
 		moElement = poElement;
 		Load();
@@ -93,7 +94,7 @@ public class ElementData {
 
 		// if pnLevel is <= mnElementLevel will return the build Cost
 		for (int nLevel = mnElementLevel+1; nLevel <= pnLevel; nLevel++) {
-			ElementData oElementData = new ElementData(this.getElement(), nLevel);
+			ElementData oElementData = new ElementData(moDB, this.getElement(), nLevel);
 			nBuildCost = nBuildCost + oElementData.getBuildCost();
 		}
 		return nBuildCost;
@@ -105,7 +106,7 @@ public class ElementData {
 
 		// if pnLevel is <= mnElementLevel will return the build time
 		for (int nLevel = mnElementLevel+1; nLevel <= pnLevel; nLevel++) {
-			ElementData oElementData = new ElementData(this.getElement(), nLevel);
+			ElementData oElementData = new ElementData(moDB, this.getElement(), nLevel);
 			nBuildTime = nBuildTime + oElementData.getBuildTime();
 		}
 		return nBuildTime;
