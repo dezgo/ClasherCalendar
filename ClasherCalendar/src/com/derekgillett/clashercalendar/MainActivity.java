@@ -389,7 +389,7 @@ public class MainActivity extends ActionBarActivity {
 					@Override
 					public void onClick(View v) {
 						//v.performClick();
-						LevelChangeOnClickListener(tv4, -1, oElementA);
+						LevelChangeOnClickListener( tv4, -1, oElementA);
 					}
 				});
 	        	if (bCentre) btn2.setLayoutParams(lp4);
@@ -618,18 +618,23 @@ public class MainActivity extends ActionBarActivity {
 
     // change the level of the selected item
     private void LevelChangeOnClickListener(TextView poTextview, int pnIncrement, ElementA poElementA) {
-    	int nCurrentValue = poElementA.getLevel();
-    	int nNewValue = nCurrentValue + pnIncrement;
-    	
-        Player player = Globals.INSTANCE.getPlayer();
-        if (nNewValue >= 0 && nNewValue <= poElementA.getElement().getMaxLevel(player.getTHLevel())) {
-        	long nElementID = poElementA.getElement().getId();
-        	PlayerElement oPlayerElement = player.getPlayerElement(nElementID,poElementA.getLevel());
-        	if (oPlayerElement != null) {
-	        	player.incPlayerElementLevel(oPlayerElement, pnIncrement);
-	        	this.GetElements(findViewById(R.id.rlMain), (GridLayout) this.findViewById(R.id.layoutMain));
-        	}
-    	}
+    	// only do this if the button is currently pressed
+    	//AutoRepeatButton btn = (AutoRepeatButton) findViewById(nBtnID);
+    	//if (btn.isPressed()) {	    	
+
+    		int nCurrentValue = poElementA.getLevel();
+	    	int nNewValue = nCurrentValue + pnIncrement;
+	    	
+	        Player player = Globals.INSTANCE.getPlayer();
+	        if (nNewValue >= 0 && nNewValue <= poElementA.getElement().getMaxLevel(player.getTHLevel())) {
+	        	long nElementID = poElementA.getElement().getId();
+	        	PlayerElement oPlayerElement = player.getPlayerElement(nElementID,poElementA.getLevel());
+	        	if (oPlayerElement != null) {
+		        	player.incPlayerElementLevel(oPlayerElement, pnIncrement);
+		        	this.GetElements(findViewById(R.id.rlMain), (GridLayout) this.findViewById(R.id.layoutMain));
+	        	}
+	    	}
+    	//}
     }
 
     private void initialSetup(View poView) {

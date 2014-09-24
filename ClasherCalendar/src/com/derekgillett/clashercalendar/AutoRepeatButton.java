@@ -14,7 +14,7 @@ public class AutoRepeatButton extends Button {
     // speedup
     private long repeatIntervalCurrent = repeatIntervalInMilliseconds;
     private long repeatIntervalStep = 2;
-    private long repeatIntervalMin = 10;
+    private long repeatIntervalMin = 50;
 
     private Runnable repeatClickWhileButtonHeldRunnable = new Runnable() {
         @Override
@@ -46,7 +46,7 @@ public class AutoRepeatButton extends Button {
                     performClick();
 
                     // Schedule the start of repetitions after a one half second delay.
-                    repeatIntervalCurrent = repeatIntervalInMilliseconds;
+                    //repeatIntervalCurrent = repeatIntervalInMilliseconds;
                     postDelayed(repeatClickWhileButtonHeldRunnable, initialRepeatDelay);
                 } else if (action == MotionEvent.ACTION_MOVE) {
                 	// do nothing
