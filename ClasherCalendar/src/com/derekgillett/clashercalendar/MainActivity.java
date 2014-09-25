@@ -22,18 +22,21 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
-	//private SQLiteDatabase moDB;
+	private final static String TAG = "MainActivity";
 	
 	// holds list of all textviews showing the countdown times
 	@SuppressLint("UseSparseArrays")
@@ -365,15 +368,14 @@ public class MainActivity extends ActionBarActivity {
             
         	// Draw increment button (if appropriate)
             if (!bMax) {
-	        	AutoRepeatButton btn1 = new AutoRepeatButton(this);
+            	Button btn1 = (Button) getLayoutInflater().inflate(R.layout.btn_template, null);
 	        	btn1.setText("  +  ");
-	        	btn1.setOnClickListener(new View.OnClickListener() {
+	        	btn1.setOnTouchListener(new RepeatListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						//v.performClick();
-						LevelChangeOnClickListener(tv4, 1, oElementA);
+						LevelChangeOnClickListener((Button) v, tv4, 1, oElementA);
 					}
-				});
+				}));
 	        	if (bCentre) btn1.setLayoutParams(lp4);
 	        	btn1.setGravity(Gravity.CENTER);
 //	        	lp4.columnSpec = GridLayout.spec(3);
@@ -383,15 +385,15 @@ public class MainActivity extends ActionBarActivity {
 
         	// Draw decrement button (if appropriate)
             if (!bMin) {
-	        	AutoRepeatButton btn2 = new AutoRepeatButton(this);
+            	Button btn2 = (Button) getLayoutInflater().inflate(R.layout.btn_template, null);
 	        	btn2.setText("  -  ");
-	        	btn2.setOnClickListener(new View.OnClickListener() {
+	        	btn2.setOnTouchListener(new RepeatListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						//v.performClick();
-						LevelChangeOnClickListener( tv4, -1, oElementA);
+						LevelChangeOnClickListener((Button) v, tv4, -1, oElementA);
 					}
-				});
+				}));
 	        	if (bCentre) btn2.setLayoutParams(lp4);
 	        	btn2.setGravity(Gravity.CENTER);
 //	        	lp4.columnSpec = GridLayout.spec(3);
@@ -617,21 +619,34 @@ public class MainActivity extends ActionBarActivity {
     }
 
     // change the level of the selected item
-    private void LevelChangeOnClickListener(TextView poTextview, int pnIncrement, ElementA poElementA) {
+    private void LevelChangeOnClickListener(Button btn, TextView poTextview, int pnIncrement, ElementA poElementA) {
     	// only do this if the button is currently pressed
     	//AutoRepeatButton btn = (AutoRepeatButton) findViewById(nBtnID);
     	//if (btn.isPressed()) {	    	
-
+    		//long time = System.currentTimeMillis();
+    		//Log.v(TAG, "Start");
     		int nCurrentValue = poElementA.getLevel();
+    		//Log.v(TAG, "Step 1: " + (System.currentTimeMillis()-time));
 	    	int nNewValue = nCurrentValue + pnIncrement;
+    		//Log.v(TAG, "Step 2: " + (System.currentTimeMillis()-time));
 	    	
 	        Player player = Globals.INSTANCE.getPlayer();
+    		//Log.v(TAG, "Step 3: " + (System.currentTimeMillis()-time));
 	        if (nNewValue >= 0 && nNewValue <= poElementA.getElement().getMaxLevel(player.getTHLevel())) {
+	    		//Log.v(TAG, "Step 4: " + (System.currentTimeMillis()-time));
 	        	long nElementID = poElementA.getElement().getId();
+	    		//Log.v(TAG, "Step 5: " + (System.currentTimeMillis()-time));
 	        	PlayerElement oPlayerElement = player.getPlayerElement(nElementID,poElementA.getLevel());
+	    		//Log.v(TAG, "Step 6: " + (System.currentTimeMillis()-time));
 	        	if (oPlayerElement != null) {
 		        	player.incPlayerElementLevel(oPlayerElement, pnIncrement);
-		        	this.GetElements(findViewById(R.id.rlMain), (GridLayout) this.findViewById(R.id.layoutMain));
+		    		//Log.v(TAG, "Step 7: " + (System.currentTimeMillis()-time));
+		    		RelativeLayout rl = (RelativeLayout) findViewById(R.id.rlMain);
+		    		//Log.v(TAG, "Step 8: " + (System.currentTimeMillis()-time));
+		    		GridLayout gl = (GridLayout) this.findViewById(R.id.layoutMain);
+		    		//Log.v(TAG, "Step 9: " + (System.currentTimeMillis()-time));
+		        	this.GetElements(rl, gl);
+		    		//Log.v(TAG, "Step 10: " + (System.currentTimeMillis()-time));
 	        	}
 	    	}
     	//}
