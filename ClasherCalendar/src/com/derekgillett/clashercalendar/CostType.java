@@ -21,7 +21,7 @@ public class CostType {
 		this.selectSingle();
 	}
 	
-	public CostType(SQLiteDatabase poDB, String psCostType) {
+	public CostType(SQLiteDatabase poDB, long pnID, String psCostType) {
 		moDB = poDB;
 		msCostType = psCostType;
 		this.insert();
@@ -52,12 +52,11 @@ public class CostType {
 		return msCostType;
 	}
 
-    private boolean insert() {
+    private void insert() {
     	ContentValues values = new ContentValues();
+    	values.put(ClasherDBContract.ClasherCostType.COLUMN_NAME_ID, this.mnID);
     	values.put(ClasherDBContract.ClasherCostType.COLUMN_NAME_COST_TYPE_NAME, this.msCostType);
-
-    	mnID = moDB.insert(ClasherDBContract.ClasherCostType.TABLE_NAME, null, values);
-		return mnID != 0;
+    	moDB.insert(ClasherDBContract.ClasherCostType.TABLE_NAME, null, values);
     }
 /*
     private int update() {

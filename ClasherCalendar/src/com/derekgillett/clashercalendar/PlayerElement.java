@@ -110,8 +110,11 @@ public class PlayerElement {
 		}
 	}
 	
-	public int getUpgradeCost() {
-		if (isMax() || mbExclude) 
+	public int getUpgradeCost(CostType poCostType) {
+		boolean bCostTypeMatch = true;
+		if (poCostType != null)
+			bCostTypeMatch = moElement.getCostType().getID() == poCostType.getID();
+		if (isMax() || mbExclude || !bCostTypeMatch) 
 			return 0;
 		else {
 			ElementData oElementData = moElement.getElementData(mnLevel+1);
@@ -119,8 +122,11 @@ public class PlayerElement {
 		}
 	}
 	
-	public int getUpgradeCostMax() {
-		if (isMax() || mbExclude) 
+	public int getUpgradeCostMax(long pnCostType) {
+		boolean bCostTypeMatch = true;
+		if (pnCostType > 0)
+			bCostTypeMatch = moElement.getCostType().getID() == pnCostType;
+		if (isMax() || mbExclude || !bCostTypeMatch) 
 			return 0;
 		else {
 			int nTargetLevel = moElement.getMaxLevel(moPlayer.getTHLevel());

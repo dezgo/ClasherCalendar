@@ -521,7 +521,7 @@ public class MainActivity extends ActionBarActivity {
 	        	if (oPlayerElement.isMax())
 	        		tv2.setText("Maxed");
 	        	else
-	        		tv2.setText( NumberFormat.getInstance().format(oPlayerElement.getUpgradeCost()));
+	        		tv2.setText( NumberFormat.getInstance().format(oPlayerElement.getUpgradeCost(null)));
 	        	ll.addView(tv2);
 	
 	        	// element cost type
@@ -574,6 +574,16 @@ public class MainActivity extends ActionBarActivity {
     	// show total upgrade time remaining (do this at the end after we've filtered items)
         TextView tv_upgrade_time = (TextView) poParent.findViewById(R.id.tvUpgradeTime);
     	tv_upgrade_time.setText(Utils.Time_ValToText(player.getUpgradeTimeMax()));    	
+    	
+    	// show total upgrade cost 
+    	int nUpgradeCost = player.getUpgradeCostMax(Utils.CostTypeEnum.Elixir.getId());
+    	TextView tv_upgrade_cost_elixir = (TextView) poParent.findViewById(R.id.tvUpgradeCostElixir);
+    	tv_upgrade_cost_elixir.setText(String.valueOf(nUpgradeCost));
+
+    	// show total upgrade cost 
+    	nUpgradeCost = player.getUpgradeCostMax(Utils.CostTypeEnum.Gold.getId());
+    	TextView tv_upgrade_cost_gold = (TextView) poParent.findViewById(R.id.tvUpgradeCostGold);
+    	tv_upgrade_cost_gold.setText(String.valueOf(nUpgradeCost));
     }
     
     private void onTouchHandler(View arg0, PlayerElement poPlayerElement) {

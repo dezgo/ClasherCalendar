@@ -356,13 +356,13 @@ public class Player {
 		return nUpgradeTimeTotal;
 	}
 	
-	public int getUpgradeCostMax() {
+	public int getUpgradeCostMax(long pnCostType) {
 		int nUpgradeCost = 0;
 		
 		for (int i=0; i<this.moPlayerElements.size(); i++) {
 			long key = moPlayerElements.keyAt(i);
 			PlayerElement oPlayerElement = moPlayerElements.get(key);
-			nUpgradeCost = nUpgradeCost + oPlayerElement.getUpgradeCostMax();
+			nUpgradeCost = nUpgradeCost + oPlayerElement.getUpgradeCostMax(pnCostType);
 		}
 		return nUpgradeCost;
 	}

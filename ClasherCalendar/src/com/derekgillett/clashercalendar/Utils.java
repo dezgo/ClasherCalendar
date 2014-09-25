@@ -9,7 +9,9 @@ public class Utils {
 	
 	static public enum CostTypeEnum {
 		Gold(1),
-		Elixir(2);
+		Elixir(2),
+		DarkElixir(3),
+		Gems(4);
 		private int costType;
 		private CostTypeEnum(int costType) {
 			this.costType = costType;
