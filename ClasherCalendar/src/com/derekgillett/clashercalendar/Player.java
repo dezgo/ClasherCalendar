@@ -306,25 +306,56 @@ public class Player {
 	}
 	
 	// for a newly created player, add in the default buildings that come with the given TH level
+	// for any new buildings, default to level 0
+	// for townhall level 1, default all buildings to level 0
 	private void LoadDefaults() {
-        THElements oTHElements = new THElements(moDB, mnTHLevel);
-
-        for (int i=0; i<oTHElements.size(); i++) {
-        	THElement thElement = oTHElements.getTHElement();
+		// array of elements for new town hall level
+		THElements oTHElementsNew = new THElements(moDB, mnTHLevel);
+		
+		// array of elements for previous town hall level (if new townhall level >1)
+        THElements oTHElementsOld = null;
+        if (mnTHLevel > 1) oTHElementsOld = new THElements(moDB, mnTHLevel-1);
+        
+        // loop through new elements array
+        for (int i=0; i<oTHElementsNew.size(); i++) {
+        	// get new element
+        	THElement thElement = oTHElementsNew.getTHElement();
+        	
+        	// get element at previous townhall level
+        	THElement thElementOld = null;
+        	if (oTHElementsOld != null) thElementOld = oTHElementsOld.getTHElement(thElement.getElement().getId());
+        	
+    		// for each element, add it assuming player has maxed out buildings at previous level
+    		// for level 1, assume all buildings are level 0 (not built yet)
+    		// EXCEPTION: make townhall level = mnTHLevel
         	for (int j=0; j<thElement.getQuantity(); j++) {
-        		// for each element, add it assuming player has maxed out buildings at previous level
-        		// for level 1, assume all buildings are level 0 (not built yet)
-        		// EXCEPTION: make townhall level = mnTHLevel
-        		int nLevel = 0;
+        		int nLevel;
         		Element oElement = thElement.getElement();
-        		if (oElement.getName().equals("Town Hall")) 
+        		
+        		// if this is the town hall, set it to current level
+        		if (oElement.getName().equals(ClasherDBContract.TOWNHALL_NAME))
         			nLevel = mnTHLevel;
+        		
+        		// if this is a new element, make it level 0
+        		else if (thElementOld == null)
+        			nLevel = 0;
+        		
+        		// if there are more of this element now, make the new ones level 0
+        		else if (mnTHLevel == 1 || j >= thElementOld.getQuantity())
+        			nLevel = 0;
+        		
+        		// otherwise get the max level this element could be at the previous townhall level
         		else
-        			if (mnTHLevel > 1) nLevel = oElement.getMaxLevel(mnTHLevel-1);
+        			nLevel = oElement.getMaxLevel(mnTHLevel-1);
+        		
+        		// and add the new element
         		this.addPlayerElement(oElement, nLevel);
         	}
-        	oTHElements.moveToNext();
+        	oTHElementsNew.moveToNext();
         }
+        
+        // finally populate thet aggregate array and sort
+        populateElementsA();
 	}
 	
 	// for an existing player, load the buildings as saved in tblPlayerElement

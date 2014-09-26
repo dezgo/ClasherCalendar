@@ -516,7 +516,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	new ElementData(database, oElement, 5, 3000, 5000000, 604800, 9);
 	new ElementData(database, oElement, 6, 3400, 7000000, 1209600, 10);
 
-	oElement = new Element(database, "Town Hall", oCategoryOther, oCostTypeGold);
+	oElement = new Element(database, ClasherDBContract.TOWNHALL_NAME, oCategoryOther, oCostTypeGold);
 	new ElementData(database, oElement, 1, 1500, 0, 0, 0);
 	new ElementData(database, oElement, 2, 1600, 1000, 300, 1);
 	new ElementData(database, oElement, 3, 1850, 4000, 10800, 2);

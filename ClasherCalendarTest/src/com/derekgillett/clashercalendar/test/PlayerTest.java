@@ -510,7 +510,7 @@ public class PlayerTest extends TestCase {
 		
 		Player oPlayer = new Player(moDB, pnTHLevel, psVillageName);
 		Log.v("PlayerTest.testCreatePlayer", "Start Create Plater TH Level " + pnTHLevel);
-		oPlayer.sortByName(true);
+		//oPlayer.sortByName(true);
 		oPlayer.moveToFirstA();
 		while (!oPlayer.isAfterLastA()) {
 			ElementA oElementA = oPlayer.getElementA();

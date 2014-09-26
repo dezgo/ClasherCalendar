@@ -13,6 +13,8 @@ public class ClasherDBContract {
     // give it an empty constructor.
     public ClasherDBContract() {}
 
+    public static final String TOWNHALL_NAME = "Town hall";
+    
     public static abstract class ClasherCategory implements BaseColumns {
         public static final String TABLE_NAME = "tblCategory";
         public static final String COLUMN_NAME_ID = _ID;

@@ -14,23 +14,31 @@ public class THElements {
 	
 	public THElements(SQLiteDatabase poDB, int pnLevel) {
 		moDB = poDB;
+		moTHElements = createArray(pnLevel);
+	}
+	
+	// create an array of townhall elements for a given townhall level
+	private LongSparseArray<THElement> createArray(int pnTHLevel) {
+		LongSparseArray<THElement> oTHElements = new LongSparseArray<THElement>();
 		THElement oTHElement;
 		long nID;
 
-		Cursor cursor = selectByTHLevel(pnLevel);
+		Cursor cursor = selectByTHLevel(pnTHLevel);
 		if (cursor != null) {
 			if (cursor.getCount() > 0) {
 				cursor.moveToFirst();
 				while (!cursor.isAfterLast())
 				{
-					nID = cursor.getLong(0);
+					// use element ID as the key for this array (given it's only for a single townhall level)
+					nID = cursor.getLong(cursor.getColumnIndexOrThrow(ClasherDBContract.ClasherTHElement.COLUMN_NAME_ELEMENT_ID));
 					oTHElement = new THElement(moDB, nID);
-					moTHElements.put(nID, oTHElement);
+					oTHElements.put(nID, oTHElement);
 					cursor.moveToNext();
 				}
 			}
 			cursor.close();
 		}
+		return oTHElements;
 	}
 	
 	public int size() {
