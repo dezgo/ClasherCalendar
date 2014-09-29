@@ -13,7 +13,7 @@ public class Players {
 	private int mnIndex = 0;
 	
 	public Players() {
-		MySQLiteHelper mySQLiteHelper = new MySQLiteHelper();
+		MySQLiteHelper mySQLiteHelper = MySQLiteHelper.getInstance();
 		moDB = mySQLiteHelper.getWritableDatabase();
 		
 		// populate internal array with existing players from database

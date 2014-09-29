@@ -21,7 +21,7 @@ public class PlayerActions extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		MySQLiteHelper mySQLiteHelper = new MySQLiteHelper();
+		MySQLiteHelper mySQLiteHelper = MySQLiteHelper.getInstance();
 		SQLiteDatabase poDB = mySQLiteHelper.getWritableDatabase();
 		moPlayer = new Player(poDB, mnTHLevel, "Test Village");
 	}

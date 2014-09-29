@@ -121,22 +121,26 @@ public class ElementData {
 					String.valueOf(this.mnTHMinLevel), String.valueOf(moElement.getId()), String.valueOf(mnElementLevel) }); 
 	}*/
 	
-	private void Load() {
-		select(moElement.getId(), mnElementLevel, this);
-	}
-
-    public void select(long pnElementID, int pnElementLevel, ElementData poElementData) {
-		Cursor cursor = moDB.rawQuery("SELECT HitPoints, BuildCost, BuildTime, THMinLevel " +
-				"FROM tblElementData WHERE ElementID = ? AND ElementLevel = ?",
-				new String[] { String.valueOf(pnElementID), String.valueOf(pnElementLevel) }); 
+    private void Load() {
+    	String[] columns = ClasherDBContract.ClasherElementData.ALL_COLUMNS;
+    	String selection = ClasherDBContract.ClasherElementData.COLUMN_NAME_ELEMENT_ID + " = ? and " +
+    			ClasherDBContract.ClasherElementData.COLUMN_NAME_ELEMENT_LEVEL + " = ?";
+		String[] selectionArgs = new String[] { String.valueOf(moElement.getId()), String.valueOf(mnElementLevel) };
+		Cursor cursor = moDB.query(
+				ClasherDBContract.ClasherElementData.TABLE_NAME, 
+				columns, 
+				selection, 
+				selectionArgs, 
+				null, null, null);      
+		
 		if (cursor != null) {
 			try {
     			if (cursor.getCount() > 0) {
     				cursor.moveToFirst();
-    				poElementData.setHitPoints(cursor.getString(0) == null ? 0 : Integer.parseInt(cursor.getString(0)));
-    				poElementData.setBuildCost(cursor.getString(1) == null ? 0 : Integer.parseInt(cursor.getString(1)));
-    				poElementData.setBuildTime(cursor.getString(2) == null ? 0 : Integer.parseInt(cursor.getString(2)));
-    				poElementData.setTHMinLevel(cursor.getString(3) == null ? 0 : Integer.parseInt(cursor.getString(3)));
+    				mnHitPoints = cursor.getInt(cursor.getColumnIndexOrThrow(ClasherDBContract.ClasherElementData.COLUMN_NAME_HIT_POINTS));
+    				mnBuildCost = cursor.getInt(cursor.getColumnIndexOrThrow(ClasherDBContract.ClasherElementData.COLUMN_NAME_BUILD_COST));
+    				mnBuildTime = cursor.getInt(cursor.getColumnIndexOrThrow(ClasherDBContract.ClasherElementData.COLUMN_NAME_BUILD_TIME));
+    				mnTHMinLevel = cursor.getInt(cursor.getColumnIndexOrThrow(ClasherDBContract.ClasherElementData.COLUMN_NAME_TOWNHALL_MIN_LEVEL));
     			}
 			}
 			catch (SQLiteException e) {

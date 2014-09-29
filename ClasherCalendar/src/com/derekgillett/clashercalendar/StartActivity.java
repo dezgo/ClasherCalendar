@@ -41,7 +41,7 @@ public class StartActivity extends ActionBarActivity {
 		// start task to init players object in background
 		new GetPlayersTask().execute();
 		
-		MySQLiteHelper mySQLiteHelper = new MySQLiteHelper();
+		MySQLiteHelper mySQLiteHelper = MySQLiteHelper.getInstance();
 		moDB = mySQLiteHelper.getWritableDatabase();
 	}
 	

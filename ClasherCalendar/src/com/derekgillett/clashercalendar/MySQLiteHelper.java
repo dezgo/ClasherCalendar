@@ -1,5 +1,6 @@
 package com.derekgillett.clashercalendar;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -11,46 +12,19 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
   
   private static final String DATABASE_NAME = "ClasherCalendar.db";
   private static final int DATABASE_VERSION = 4;
-
-  /*
-  private static void execInitSQL(SQLiteDatabase database, String fileName) {
-	  InputStream inputStream;
-	  try {
-		  inputStream = MyApplication.getAppContext().getAssets().open(fileName);
-	  } catch (IOException e1) {
-		  Log.e(TAG, e1.getMessage());
-		  inputStream = null;
-	  }
-	  
-	  InputStreamReader inputReader = new InputStreamReader(inputStream);
-	  BufferedReader buffreader = new BufferedReader(inputReader);
-	  String line;
-	  StringBuilder text = new StringBuilder();
-
-	  try {
-		  while (( line = buffreader.readLine()) != null) {
-			  // skip empty lines, comment lines, and remove tabs and carriage returns
-			  line = line.replace("\t","");
-			  line = line.replace("\n","");
-			  if (line.equals("")) { }
-			  else if (line.length()<2) { }
-			  else if (line.substring(0, 2).equals("--")) { }
-			  else {
-				  text.append(line);
-				  if (line.charAt(line.length()-1) == ';') {
-					  database.execSQL(text.toString());
-					  text = null;
-					  text = new StringBuilder();
-				  }
-			  }
-		  }
-	  } catch (IOException e) {
-
-	  }
-  }*/
   
-  public MySQLiteHelper() {
+  private static MySQLiteHelper sInstance;
+
+  private MySQLiteHelper() {
 	  super(MyApplication.getAppContext(), DATABASE_NAME, null, DATABASE_VERSION);
+  }
+  
+  public static MySQLiteHelper getInstance() {
+
+	    if (sInstance == null) {
+	      sInstance = new MySQLiteHelper();
+	    }
+	    return sInstance;
   }
 
   @Override

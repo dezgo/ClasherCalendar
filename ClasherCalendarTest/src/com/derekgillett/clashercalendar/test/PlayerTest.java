@@ -22,7 +22,7 @@ public class PlayerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		MySQLiteHelper mySQLiteHelper = new MySQLiteHelper();
+		MySQLiteHelper mySQLiteHelper = MySQLiteHelper.getInstance();
 		moDB = mySQLiteHelper.getWritableDatabase();
 	}
 
