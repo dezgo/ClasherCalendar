@@ -19,6 +19,19 @@ public class Utils {
 		public int getId() {
 			return costType;
 		}
+		public int getResID() {
+			if (costType == 1)
+	    		return R.drawable.gold;
+	
+	    	else if (costType == 2)
+	    		return R.drawable.elixir;
+	
+	    	else if (costType == 3)
+	    		return R.drawable.dark_elixir;
+			
+	    	else
+	    		return 0;
+		}
 	}
 	
 	static public enum CategoryEnum {

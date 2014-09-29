@@ -23,6 +23,7 @@ public class CostType {
 	
 	public CostType(SQLiteDatabase poDB, long pnID, String psCostType) {
 		moDB = poDB;
+		mnID = pnID;
 		msCostType = psCostType;
 		this.insert();
 		this.setResID();

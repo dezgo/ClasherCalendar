@@ -36,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
+	@SuppressWarnings("unused")
 	private final static String TAG = "MainActivity";
 	
 	// holds list of all textviews showing the countdown times

@@ -23,6 +23,14 @@
 	        android:orientation="vertical"
 	        >
 	        
+	        <TextView
+		        android:id="@+id/tvExistingPlayers"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="15sp"
+		        android:textStyle="italic"
+		        android:text="@string/existing_players" />
+	        
 	    </LinearLayout>
 	    
 	    
