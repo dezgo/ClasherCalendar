@@ -14,7 +14,7 @@ import android.util.Log;
 
 public class Player {
 	private SQLiteDatabase moDB;
-	private static final String TAG = "Player.java";
+	private static final String TAG = "ClasherPlayer";
 	
 	private boolean mbRepopulateA = true;	// flag indicating whether to repopulate aggregate array
 	private long mnPlayerID;
@@ -479,5 +479,31 @@ public class Player {
 				selectionArgs, 
 				null, null, null);        	
     }	
+    
+    // DEBUGING STUFF
+    private String pad(String item, int length) {
+    	String rtn = item;
+    	while (rtn.length() < length) {
+    		rtn = rtn + " ";
+    	}
+    	return rtn;
+    }
+    
+    public void showPlayerElements() {
+    	for (int i=0; i<this.moPlayerElements.size(); i++) {
+    		PlayerElement oPlayerElement = this.moPlayerElements.get(moPlayerElements.keyAt(i));
+    		String village = oPlayerElement.getPlayer().getVillageName();
+    		long id = oPlayerElement.getID();
+    		String elementName = oPlayerElement.getElement().getName();
+    		int level = oPlayerElement.getLevel();
+    		
+    		if (i==0) {
+    			Log.v(TAG, "Village: " + village);
+    			Log.v(TAG, pad("peid",6) + pad("element",20) + pad("level",5));
+    		}
+    		
+			Log.v(TAG, pad(String.valueOf(id),6) + pad(elementName,20) + pad(String.valueOf(level),5));
+    	}
+    }
 
 }

@@ -51,6 +51,10 @@ public class PlayerElement {
 		return mnPlayerElementID;
 	}
 	
+	public Player getPlayer() {
+		return moPlayer;
+	}
+	
 	public void startUpgrade() {
 		if (!this.isMax()) {
 			Calendar c = Calendar.getInstance();

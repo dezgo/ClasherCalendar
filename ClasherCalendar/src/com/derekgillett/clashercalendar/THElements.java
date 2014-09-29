@@ -9,7 +9,7 @@ public class THElements {
 	@SuppressWarnings("unused")
 	private static final String TAG = "THElements";
 	
-	private LongSparseArray<THElement> moTHElements = new LongSparseArray<THElement>();
+	private LongSparseArray<THElement> moTHElements;
 	private int mnIndex = 0;
 	
 	public THElements(SQLiteDatabase poDB, int pnLevel) {
@@ -29,9 +29,12 @@ public class THElements {
 				cursor.moveToFirst();
 				while (!cursor.isAfterLast())
 				{
+					// get townhall element
+					nID = cursor.getLong(cursor.getColumnIndexOrThrow(ClasherDBContract.ClasherTHElement.COLUMN_NAME_ID));
+					oTHElement = new THElement(moDB, nID);
+
 					// use element ID as the key for this array (given it's only for a single townhall level)
 					nID = cursor.getLong(cursor.getColumnIndexOrThrow(ClasherDBContract.ClasherTHElement.COLUMN_NAME_ELEMENT_ID));
-					oTHElement = new THElement(moDB, nID);
 					oTHElements.put(nID, oTHElement);
 					cursor.moveToNext();
 				}

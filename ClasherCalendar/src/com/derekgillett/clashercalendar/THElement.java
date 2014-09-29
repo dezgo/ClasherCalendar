@@ -79,6 +79,10 @@ public class THElement {
   */  
     private Cursor selectSingle() {
 		String[] selectionArgs = new String[] { String.valueOf(mnID) };
-		return moDB.query(ClasherDBContract.ClasherTHElement.TABLE_NAME, ClasherDBContract.ClasherTHElement.ALL_COLUMNS, "_ID = ?", selectionArgs, null, null, null);        	
+		return moDB.query(ClasherDBContract.ClasherTHElement.TABLE_NAME, 
+				ClasherDBContract.ClasherTHElement.ALL_COLUMNS,  
+				ClasherDBContract.ClasherTHElement.COLUMN_NAME_ID + " = ?", 
+				selectionArgs, 
+				null, null, null);        	
     }
 }

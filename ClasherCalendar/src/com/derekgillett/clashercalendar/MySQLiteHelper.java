@@ -133,7 +133,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	new THElement(database, 10, oElement, 5);
 
 	oElement = new Element(database, "Spring Trap", oCategoryTrap, oCostTypeGold);
-	new ElementData(database, oElement, 1, 0, 2000, 0, 4);
+	new ElementData(database, oElement, 0, 0, 2000, 0, 4);
 	new THElement(database, 4, oElement, 2);
 	new THElement(database, 5, oElement, 2);
 	new THElement(database, 6, oElement, 4);
@@ -459,6 +459,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	new ElementData(database, oElement, 3, 350, 1750000, 518400, 8);
 	new ElementData(database, oElement, 4, 400, 2250000, 604800, 8);
 	new ElementData(database, oElement, 5, 450, 2750000, 691200, 9);
+	new ElementData(database, oElement, 6, 500, 3500000, 777600, 9);
 	new THElement(database, 7, oElement, 1);
 	new THElement(database, 8, oElement, 2);
 	new THElement(database, 9, oElement, 2);
