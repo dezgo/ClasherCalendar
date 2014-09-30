@@ -437,6 +437,14 @@ public class MainActivity extends ActionBarActivity {
     	ImageView ivOrder1 = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
     	ivOrder1.setImageResource(R.drawable.up_arrow);
     	vwMainLayout.addView(ivOrder1);
+    	ivOrder1.setOnClickListener(new View.OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				Globals.INSTANCE.getPlayer().sortByCost(true);
+				MainActivity oActivity = MainActivity.this;
+				//oActivity.GetElements_Dashboard(poParent, vwMainLayout)
+			}
+		});
 
     	// building
     	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
@@ -497,6 +505,10 @@ public class MainActivity extends ActionBarActivity {
             	// qty
 	        	TextView tv = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
 	        	tv.setText(String.valueOf(oElementA.getQuantity()));
+	        	lp = new GridLayout.LayoutParams();
+	        	GridLayout.Spec s = GridLayout.spec(GridLayout.UNDEFINED, 2);
+	        	lp.columnSpec = s;
+	        	tv.setLayoutParams(lp);
 	        	vwMainLayout.addView(tv);
 	
 	        	// element name
