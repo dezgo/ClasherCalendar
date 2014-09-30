@@ -23,7 +23,8 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:textSize="12sp"
-	        android:layout_alignParentRight="true" 
+	        android:layout_below="@+id/tvTitle"
+	        android:layout_marginRight="30dp"
 	        />
 	    
    	    <TextView
@@ -31,23 +32,50 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:textSize="12sp"
-		    android:layout_below="@+id/tvUpgradeTime"
-	        android:layout_alignParentRight="true" 
+	        android:layout_toRightOf="@+id/tvUpgradeTime" 
+	        android:layout_below="@+id/tvTitle"
 	        />
+   	    
+   	    <ImageView
+   	        android:id="@+id/ivUpgradeCostElixir"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:src="@drawable/elixir"
+	        android:layout_toRightOf="@+id/tvUpgradeCostElixir" 
+	        android:layout_below="@+id/tvTitle"
+   	        />
+	    
+   	    <!--  had trouble getting margin to work. ended up using spacer instead -->
+   	    <Space
+   	        android:id="@+id/sp1"
+	        android:layout_width="30dp"
+	        android:layout_height="wrap_content"
+	        android:layout_toRightOf="@+id/ivUpgradeCostElixir" 
+	        android:layout_below="@+id/tvTitle"
+   	        />
 	    
    	    <TextView
 	        android:id="@+id/tvUpgradeCostGold"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:textSize="12sp"
-		    android:layout_below="@+id/tvUpgradeCostElixir"
-	        android:layout_alignParentRight="true" 
+	        android:layout_toRightOf="@+id/sp1" 
+	        android:layout_below="@+id/tvTitle"
 	        />
+	    
+   	    <ImageView
+   	        android:id="@+id/ivUpgradeCostGold"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:src="@drawable/gold"
+	        android:layout_toRightOf="@+id/tvUpgradeCostGold" 
+	        android:layout_below="@+id/tvTitle"
+   	        />
 	    
    	    <HorizontalScrollView 
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
-		    android:layout_below="@+id/tvTitle"
+		    android:layout_below="@+id/tvUpgradeCostGold"
 		    >
 		    
    	    

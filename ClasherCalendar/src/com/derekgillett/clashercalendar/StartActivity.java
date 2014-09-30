@@ -49,13 +49,13 @@ public class StartActivity extends ActionBarActivity {
 	//TODO: implement the fixes here to avoid crashes when rotating screen while asynctask is running
 	//http://androidresearch.wordpress.com/2013/05/10/dealing-with-asynctask-and-screen-orientation/
 	private class GetPlayersTask extends AsyncTask<String, Integer, String> {
-		@Override
+/*		@Override
 		   protected void onPreExecute() {
 		      super.onPreExecute();
 		      Toast.makeText(MyApplication.getAppContext(), 
 		                "Loading existing players...",
 		                Toast.LENGTH_LONG).show();
-		   }
+		   }*/
 		 
 		@Override
 		protected String doInBackground(String... params) {
@@ -95,6 +95,16 @@ public class StartActivity extends ActionBarActivity {
 					GoToMain_(true);
 				}
 			});
+			/* 
+			// show delete button when long click to remove player
+			button.setOnLongClickListener(new View.OnLongClickListener() {
+				
+				@Override
+				public boolean onLongClick(View v) {
+					// TODO Auto-generated method stub
+					return false;
+				}
+			});*/
 			ll.addView(button);
 			players.moveNext();
 		}

@@ -421,7 +421,7 @@ public class MainActivity extends ActionBarActivity {
         if (Utils.DEBUG) Log.d("MainActivity","Clear existing views - done");
         
         // set number of columns (it might have been changed if they used the update qtys view)
-        vwMainLayout.setColumnCount(6);
+        vwMainLayout.setColumnCount(7);
 
         // get player elements, and check it's not null
         Player player = Globals.INSTANCE.getPlayer();
@@ -432,6 +432,11 @@ public class MainActivity extends ActionBarActivity {
     	tv_title.setText( R.string.grid_title1);
     	tv_title.setTypeface(null, Typeface.BOLD);
     	vwMainLayout.addView(tv_title);
+    	
+    	// order arrow
+    	ImageView ivOrder1 = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
+    	ivOrder1.setImageResource(R.drawable.up_arrow);
+    	vwMainLayout.addView(ivOrder1);
 
     	// building
     	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
@@ -526,10 +531,10 @@ public class MainActivity extends ActionBarActivity {
 	        	ll.addView(tv2);
 	
 	        	// element cost type
-	        	ImageView iv1 = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
-	        	iv1.setImageResource(oElement.getCostType().getResID());
+	        	ImageView ivCostType = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
+	        	ivCostType.setImageResource(oElement.getCostType().getResID());
 	
-	        	ll.addView(iv1);
+	        	ll.addView(ivCostType);
 	        	vwMainLayout.addView(ll);
 	        	
 	        	// element time to build
@@ -578,13 +583,15 @@ public class MainActivity extends ActionBarActivity {
     	
     	// show total upgrade cost 
     	int nUpgradeCost = player.getUpgradeCostMax(Utils.CostTypeEnum.Elixir.getId());
+    	String sCost = NumberFormat.getInstance().format(nUpgradeCost);
     	TextView tv_upgrade_cost_elixir = (TextView) poParent.findViewById(R.id.tvUpgradeCostElixir);
-    	tv_upgrade_cost_elixir.setText(String.valueOf(nUpgradeCost));
+    	tv_upgrade_cost_elixir.setText(sCost);
 
     	// show total upgrade cost 
     	nUpgradeCost = player.getUpgradeCostMax(Utils.CostTypeEnum.Gold.getId());
+    	sCost = NumberFormat.getInstance().format(nUpgradeCost);
     	TextView tv_upgrade_cost_gold = (TextView) poParent.findViewById(R.id.tvUpgradeCostGold);
-    	tv_upgrade_cost_gold.setText(String.valueOf(nUpgradeCost));
+    	tv_upgrade_cost_gold.setText(sCost);
     }
     
     private void onTouchHandler(View arg0, PlayerElement poPlayerElement) {
