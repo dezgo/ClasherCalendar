@@ -340,12 +340,8 @@ public class Player {
 	}
 	
 	// thanks to http://stackoverflow.com/questions/780541/how-to-sort-a-hashmap-in-java
-	public void sortByBuilding() {
-		if (this.mnSortBuilding == 0)
-			applySort(SortColumn.Building, 1);
-		else
-			applySort(SortColumn.Building, -1 * mnSortBuilding);
-		
+	public void sortByBuilding(int sortOrder) {
+		applySort(SortColumn.Building, sortOrder);
 		moElementsASorted = new ArrayList<ElementA>(this.moElementsA.values());
 		Collections.sort(moElementsASorted, new Comparator<ElementA>() {
 			@Override
@@ -361,6 +357,15 @@ public class Player {
 					return 0;
 			}
 		});
+	}
+
+	public void sortByBuilding() {
+		if (this.mnSortBuilding == 0)
+			mnSortBuilding = 1;
+		else
+			mnSortBuilding = -1 * mnSortBuilding;
+
+		sortByBuilding(this.mnSortBuilding);
 	}
 	
 	public void sortByCost() {
