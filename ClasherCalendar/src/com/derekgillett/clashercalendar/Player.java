@@ -191,7 +191,7 @@ public class Player {
 		}
 		mbRepopulateA = false;
 		moElementsASorted = new ArrayList<ElementA>(this.moElementsA.values());
-		this.sortByBuilding();
+		this.sortByBuilding(1);
 	}
 	
 	public void incPlayerElementLevel(PlayerElement poPlayerElement, int pnIncrement) {
@@ -340,7 +340,7 @@ public class Player {
 	}
 	
 	// thanks to http://stackoverflow.com/questions/780541/how-to-sort-a-hashmap-in-java
-	public void sortByBuilding(int sortOrder) {
+	private void sortByBuilding(int sortOrder) {
 		applySort(SortColumn.Building, sortOrder);
 		moElementsASorted = new ArrayList<ElementA>(this.moElementsA.values());
 		Collections.sort(moElementsASorted, new Comparator<ElementA>() {

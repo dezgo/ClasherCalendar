@@ -311,7 +311,7 @@ public class MainActivity extends ActionBarActivity {
     	tv_title.setText("");
     	vwMainLayout.addView(tv_title);
 */
-    	player.sortByBuilding(1);
+    	//player.sortByBuilding(1);
         player.moveToFirstA();
     	while (!player.isAfterLastA()) {
         	final ElementA oElementA = player.getElementA();
