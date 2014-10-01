@@ -416,16 +416,17 @@ public class MainActivity extends ActionBarActivity {
         }
         
         // clear out previous stuff first
-        if (Utils.DEBUG) Log.d("MainActivity","Clear existing views");
         vwMainLayout.removeAllViews();
-        if (Utils.DEBUG) Log.d("MainActivity","Clear existing views - done");
         
         // set number of columns (it might have been changed if they used the update qtys view)
-        vwMainLayout.setColumnCount(7);
+        vwMainLayout.setColumnCount(12);
 
         // get player elements, and check it's not null
-        Player player = Globals.INSTANCE.getPlayer();
-        junit.framework.Assert.assertNotNull("MyApplication.getPlayerElements() global variable null!", player);
+        // final so it can be used in subclasses. also apparently it's good practice!
+        // I *think* it's ok to make this final even though data in object player is changing because
+        // the reference to the object itself doesn't change
+        final Player oPlayer = Globals.INSTANCE.getPlayer();
+        junit.framework.Assert.assertNotNull("MyApplication.getPlayerElements() global variable null!", oPlayer);
 
     	// quantity
     	TextView tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
@@ -433,30 +434,62 @@ public class MainActivity extends ActionBarActivity {
     	tv_title.setTypeface(null, Typeface.BOLD);
     	vwMainLayout.addView(tv_title);
     	
-    	// order arrow
-    	ImageView ivOrder1 = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
-    	ivOrder1.setImageResource(R.drawable.up_arrow);
-    	vwMainLayout.addView(ivOrder1);
-    	ivOrder1.setOnClickListener(new View.OnClickListener() {			
+    	// quantity order
+    	final ImageView ivOrderQty = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
+    	int resId = oPlayer.getSortArrowRes(oPlayer.getSortQty());
+    	if (resId != 0) ivOrderQty.setImageResource(resId);
+    	vwMainLayout.addView(ivOrderQty);
+
+    	tv_title.setOnClickListener(new View.OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				Globals.INSTANCE.getPlayer().sortByCost(true);
-				MainActivity oActivity = MainActivity.this;
-				//oActivity.GetElements_Dashboard(poParent, vwMainLayout)
+				oPlayer.sortByQty();
+				ivOrderQty.setImageResource(oPlayer.getSortArrowRes(oPlayer.getSortQty()));
+				MainActivity.this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) findViewById(R.id.layoutMain));
 			}
 		});
-
+    	
     	// building
     	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
     	tv_title.setText( R.string.grid_title2);
     	tv_title.setTypeface(null, Typeface.BOLD);
     	vwMainLayout.addView(tv_title);
 
+    	// building order
+    	final ImageView ivOrderBuilding = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
+    	resId = oPlayer.getSortArrowRes(oPlayer.getSortBuilding());
+    	if (resId != 0) ivOrderBuilding.setImageResource(resId);
+    	vwMainLayout.addView(ivOrderBuilding);
+    	
+    	tv_title.setOnClickListener(new View.OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				oPlayer.sortByBuilding();
+				ivOrderBuilding.setImageResource(oPlayer.getSortArrowRes(oPlayer.getSortBuilding()));
+				MainActivity.this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) findViewById(R.id.layoutMain));
+			}
+		});
+
     	// level
     	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
     	tv_title.setText( R.string.grid_title3);
     	tv_title.setTypeface(null, Typeface.BOLD);
     	vwMainLayout.addView(tv_title);
+
+    	// level order
+    	final ImageView ivOrderLevel = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
+    	resId = oPlayer.getSortArrowRes(oPlayer.getSortLevel());
+    	if (resId != 0) ivOrderLevel.setImageResource(resId);
+    	vwMainLayout.addView(ivOrderLevel);
+    	
+    	tv_title.setOnClickListener(new View.OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				oPlayer.sortByLevel();
+				ivOrderLevel.setImageResource(oPlayer.getSortArrowRes(oPlayer.getSortLevel()));
+				MainActivity.this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) findViewById(R.id.layoutMain));
+			}
+		});
 
     	// max level
     	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
@@ -465,11 +498,41 @@ public class MainActivity extends ActionBarActivity {
     	tv_title.setTypeface(null, Typeface.BOLD);
     	vwMainLayout.addView(tv_title);
 
+    	// max level order
+    	final ImageView ivOrderMaxLevel = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
+    	resId = oPlayer.getSortArrowRes(oPlayer.getSortMaxLevel());
+    	if (resId != 0) ivOrderMaxLevel.setImageResource(resId);
+    	vwMainLayout.addView(ivOrderMaxLevel);
+    	
+    	tv_title.setOnClickListener(new View.OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				oPlayer.sortByMaxLevel();
+				ivOrderMaxLevel.setImageResource(oPlayer.getSortArrowRes(oPlayer.getSortMaxLevel()));
+				MainActivity.this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) findViewById(R.id.layoutMain));
+			}
+		});
+
     	// cost
     	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
     	tv_title.setText( R.string.grid_title5);
     	tv_title.setTypeface(null, Typeface.BOLD);
     	vwMainLayout.addView(tv_title);
+
+    	// cost order
+    	final ImageView ivOrderCost = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
+    	resId = oPlayer.getSortArrowRes(oPlayer.getSortCost());
+    	if (resId != 0) ivOrderCost.setImageResource(resId);
+    	vwMainLayout.addView(ivOrderCost);
+    	
+    	tv_title.setOnClickListener(new View.OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				oPlayer.sortByCost();
+				ivOrderCost.setImageResource(oPlayer.getSortArrowRes(oPlayer.getSortCost()));
+				MainActivity.this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) findViewById(R.id.layoutMain));
+			}
+		});
 
     	// build time
     	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
@@ -478,13 +541,28 @@ public class MainActivity extends ActionBarActivity {
     	tv_title.setTypeface(null, Typeface.BOLD);
     	vwMainLayout.addView(tv_title);
     	
-    	player.moveToFirstA();
-    	while (!player.isAfterLastA()) {
-        	ElementA oElementA = player.getElementA();
+    	// build time order
+    	final ImageView ivOrderBuildTime = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
+    	resId = oPlayer.getSortArrowRes(oPlayer.getSortBuildTime());
+    	if (resId != 0) ivOrderBuildTime.setImageResource(resId);
+    	vwMainLayout.addView(ivOrderBuildTime);
+    	
+    	tv_title.setOnClickListener(new View.OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				oPlayer.sortByBuildTime();
+				ivOrderBuildTime.setImageResource(oPlayer.getSortArrowRes(oPlayer.getSortBuildTime()));
+				MainActivity.this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) findViewById(R.id.layoutMain));
+			}
+		});
+
+    	oPlayer.moveToFirstA();
+    	while (!oPlayer.isAfterLastA()) {
+        	ElementA oElementA = oPlayer.getElementA();
             junit.framework.Assert.assertNotNull("oElementA variable null!", oElementA);
 
             Element oElement = oElementA.getElement();
-            PlayerElement oPlayerElement = player.getPlayerElement(oElement.getId(), oElementA.getLevel());
+            PlayerElement oPlayerElement = oPlayer.getPlayerElement(oElement.getId(), oElementA.getLevel());
             junit.framework.Assert.assertNotNull("oPlayerElement variable null!", oPlayerElement);
 
             // check on the filter. if this item should be excluded, do it now
@@ -499,14 +577,14 @@ public class MainActivity extends ActionBarActivity {
             if (oElement.getCategory().getID() == Utils.CategoryEnum.Trap.getId() && !this.mbTrap) bExclude = true;
             
             // now if the item is excluded, update that in the players global var
-        	player.setExclude(oElementA, bExclude);
+            oPlayer.setExclude(oElementA, bExclude);
             if (!bExclude) {
 	            
             	// qty
 	        	TextView tv = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
 	        	tv.setText(String.valueOf(oElementA.getQuantity()));
 	        	lp = new GridLayout.LayoutParams();
-	        	GridLayout.Spec s = GridLayout.spec(GridLayout.UNDEFINED, 2);
+	        	GridLayout.Spec s = GridLayout.spec(GridLayout.UNDEFINED, 2);	//colspan=2
 	        	lp.columnSpec = s;
 	        	tv.setLayoutParams(lp);
 	        	vwMainLayout.addView(tv);
@@ -514,11 +592,15 @@ public class MainActivity extends ActionBarActivity {
 	        	// element name
 	        	tv = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
 	        	tv.setText( oElement.getName());
+	        	lp = new GridLayout.LayoutParams();
+	        	lp.columnSpec = s;
+	        	tv.setLayoutParams(lp);
 	        	vwMainLayout.addView(tv);
 	
 	        	// element level
 	        	TextView tv1 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
 	            lp = new GridLayout.LayoutParams();
+	        	lp.columnSpec = s;
 	            lp.setGravity(Gravity.CENTER_HORIZONTAL);
 	            tv1.setLayoutParams(lp);
 	        	tv1.setText(String.valueOf(oPlayerElement.getLevel()));
@@ -527,9 +609,10 @@ public class MainActivity extends ActionBarActivity {
 	        	// element max level
 	        	TextView tv5 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
 	            lp = new GridLayout.LayoutParams();
+	        	lp.columnSpec = s;
 	            lp.setGravity(Gravity.CENTER_HORIZONTAL);
 	            tv5.setLayoutParams(lp);
-	        	tv5.setText(String.valueOf(oPlayerElement.getElement().getMaxLevel(player.getTHLevel())));
+	        	tv5.setText(String.valueOf(oPlayerElement.getElement().getMaxLevel(oPlayer.getTHLevel())));
 	        	vwMainLayout.addView(tv5);
 	
 	        	// element cost / cost type
@@ -545,8 +628,11 @@ public class MainActivity extends ActionBarActivity {
 	        	// element cost type
 	        	ImageView ivCostType = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
 	        	ivCostType.setImageResource(oElement.getCostType().getResID());
-	
 	        	ll.addView(ivCostType);
+
+	            lp = new GridLayout.LayoutParams();
+	        	lp.columnSpec = s;
+	        	ll.setLayoutParams(lp);
 	        	vwMainLayout.addView(ll);
 	        	
 	        	// element time to build
@@ -575,6 +661,12 @@ public class MainActivity extends ActionBarActivity {
 	        	}
 	        	
 	        	final PlayerElement oPlayerElementFinal = oPlayerElement;
+
+	        	// colspan 2
+	        	lp = new GridLayout.LayoutParams();
+	        	lp.columnSpec = s;
+	        	tv3.setLayoutParams(lp);
+	        	
 	        	tv3.setOnTouchListener(new OnTouchListener() {
 					@Override
 					public boolean onTouch(View arg0, MotionEvent arg1) {
@@ -586,21 +678,21 @@ public class MainActivity extends ActionBarActivity {
             }
 
         	// move to the next player element in the player object
-        	player.moveToNextA();
+            oPlayer.moveToNextA();
     	}
 
     	// show total upgrade time remaining (do this at the end after we've filtered items)
         TextView tv_upgrade_time = (TextView) poParent.findViewById(R.id.tvUpgradeTime);
-    	tv_upgrade_time.setText(Utils.Time_ValToText(player.getUpgradeTimeMax()));    	
+    	tv_upgrade_time.setText(Utils.Time_ValToText(oPlayer.getUpgradeTimeMax()));    	
     	
     	// show total upgrade cost 
-    	int nUpgradeCost = player.getUpgradeCostMax(Utils.CostTypeEnum.Elixir.getId());
+    	int nUpgradeCost = oPlayer.getUpgradeCostMax(Utils.CostTypeEnum.Elixir.getId());
     	String sCost = NumberFormat.getInstance().format(nUpgradeCost);
     	TextView tv_upgrade_cost_elixir = (TextView) poParent.findViewById(R.id.tvUpgradeCostElixir);
     	tv_upgrade_cost_elixir.setText(sCost);
 
     	// show total upgrade cost 
-    	nUpgradeCost = player.getUpgradeCostMax(Utils.CostTypeEnum.Gold.getId());
+    	nUpgradeCost = oPlayer.getUpgradeCostMax(Utils.CostTypeEnum.Gold.getId());
     	sCost = NumberFormat.getInstance().format(nUpgradeCost);
     	TextView tv_upgrade_cost_gold = (TextView) poParent.findViewById(R.id.tvUpgradeCostGold);
     	tv_upgrade_cost_gold.setText(sCost);

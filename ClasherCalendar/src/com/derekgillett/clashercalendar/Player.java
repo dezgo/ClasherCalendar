@@ -13,6 +13,7 @@ import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 
 public class Player {
+	//region class vars
 	private SQLiteDatabase moDB;
 	private static final String TAG = "ClasherPlayer";
 	
@@ -32,6 +33,51 @@ public class Player {
 	private int mnIndex = 0;
 	private int mnIndexA = 0;
 	
+	//region sorting local vars
+	private int mnSortQty = 0;
+	private int mnSortBuilding = 0;
+	private int mnSortLevel = 0;
+	private int mnSortMaxLevel = 0;
+	private int mnSortCost = 0;
+	private int mnSortBuildTime = 0;
+
+	public int getSortQty() {
+		return mnSortQty;
+	}
+
+	public int getSortBuilding() {
+		return mnSortBuilding;
+	}
+
+	public int getSortLevel() {
+		return mnSortLevel;
+	}
+
+	public int getSortMaxLevel() {
+		return mnSortMaxLevel;
+	}
+
+	public int getSortCost() {
+		return mnSortCost;
+	}
+
+	public int getSortBuildTime() {
+		return mnSortBuildTime;
+	}
+
+	public int getSortArrowRes(int pnSort) {
+		if (pnSort > 0)
+			return R.drawable.down_arrow;
+		else if (pnSort < 0)
+			return R.drawable.up_arrow;
+		else
+			return 0;//R.drawable.unsorted;
+	}
+	
+	//endregion
+	//endregion
+	
+	//region Constructors
 	public Player(SQLiteDatabase poDB, long pnPlayerID) {
 		moDB = poDB;
 		mnPlayerID = pnPlayerID;
@@ -48,7 +94,9 @@ public class Player {
 		LoadDefaults();
 		Globals.INSTANCE.setPlayer(this);
 	}
+	//endregion
 	
+	//region Getters
 	public String getVillageName() {
 		return this.msVillageName;
 	}
@@ -56,6 +104,30 @@ public class Player {
 	public int getTHLevel() {
 		return mnTHLevel;
 	}
+	
+	public long getid() {
+		return this.mnPlayerID;
+	}
+	
+	public PlayerElement getPlayerElement() {
+		PlayerElement playerElement = null;
+		if (mnIndex <= moPlayerElements.size() ) {
+			playerElement = moPlayerElements.get(moPlayerElements.keyAt(mnIndex));
+		}
+		return playerElement;
+	}
+	
+	// as per http://stackoverflow.com/questions/1066589/java-iterate-through-hashmap
+	public ElementA getElementA() {
+		ElementA oElementA = null;
+
+		if (this.mnIndexA < this.moElementsASorted.size()) {
+			oElementA = this.moElementsASorted.get(mnIndexA);
+		}
+		
+		return oElementA;
+	}
+	//endregion
 	
 	public void incTHLevel() {
 		mnTHLevel++;
@@ -119,8 +191,7 @@ public class Player {
 		}
 		mbRepopulateA = false;
 		moElementsASorted = new ArrayList<ElementA>(this.moElementsA.values());
-		this.sortByName(true);
-		//this.sortByCost(true);
+		this.sortByBuilding();
 	}
 	
 	public void incPlayerElementLevel(PlayerElement poPlayerElement, int pnIncrement) {
@@ -163,10 +234,6 @@ public class Player {
 		
 	}
 	
-	public long getid() {
-		return this.mnPlayerID;
-	}
-	
 	private void addPlayerElement(long pnPlayerElementID) {
 		PlayerElement oPlayerElement = new PlayerElement(moDB, pnPlayerElementID, this);
 		addPlayerElement(oPlayerElement);
@@ -206,7 +273,7 @@ public class Player {
 			return null;
 	}
 	
-	/*
+	/*getElementA
 	public ElementA getElementA(Element poElement, int pnLevel) {
 		if (mbRepopulateA) this.populateElementsA();
 		
@@ -215,6 +282,7 @@ public class Player {
 	}
 	*/
 	
+	//region Array Navigation
 	public void moveToFirst() {
 		this.mnIndex = 0;
 	}
@@ -239,33 +307,45 @@ public class Player {
 	public boolean isAfterLastA() {
 		return mnIndexA >= this.moElementsA.size();
 	}
-	
-	public PlayerElement getPlayerElement() {
-		PlayerElement playerElement = null;
-		if (mnIndex <= moPlayerElements.size() ) {
-			playerElement = moPlayerElements.get(moPlayerElements.keyAt(mnIndex));
-		}
-		return playerElement;
-	}
-	
-	// as per http://stackoverflow.com/questions/1066589/java-iterate-through-hashmap
-	public ElementA getElementA() {
-		ElementA oElementA = null;
-
-		if (this.mnIndexA < this.moElementsASorted.size()) {
-			oElementA = this.moElementsASorted.get(mnIndexA);
-		}
-		
-		return oElementA;
-	}
+	//endregion
 	
 	public void setExclude(long key, boolean pbExclude) {
 		PlayerElement playerElement = moPlayerElements.get(key);
 		playerElement.setExclude(pbExclude);
 	}
 	
+	private enum SortColumn {
+		Qty, Building, Level, MaxLevel, Cost, BuildTime
+	}
+	// only sorting by one column, so reset all others when changing sort order
+	private void applySort(SortColumn peSortColumn, int pnSort) {
+		mnSortQty = 0;
+		mnSortBuilding = 0;
+		mnSortLevel = 0;
+		mnSortMaxLevel = 0;
+		mnSortCost = 0;
+		mnSortBuildTime = 0;
+		if (peSortColumn == SortColumn.Qty)
+			mnSortQty = pnSort;
+		else if (peSortColumn == SortColumn.Building)
+			mnSortBuilding = pnSort;
+		else if (peSortColumn == SortColumn.BuildTime)
+			this.mnSortBuildTime = pnSort;
+		else if (peSortColumn == SortColumn.Cost)
+			this.mnSortCost = pnSort;
+		else if (peSortColumn == SortColumn.Level)
+			this.mnSortLevel = pnSort;
+		else if (peSortColumn == SortColumn.MaxLevel)
+			this.mnSortMaxLevel = pnSort;
+	}
+	
 	// thanks to http://stackoverflow.com/questions/780541/how-to-sort-a-hashmap-in-java
-	public void sortByName(final boolean pbAscending) {
+	public void sortByBuilding() {
+		if (this.mnSortBuilding == 0)
+			applySort(SortColumn.Building, 1);
+		else
+			applySort(SortColumn.Building, -1 * mnSortBuilding);
+		
 		moElementsASorted = new ArrayList<ElementA>(this.moElementsA.values());
 		Collections.sort(moElementsASorted, new Comparator<ElementA>() {
 			@Override
@@ -273,7 +353,7 @@ public class Player {
 				String name0 = arg0.getElement().getName();
 				String name1 = arg1.getElement().getName();
 				if (name0 != null && name1 != null)
-					if (pbAscending)
+					if (mnSortBuilding > 0)
 						return name0.compareTo(name1);
 					else
 						return name1.compareTo(name0);
@@ -283,24 +363,113 @@ public class Player {
 		});
 	}
 	
-	public void sortByCost(final boolean pbAscending) {
+	public void sortByCost() {
+		if (this.mnSortCost == 0)
+			applySort(SortColumn.Cost, 1);
+		else
+			applySort(SortColumn.Cost, -1 * this.mnSortCost);
+
 		moElementsASorted = new ArrayList<ElementA>(this.moElementsA.values());
 		Collections.sort(moElementsASorted, new Comparator<ElementA>() {
 			@Override
 			public int compare(ElementA arg0, ElementA arg1) {
 				Element oElement0 = arg0.getElement();
+				if (oElement0 == null) { Log.d(TAG, "oElement0 is null!"); return 1; }
+				Element oElement1 = arg1.getElement();
+				if (oElement1 == null) { Log.d(TAG, "oElement1 is null!"); return 1; }
+				
+				ElementData oElementData0 = oElement0.getElementData(arg0.getLevel()+1);
+				if (oElementData0 == null) { 
+					Log.d(TAG, oElement0.getName() + ": oElementData0 is null for level " + arg0.getLevel()+1); 
+					return 1; 
+				}
+				ElementData oElementData1 = oElement1.getElementData(arg1.getLevel()+1);
+				if (oElementData1 == null) { 
+					Log.d(TAG, oElement1.getName() + ": oElementData1 is null for level " + arg1.getLevel()+1);
+					return 1; 
+				}
+				return mnSortCost * (oElementData0.getBuildCost() - oElementData1.getBuildCost());
+			}
+		});
+	}
+	
+	public void sortByBuildTime() {
+		if (this.mnSortBuildTime == 0)
+			applySort(SortColumn.BuildTime, 1);
+		else
+			applySort(SortColumn.BuildTime, -1 * this.mnSortBuildTime);
+
+		moElementsASorted = new ArrayList<ElementA>(this.moElementsA.values());
+		Collections.sort(moElementsASorted, new Comparator<ElementA>() {
+			@Override
+			public int compare(ElementA arg0, ElementA arg1) {
+				Element oElement0 = arg0.getElement();
+				if (oElement0 == null) { Log.d(TAG, "oElement0 is null!"); return 1; }
+				Element oElement1 = arg1.getElement();
+				if (oElement1 == null) { Log.d(TAG, "oElement1 is null!"); return 1; }
+				
+				ElementData oElementData0 = oElement0.getElementData(arg0.getLevel()+1);
+				if (oElementData0 == null) { 
+					Log.d(TAG, oElement0.getName() + ": oElementData0 is null for level " + arg0.getLevel()+1); 
+					return 1; 
+				}
+				ElementData oElementData1 = oElement1.getElementData(arg1.getLevel()+1);
+				if (oElementData1 == null) { 
+					Log.d(TAG, oElement1.getName() + ": oElementData1 is null for level " + arg1.getLevel()+1);
+					return 1; 
+				}
+				return mnSortBuildTime * (oElementData0.getBuildTime() - oElementData1.getBuildTime());
+			}
+		});
+	}
+	
+	public void sortByLevel() {
+		if (this.mnSortLevel == 0)
+			applySort(SortColumn.Level, 1);
+		else
+			applySort(SortColumn.Level, -1 * mnSortLevel);
+		
+		moElementsASorted = new ArrayList<ElementA>(this.moElementsA.values());
+		Collections.sort(moElementsASorted, new Comparator<ElementA>() {
+			@Override
+			public int compare(ElementA arg0, ElementA arg1) {
+				return mnSortLevel * (arg0.getLevel() - arg1.getLevel());
+			}
+		});
+	}
+	
+	public void sortByQty() {
+		if (this.mnSortQty == 0)
+			applySort(SortColumn.Qty, 1);
+		else
+			applySort(SortColumn.Qty, -1 * mnSortQty);
+
+		moElementsASorted = new ArrayList<ElementA>(this.moElementsA.values());
+		Collections.sort(moElementsASorted, new Comparator<ElementA>() {
+			@Override
+			public int compare(ElementA arg0, ElementA arg1) {
+				return mnSortQty * (arg0.getQuantity() - arg1.getQuantity());
+			}
+		});
+	}
+	
+	public void sortByMaxLevel() {
+		if (this.mnSortMaxLevel == 0)
+			applySort(SortColumn.MaxLevel, 1);
+		else
+			applySort(SortColumn.MaxLevel, -1 * mnSortMaxLevel);
+
+		moElementsASorted = new ArrayList<ElementA>(this.moElementsA.values());
+		Collections.sort(moElementsASorted, new Comparator<ElementA>() {
+			@Override
+			public int compare(ElementA arg0, ElementA arg1) {
+				Player oPlayer = Globals.INSTANCE.getPlayer();
+				Element oElement0 = arg0.getElement();
 				if (oElement0 == null) { Log.d("Player", "oElement0 is null!"); return 1; }
 				Element oElement1 = arg1.getElement();
 				if (oElement1 == null) { Log.d("Player", "oElement1 is null!"); return 1; }
-				
-				ElementData oElementData0 = oElement0.getElementData(arg0.getLevel());
-				if (oElementData0 == null) { Log.d("Player", oElement0.getName() + ": oElementData0 is null!"); return 1; }
-				ElementData oElementData1 = oElement1.getElementData(arg1.getLevel());
-				if (oElementData1 == null) { Log.d("Player", oElement1.getName() + ": oElementData1 is null!"); return 1; }
-				if (pbAscending)
-					return oElementData0.getBuildCost() - oElementData1.getBuildCost();
-				else
-					return oElementData1.getBuildCost() - oElementData0.getBuildCost();
+
+				return mnSortMaxLevel * (oElement0.getMaxLevel(oPlayer.getTHLevel()) - oElement1.getMaxLevel(oPlayer.getTHLevel()));
 			}
 		});
 	}
@@ -386,7 +555,7 @@ public class Player {
 		}
 		return nUpgradeTimeTotal;
 	}
-	
+
 	public int getUpgradeCostMax(long pnCostType) {
 		int nUpgradeCost = 0;
 		
@@ -402,6 +571,7 @@ public class Player {
 		return moPlayerElements.size();
 	}
 	
+	//region Database
 	private void select() {
     	String[] columns = ClasherDBContract.ClasherPlayer.ALL_COLUMNS;
     	String selection = ClasherDBContract.ClasherPlayer.COLUMN_NAME_ID + " = ?";
@@ -479,8 +649,9 @@ public class Player {
 				selectionArgs, 
 				null, null, null);        	
     }	
+	//endregion
     
-    // DEBUGING STUFF
+    //region Debugging
     private String pad(String item, int length) {
     	String rtn = item;
     	while (rtn.length() < length) {
@@ -505,5 +676,6 @@ public class Player {
 			Log.v(TAG, pad(String.valueOf(id),6) + pad(elementName,20) + pad(String.valueOf(level),5));
     	}
     }
+    //endregion
 
 }
