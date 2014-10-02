@@ -193,9 +193,10 @@ public class Player {
 		moElementsASorted = new ArrayList<ElementA>(this.moElementsA.values());
 		this.sortByBuilding(1);
 	}
-	
-	public void incPlayerElementLevel(PlayerElement poPlayerElement, int pnIncrement) {
-		junit.framework.Assert.assertTrue("increment can only be -1 or 1, not " + pnIncrement, pnIncrement == -1 || pnIncrement == 1);
+
+	// if pbIncrement true, go up, otherwise go down
+	public void incPlayerElementLevel(PlayerElement poPlayerElement, boolean pbIncrement) {
+		//junit.framework.Assert.assertTrue("increment can only be -1 or 1, not " + pnIncrement, pnIncrement == -1 || pnIncrement == 1);
 /*		
 		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
 		junit.framework.Assert.assertTrue(
@@ -204,11 +205,11 @@ public class Player {
 	*/	
 		// only increment if we're not already at max level
 		// only decrement if we're at level > 0
-		if (((pnIncrement ==  1) && (poPlayerElement.getLevel() < poPlayerElement.getElement().getMaxLevel(this.mnTHLevel)) ||
-			((pnIncrement == -1) && (poPlayerElement.getLevel() > 0)))) {
+		if (((pbIncrement) && (poPlayerElement.getLevel() < poPlayerElement.getElement().getMaxLevel(this.mnTHLevel)) ||
+			((!pbIncrement) && (poPlayerElement.getLevel() > 0)))) {
 
 			// for the standard array of player elements, just increment/decrement the level
-			if (pnIncrement == 1)
+			if (pbIncrement)
 				this.moPlayerElements.get(poPlayerElement.getID()).incLevel();
 			else
 				this.moPlayerElements.get(poPlayerElement.getID()).decLevel();

@@ -31,7 +31,6 @@ import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +47,7 @@ public class MainActivity extends ActionBarActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    
+
     private boolean mbMaxed = true;
     private boolean mbElixir = true;
     private boolean mbGold = true;
@@ -277,17 +276,134 @@ public class MainActivity extends ActionBarActivity {
 		startActivity(intent);
 	}
 	
-    @SuppressLint("InflateParams")
+    private void removeRow(GridLayout vwMainLayout, 
+		int row, 	         // row number (zero-based) to add/update
+		int numCols) { 		 // number of column displayed
+    
+    	int index = row*numCols;
+    	for (int i=0; i<numCols; i++) {
+    		vwMainLayout.removeViewAt(index+i);
+    	}
+    }
+    
+    private void drawRow(GridLayout vwMainLayout, 
+    		final ElementA poElementA, 
+    		int pnTHLevel, 		 // current town hall level (to check if we're at max level)
+    		final int row,       // row number (zero-based) to add/update
+    		final int numCols, 		 // number of column displayed
+    		boolean pbUpdate) {  // update the row, or append?
+    	
+    	int index = row*numCols;
+    	
+    	// quantity
+    	TextView tvQuantity;
+    	String sQty = String.valueOf(poElementA.getQuantity());
+    	if (pbUpdate) {
+    		tvQuantity = (TextView) vwMainLayout.getChildAt(index);
+    		tvQuantity.setText(sQty);
+    	} else {
+    		tvQuantity = (TextView) getLayoutInflater().inflate(R.layout.tv_template, vwMainLayout, false);
+    		tvQuantity.setText(sQty);
+        	GridLayout.LayoutParams lp1 = new GridLayout.LayoutParams();
+            lp1.setGravity(Gravity.CENTER_VERTICAL);
+        	vwMainLayout.addView(tvQuantity, index, lp1);
+    	}
+    	index++;
+
+    	// element name
+    	if (!pbUpdate) {
+	    	TextView tvElementName = (TextView) getLayoutInflater().inflate(R.layout.tv_template, vwMainLayout, false);
+	    	tvElementName.setText( poElementA.getElement().getName());
+	    	GridLayout.LayoutParams lp2 = new GridLayout.LayoutParams();
+	        lp2.setGravity(Gravity.CENTER_VERTICAL);
+	    	vwMainLayout.addView(tvElementName, index, lp2);
+    	}
+    	index++;
+
+    	// level
+    	final TextView tvLevel;
+    	if (pbUpdate) {
+    		tvLevel = (TextView) vwMainLayout.getChildAt(index);
+    	} else {
+    		tvLevel = (TextView) getLayoutInflater().inflate(R.layout.tv_template, vwMainLayout, false);
+	    	GridLayout.LayoutParams lp3 = new GridLayout.LayoutParams();
+	        lp3.setGravity(Gravity.CENTER_VERTICAL);
+	        tvLevel.setText("Lvl " + String.valueOf(poElementA.getLevel()));
+	    	vwMainLayout.addView(tvLevel, index, lp3);
+    	}
+    	index++;
+
+        // check if we've hit max or min level
+    	int nCurrentValue = poElementA.getLevel();
+    	boolean bDrawInc = nCurrentValue+1 <= poElementA.getElement().getMaxLevel(pnTHLevel);
+        boolean bDrawDec = nCurrentValue-1 >= 0;
+
+        // container to hold buttons
+        LinearLayout ll;
+        if (pbUpdate) {
+        	ll = (LinearLayout) vwMainLayout.getChildAt(index);
+        } else {
+        	ll = new LinearLayout(this);
+        }
+        
+    	// Increment / Decrement buttons
+        // tricky bit to save adding and removing buttons unnecessarily
+        if (pbUpdate) {
+        	for (int nBtnIndex=ll.getChildCount()-1; nBtnIndex >= 0; nBtnIndex--) {
+        		Button btn = (Button) ll.getChildAt(nBtnIndex);
+        		if (btn.getText().equals("  +  ")) {
+        			if (bDrawInc) bDrawInc = false; else ll.removeViewAt(nBtnIndex);
+        		}
+        		if (btn.getText().equals("  -  ")) {
+        			if (bDrawDec) bDrawDec = false; else ll.removeViewAt(nBtnIndex);
+        		}
+        	}
+        }
+
+        if (bDrawInc) {
+        	Button btn1 = (Button) getLayoutInflater().inflate(R.layout.btn_template, ll, false);
+        	btn1.setText("  +  ");
+        	btn1.setOnTouchListener(new RepeatListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					LevelChangeOnClickListener(row, numCols, true, poElementA);
+				}
+			}));
+        	ll.addView(btn1, 0);	// add at index zero to make this the first button
+        }
+
+        if (bDrawDec) {
+        	Button btn2 = (Button) getLayoutInflater().inflate(R.layout.btn_template, ll, false);
+        	btn2.setText("  -  ");
+        	btn2.setOnTouchListener(new RepeatListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					LevelChangeOnClickListener(row, numCols, false, poElementA);
+				}
+			}));
+        	ll.addView(btn2);
+        }
+        
+        if (!pbUpdate) vwMainLayout.addView(ll, index);
+
+        // last element, so no need to increment index. 
+        // remember to add that in if adding more columns though
+    }
+
 	private void GetElements(View poParent, GridLayout vwMainLayout) {
+		final int numCols = 4;
+		
         // found situations where vwMainLayout was null. definitely get outta here if
         // that happens
         if (vwMainLayout == null) return;
         
         // clear out previous stuff first
+        //TODO: don't do this, very inefficient
+        // work out another 
         vwMainLayout.removeAllViews();
         
         // update column count - it might have been changed by viewing the dashboard
-        vwMainLayout.setColumnCount(5);
+        vwMainLayout.setColumnCount(numCols);
 
         // get player elements, and check it's not null
         Player player = Globals.INSTANCE.getPlayer();
@@ -313,90 +429,10 @@ public class MainActivity extends ActionBarActivity {
 */
     	//player.sortByBuilding(1);
         player.moveToFirstA();
+        int row=0;
     	while (!player.isAfterLastA()) {
-        	final ElementA oElementA = player.getElementA();
+    		drawRow(vwMainLayout, player.getElementA(), player.getTHLevel(), row++, numCols, false);
         	
-        	Element oElement = oElementA.getElement();
-        	
-        	// quantity
-        	TextView tv1 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
-        	tv1.setText(String.valueOf(oElementA.getQuantity()));
-        	GridLayout.LayoutParams lp1 = new GridLayout.LayoutParams();
-            lp1.setGravity(Gravity.CENTER_VERTICAL);
-            tv1.setLayoutParams(lp1);
-        	vwMainLayout.addView(tv1);
-
-        	// element name
-        	TextView tv2 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
-        	tv2.setText( oElement.getName());
-        	GridLayout.LayoutParams lp2 = new GridLayout.LayoutParams();
-            lp2.setGravity(Gravity.CENTER_VERTICAL);
-            tv2.setLayoutParams(lp2);
-        	vwMainLayout.addView(tv2);
-
-        	TextView tv3 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
-        	GridLayout.LayoutParams lp3 = new GridLayout.LayoutParams();
-            lp3.setGravity(Gravity.CENTER_VERTICAL);
-            tv3.setLayoutParams(lp3);
-        	tv3.setText("Lvl " + String.valueOf(oElementA.getLevel()));
-        	vwMainLayout.addView(tv3);
-        	final TextView tv4 = tv3;
-
-        	// use this layout parameter if there's only one button
-        	GridLayout.LayoutParams lp4 = new GridLayout.LayoutParams();
-            lp4.setGravity(Gravity.CENTER);
-        	lp4.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 2);
-
-            // check if we've hit max or min level
-        	int nCurrentValue = oElementA.getLevel();
-        	boolean bMax = nCurrentValue+1 > oElementA.getElement().getMaxLevel(player.getTHLevel());
-            boolean bMin = nCurrentValue-1 < 0;
-            boolean bCentre = bMax && !bMin || !bMax && bMin;
-
-            // just in case an element level can neither be increased nor decreased, put in a blank
-            // element so the layout doesn't get mucked up
-            if (bMax && bMin) {
-            	TextView oTVMax = new TextView(this);
-            	oTVMax.setLayoutParams(lp4);
-            	oTVMax.setGravity(Gravity.CENTER);
-            	vwMainLayout.addView(oTVMax);
-            }
-            
-        	// Draw increment button (if appropriate)
-            if (!bMax) {
-            	Button btn1 = (Button) getLayoutInflater().inflate(R.layout.btn_template, null);
-	        	btn1.setText("  +  ");
-	        	btn1.setOnTouchListener(new RepeatListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						LevelChangeOnClickListener((Button) v, tv4, 1, oElementA);
-					}
-				}));
-	        	if (bCentre) btn1.setLayoutParams(lp4);
-	        	btn1.setGravity(Gravity.CENTER);
-//	        	lp4.columnSpec = GridLayout.spec(3);
-//	        	btn1.setLayoutParams(lp4);
-	        	vwMainLayout.addView(btn1);
-            }
-
-        	// Draw decrement button (if appropriate)
-            if (!bMin) {
-            	Button btn2 = (Button) getLayoutInflater().inflate(R.layout.btn_template, null);
-	        	btn2.setText("  -  ");
-	        	btn2.setOnTouchListener(new RepeatListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						//v.performClick();
-						LevelChangeOnClickListener((Button) v, tv4, -1, oElementA);
-					}
-				}));
-	        	if (bCentre) btn2.setLayoutParams(lp4);
-	        	btn2.setGravity(Gravity.CENTER);
-//	        	lp4.columnSpec = GridLayout.spec(3);
-//	        	btn2.setLayoutParams(lp4);
-	        	vwMainLayout.addView(btn2);
-	        }
-            
             // move to next element in aggregated array
         	player.moveToNextA();
     	}
@@ -406,7 +442,6 @@ public class MainActivity extends ActionBarActivity {
     	tv_upgrade_time.setText(Utils.Time_ValToText(player.getUpgradeTimeMax()));    	
     }
     
-    @SuppressLint("InflateParams")
 	private void GetElements_Dashboard(View poParent, GridLayout vwMainLayout) {
         GridLayout.LayoutParams lp;
 
@@ -430,13 +465,13 @@ public class MainActivity extends ActionBarActivity {
         junit.framework.Assert.assertNotNull("MyApplication.getPlayerElements() global variable null!", oPlayer);
 
     	// quantity
-    	TextView tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+    	TextView tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, vwMainLayout, false);
     	tv_title.setText( R.string.grid_title1);
     	tv_title.setTypeface(null, Typeface.BOLD);
     	vwMainLayout.addView(tv_title);
     	
     	// quantity order
-    	final ImageView ivOrderQty = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
+    	final ImageView ivOrderQty = (ImageView) getLayoutInflater().inflate(R.layout.img_template, vwMainLayout, false);
     	int resId = oPlayer.getSortArrowRes(oPlayer.getSortQty());
     	if (resId != 0) ivOrderQty.setImageResource(resId);
     	vwMainLayout.addView(ivOrderQty);
@@ -451,13 +486,13 @@ public class MainActivity extends ActionBarActivity {
 		});
     	
     	// building
-    	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+    	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, vwMainLayout, false);
     	tv_title.setText( R.string.grid_title2);
     	tv_title.setTypeface(null, Typeface.BOLD);
     	vwMainLayout.addView(tv_title);
 
     	// building order
-    	final ImageView ivOrderBuilding = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
+    	final ImageView ivOrderBuilding = (ImageView) getLayoutInflater().inflate(R.layout.img_template, vwMainLayout, false);
     	resId = oPlayer.getSortArrowRes(oPlayer.getSortBuilding());
     	if (resId != 0) ivOrderBuilding.setImageResource(resId);
     	vwMainLayout.addView(ivOrderBuilding);
@@ -472,13 +507,13 @@ public class MainActivity extends ActionBarActivity {
 		});
 
     	// level
-    	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+    	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, vwMainLayout, false);
     	tv_title.setText( R.string.grid_title3);
     	tv_title.setTypeface(null, Typeface.BOLD);
     	vwMainLayout.addView(tv_title);
 
     	// level order
-    	final ImageView ivOrderLevel = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
+    	final ImageView ivOrderLevel = (ImageView) getLayoutInflater().inflate(R.layout.img_template, vwMainLayout, false);
     	resId = oPlayer.getSortArrowRes(oPlayer.getSortLevel());
     	if (resId != 0) ivOrderLevel.setImageResource(resId);
     	vwMainLayout.addView(ivOrderLevel);
@@ -493,14 +528,14 @@ public class MainActivity extends ActionBarActivity {
 		});
 
     	// max level
-    	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+    	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, vwMainLayout, false);
     	tv_title.setText( R.string.grid_title4);
     	tv_title.setMaxEms(3);
     	tv_title.setTypeface(null, Typeface.BOLD);
     	vwMainLayout.addView(tv_title);
 
     	// max level order
-    	final ImageView ivOrderMaxLevel = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
+    	final ImageView ivOrderMaxLevel = (ImageView) getLayoutInflater().inflate(R.layout.img_template, vwMainLayout, false);
     	resId = oPlayer.getSortArrowRes(oPlayer.getSortMaxLevel());
     	if (resId != 0) ivOrderMaxLevel.setImageResource(resId);
     	vwMainLayout.addView(ivOrderMaxLevel);
@@ -515,13 +550,13 @@ public class MainActivity extends ActionBarActivity {
 		});
 
     	// cost
-    	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+    	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, vwMainLayout, false);
     	tv_title.setText( R.string.grid_title5);
     	tv_title.setTypeface(null, Typeface.BOLD);
     	vwMainLayout.addView(tv_title);
 
     	// cost order
-    	final ImageView ivOrderCost = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
+    	final ImageView ivOrderCost = (ImageView) getLayoutInflater().inflate(R.layout.img_template, vwMainLayout, false);
     	resId = oPlayer.getSortArrowRes(oPlayer.getSortCost());
     	if (resId != 0) ivOrderCost.setImageResource(resId);
     	vwMainLayout.addView(ivOrderCost);
@@ -536,14 +571,14 @@ public class MainActivity extends ActionBarActivity {
 		});
 
     	// build time
-    	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+    	tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, vwMainLayout, false);
     	tv_title.setText( R.string.grid_title6);
     	tv_title.setMaxEms(3);
     	tv_title.setTypeface(null, Typeface.BOLD);
     	vwMainLayout.addView(tv_title);
     	
     	// build time order
-    	final ImageView ivOrderBuildTime = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
+    	final ImageView ivOrderBuildTime = (ImageView) getLayoutInflater().inflate(R.layout.img_template, vwMainLayout, false);
     	resId = oPlayer.getSortArrowRes(oPlayer.getSortBuildTime());
     	if (resId != 0) ivOrderBuildTime.setImageResource(resId);
     	vwMainLayout.addView(ivOrderBuildTime);
@@ -582,7 +617,7 @@ public class MainActivity extends ActionBarActivity {
             if (!bExclude) {
 	            
             	// qty
-	        	TextView tv = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+	        	TextView tv = (TextView) getLayoutInflater().inflate(R.layout.tv_template, vwMainLayout, false);
 	        	tv.setText(String.valueOf(oElementA.getQuantity()));
 	        	lp = new GridLayout.LayoutParams();
 	        	GridLayout.Spec s = GridLayout.spec(GridLayout.UNDEFINED, 2);	//colspan=2
@@ -591,7 +626,7 @@ public class MainActivity extends ActionBarActivity {
 	        	vwMainLayout.addView(tv);
 	
 	        	// element name
-	        	tv = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+	        	tv = (TextView) getLayoutInflater().inflate(R.layout.tv_template, vwMainLayout, false);
 	        	tv.setText( oElement.getName());
 	        	lp = new GridLayout.LayoutParams();
 	        	lp.columnSpec = s;
@@ -599,7 +634,7 @@ public class MainActivity extends ActionBarActivity {
 	        	vwMainLayout.addView(tv);
 	
 	        	// element level
-	        	TextView tv1 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+	        	TextView tv1 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, vwMainLayout, false);
 	            lp = new GridLayout.LayoutParams();
 	        	lp.columnSpec = s;
 	            lp.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -608,7 +643,7 @@ public class MainActivity extends ActionBarActivity {
 	        	vwMainLayout.addView(tv1);
 	
 	        	// element max level
-	        	TextView tv5 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+	        	TextView tv5 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, vwMainLayout, false);
 	            lp = new GridLayout.LayoutParams();
 	        	lp.columnSpec = s;
 	            lp.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -619,7 +654,7 @@ public class MainActivity extends ActionBarActivity {
 	        	// element cost / cost type
 	        	LinearLayout ll = new LinearLayout(this);
 	        	
-	        	TextView tv2 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+	        	TextView tv2 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, vwMainLayout, false);
 	        	if (oPlayerElement.isMax())
 	        		tv2.setText("Maxed");
 	        	else
@@ -627,7 +662,7 @@ public class MainActivity extends ActionBarActivity {
 	        	ll.addView(tv2);
 	
 	        	// element cost type
-	        	ImageView ivCostType = (ImageView) getLayoutInflater().inflate(R.layout.img_template, null);
+	        	ImageView ivCostType = (ImageView) getLayoutInflater().inflate(R.layout.img_template, vwMainLayout, false);
 	        	ivCostType.setImageResource(oElement.getCostType().getResID());
 	        	ll.addView(ivCostType);
 
@@ -639,14 +674,14 @@ public class MainActivity extends ActionBarActivity {
 	        	// element time to build
 	        	TextView tv3;
 	        	if (oPlayerElement.isMax()) {
-		        	tv3 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+		        	tv3 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, vwMainLayout, false);
 	        		tv3.setText("n/a");
 	        	} else {
 	        		if (Utils.DEBUG) Log.d("Dashboard", "Is PlayerElement " + oPlayerElement.getID() + " being upgraded?");
 	        		ItemUpgrade oItemUpgrade = this.moItemUpgrades.get(oPlayerElement.getID());
 	            	if (oItemUpgrade == null) {
 	            		if (Utils.DEBUG) Log.d("Dashboard", "No, or upgrades array not yet setup");
-			        	tv3 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
+			        	tv3 = (TextView) getLayoutInflater().inflate(R.layout.tv_template, vwMainLayout, false);
 		            	
 			        	// if this item is actually being upgraded, add it to the upgrades array now
 			        	if (oPlayerElement.getSecondsRemaining() > 0) {
@@ -736,37 +771,58 @@ public class MainActivity extends ActionBarActivity {
     }
 
     // change the level of the selected item
-    private void LevelChangeOnClickListener(Button btn, TextView poTextview, int pnIncrement, ElementA poElementA) {
-    	// only do this if the button is currently pressed
-    	//AutoRepeatButton btn = (AutoRepeatButton) findViewById(nBtnID);
-    	//if (btn.isPressed()) {	    	
-    		//long time = System.currentTimeMillis();
-    		//Log.v(TAG, "Start");
-    		int nCurrentValue = poElementA.getLevel();
-    		//Log.v(TAG, "Step 1: " + (System.currentTimeMillis()-time));
-	    	int nNewValue = nCurrentValue + pnIncrement;
-    		//Log.v(TAG, "Step 2: " + (System.currentTimeMillis()-time));
-	    	
-	        Player player = Globals.INSTANCE.getPlayer();
-    		//Log.v(TAG, "Step 3: " + (System.currentTimeMillis()-time));
-	        if (nNewValue >= 0 && nNewValue <= poElementA.getElement().getMaxLevel(player.getTHLevel())) {
-	    		//Log.v(TAG, "Step 4: " + (System.currentTimeMillis()-time));
-	        	long nElementID = poElementA.getElement().getId();
-	    		//Log.v(TAG, "Step 5: " + (System.currentTimeMillis()-time));
-	        	PlayerElement oPlayerElement = player.getPlayerElement(nElementID,poElementA.getLevel());
-	    		//Log.v(TAG, "Step 6: " + (System.currentTimeMillis()-time));
-	        	if (oPlayerElement != null) {
-		        	player.incPlayerElementLevel(oPlayerElement, pnIncrement);
-		    		//Log.v(TAG, "Step 7: " + (System.currentTimeMillis()-time));
-		    		RelativeLayout rl = (RelativeLayout) findViewById(R.id.rlMain);
-		    		//Log.v(TAG, "Step 8: " + (System.currentTimeMillis()-time));
-		    		GridLayout gl = (GridLayout) this.findViewById(R.id.layoutMain);
-		    		//Log.v(TAG, "Step 9: " + (System.currentTimeMillis()-time));
-		        	this.GetElements(rl, gl);
-		    		//Log.v(TAG, "Step 10: " + (System.currentTimeMillis()-time));
-	        	}
-	    	}
-    	//}
+    // IMPORTANT: assuming the list is in alpha order by element name, then by element level
+    private void LevelChangeOnClickListener(int pnRow, int pnCols, boolean pbIncrement, ElementA poElementA) {
+		// do the actual change first
+        Player player = Globals.INSTANCE.getPlayer();
+    	long nElementID = poElementA.getElement().getId();
+    	PlayerElement oPlayerElement = player.getPlayerElement(nElementID,poElementA.getLevel());
+    	if (oPlayerElement != null) player.incPlayerElementLevel(oPlayerElement, pbIncrement);
+
+    	// now update the UI
+    	GridLayout gl = (GridLayout) this.findViewById(R.id.layoutMain);
+    	
+    	// retrieve the surrounding element info
+    	TextView tvPrevQty = null; int nPrevQty = 0;
+    	TextView tvPrevName = null; String sPrevName = "";
+    	TextView tvPrevLevel = null; int nPrevLevel = 0;
+    	TextView tvQty = (TextView) gl.getChildAt(pnRow * pnCols); int nQty = Integer.parseInt(tvQty.getText().toString());
+    	TextView tvName = (TextView) gl.getChildAt(pnRow * pnCols+1); String sName = tvName.getText().toString();
+    	TextView tvLevel = (TextView) gl.getChildAt(pnRow * pnCols+2); int nLevel = Integer.parseInt(tvLevel.getText().toString().substring(4));
+    	TextView tvNextQty = null; int nNextQty = 0;
+    	TextView tvNextName = null; String sNextName = "";
+    	TextView tvNextLevel = null; int nNextLevel = 0;
+    	if (pnRow > 0) {	// only do this if we're not on the first row
+    		tvPrevQty = (TextView) gl.getChildAt((pnRow-1) * pnCols); nPrevQty = Integer.parseInt(tvPrevQty.getText().toString());
+    		tvPrevName = (TextView) gl.getChildAt((pnRow-1) * pnCols+1); sPrevName = tvPrevName.getText().toString(); 
+    		tvPrevLevel = (TextView) gl.getChildAt((pnRow-1) * pnCols+2); nPrevLevel = Integer.parseInt(tvPrevLevel.getText().toString().substring(4));
+    	}
+    	if (gl.getChildCount() > (pnRow+1)*pnCols) {	// only do this if we're before the last row
+    		tvNextQty = (TextView) gl.getChildAt((pnRow+1) * pnCols); nNextQty = Integer.parseInt(tvNextQty.getText().toString());
+    		tvNextName = (TextView) gl.getChildAt((pnRow+1) * pnCols+1); sNextName = tvNextName.getText().toString();
+    		tvNextLevel = (TextView) gl.getChildAt((pnRow+1) * pnCols+2); nNextLevel = Integer.parseInt(tvNextLevel.getText().toString().substring(4));
+    	}
+    	
+    	// if we only had one of these before, remove the row (assuming increments of 1
+    	if (tvQty.getText().equals("1")) removeRow(gl, pnRow, pnCols);
+    	
+    	// if we're going down, check if the previous row is what we're going to
+    	// if it is, just add to qty, otherwise create a new row
+    	if (!pbIncrement && pnRow > 0) {
+    		if (sPrevName.equals(sName) && nPrevLevel == nLevel-1) 
+    			tvPrevQty.setText(String.valueOf(nPrevQty+1));
+    		else
+    			drawRow(gl, poElementA, player.getTHLevel(), pnRow, pnCols, false);
+   		}
+
+    	// if we're going up, check if the next row is what we're going to
+    	// if it is, just add to qty, otherwise create a new row
+    	if (pbIncrement && gl.getChildCount() > (pnRow+1)*pnCols) {
+    		if (sNextName.equals(sName) && nNextLevel == nLevel+1) 
+    			tvNextQty.setText(String.valueOf(nNextQty+1));
+    		else
+    			drawRow(gl, poElementA, player.getTHLevel(), pnRow+1, pnCols, false);
+   		}
     }
 
     private void initialSetup(View poView) {
