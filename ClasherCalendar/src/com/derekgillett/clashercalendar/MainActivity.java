@@ -280,9 +280,10 @@ public class MainActivity extends ActionBarActivity {
 		int row, 	         // row number (zero-based) to add/update
 		int numCols) { 		 // number of column displayed
     
+    	// note: go backwards, or the index will change when we remove an item
     	int index = row*numCols;
     	for (int i=0; i<numCols; i++) {
-    		vwMainLayout.removeViewAt(index+i);
+    		vwMainLayout.removeViewAt(index);
     	}
     }
     
@@ -783,28 +784,47 @@ public class MainActivity extends ActionBarActivity {
     	GridLayout gl = (GridLayout) this.findViewById(R.id.layoutMain);
     	
     	// retrieve the surrounding element info
-    	TextView tvPrevQty = null; int nPrevQty = 0;
-    	TextView tvPrevName = null; String sPrevName = "";
-    	TextView tvPrevLevel = null; int nPrevLevel = 0;
-    	TextView tvQty = (TextView) gl.getChildAt(pnRow * pnCols); int nQty = Integer.parseInt(tvQty.getText().toString());
-    	TextView tvName = (TextView) gl.getChildAt(pnRow * pnCols+1); String sName = tvName.getText().toString();
-    	TextView tvLevel = (TextView) gl.getChildAt(pnRow * pnCols+2); int nLevel = Integer.parseInt(tvLevel.getText().toString().substring(4));
-    	TextView tvNextQty = null; int nNextQty = 0;
-    	TextView tvNextName = null; String sNextName = "";
-    	TextView tvNextLevel = null; int nNextLevel = 0;
+    	TextView tvPrevQty = null; 
+    	int nPrevQty = 0;
+    	TextView tvPrevName = null; 
+    	String sPrevName = "";
+    	TextView tvPrevLevel = null; 
+    	int nPrevLevel = 0;
     	if (pnRow > 0) {	// only do this if we're not on the first row
-    		tvPrevQty = (TextView) gl.getChildAt((pnRow-1) * pnCols); nPrevQty = Integer.parseInt(tvPrevQty.getText().toString());
-    		tvPrevName = (TextView) gl.getChildAt((pnRow-1) * pnCols+1); sPrevName = tvPrevName.getText().toString(); 
-    		tvPrevLevel = (TextView) gl.getChildAt((pnRow-1) * pnCols+2); nPrevLevel = Integer.parseInt(tvPrevLevel.getText().toString().substring(4));
+    		tvPrevQty = (TextView) gl.getChildAt((pnRow-1) * pnCols); 
+    		nPrevQty = Integer.parseInt(tvPrevQty.getText().toString());
+    		tvPrevName = (TextView) gl.getChildAt((pnRow-1) * pnCols+1); 
+    		sPrevName = tvPrevName.getText().toString(); 
+    		tvPrevLevel = (TextView) gl.getChildAt((pnRow-1) * pnCols+2); 
+    		nPrevLevel = Integer.parseInt(tvPrevLevel.getText().toString().substring(4));
     	}
+    	
+    	TextView tvQty = (TextView) gl.getChildAt(pnRow * pnCols); 
+    	int nQty = Integer.parseInt(tvQty.getText().toString());
+    	TextView tvName = (TextView) gl.getChildAt(pnRow * pnCols+1); 
+    	String sName = tvName.getText().toString();
+    	TextView tvLevel = (TextView) gl.getChildAt(pnRow * pnCols+2); 
+    	int nLevel = Integer.parseInt(tvLevel.getText().toString().substring(4));
+    	
+    	TextView tvNextQty = null; 
+    	int nNextQty = 0;
+    	TextView tvNextName = null; 
+    	String sNextName = "";
+    	TextView tvNextLevel = null; 
+    	int nNextLevel = 0;
     	if (gl.getChildCount() > (pnRow+1)*pnCols) {	// only do this if we're before the last row
-    		tvNextQty = (TextView) gl.getChildAt((pnRow+1) * pnCols); nNextQty = Integer.parseInt(tvNextQty.getText().toString());
-    		tvNextName = (TextView) gl.getChildAt((pnRow+1) * pnCols+1); sNextName = tvNextName.getText().toString();
-    		tvNextLevel = (TextView) gl.getChildAt((pnRow+1) * pnCols+2); nNextLevel = Integer.parseInt(tvNextLevel.getText().toString().substring(4));
+    		tvNextQty = (TextView) gl.getChildAt((pnRow+1) * pnCols); 
+    		nNextQty = Integer.parseInt(tvNextQty.getText().toString());
+    		tvNextName = (TextView) gl.getChildAt((pnRow+1) * pnCols+1); 
+    		sNextName = tvNextName.getText().toString();
+    		tvNextLevel = (TextView) gl.getChildAt((pnRow+1) * pnCols+2); 
+    		nNextLevel = Integer.parseInt(tvNextLevel.getText().toString().substring(4));
     	}
     	
     	// if we only had one of these before, remove the row (assuming increments of 1
-    	if (tvQty.getText().equals("1")) removeRow(gl, pnRow, pnCols);
+    	if (nQty == 1) {
+    		removeRow(gl, pnRow, pnCols);
+    	}
     	
     	// if we're going down, check if the previous row is what we're going to
     	// if it is, just add to qty, otherwise create a new row
