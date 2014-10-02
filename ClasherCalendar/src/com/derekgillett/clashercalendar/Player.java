@@ -635,10 +635,15 @@ public class Player {
 				selectionArgs); 
     }
 
-    public int delete() {
-    	String selection = "_id = ?";
+    public void delete() {
+    	String selection = ClasherDBContract.ClasherPlayer.COLUMN_NAME_ID + " = ?";
+    	String selectionPE = ClasherDBContract.ClasherPlayerElement.COLUMN_NAME_PLAYER_ID + " = ?";
 		String[] selectionArgs = new String[] { String.valueOf(mnPlayerID) };
-    	return moDB.delete(
+    	moDB.delete(
+    			ClasherDBContract.ClasherPlayerElement.TABLE_NAME,
+    			selectionPE,
+    			selectionArgs);
+    	moDB.delete(
     			ClasherDBContract.ClasherPlayer.TABLE_NAME, 
 				selection, 
 				selectionArgs); 
