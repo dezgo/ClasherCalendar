@@ -287,6 +287,43 @@ public class MainActivity extends ActionBarActivity {
     	}
     }
     
+    /* returns the row number in the update building item levels list that matches the given element and level
+     * assumes 4 columns - qty, name, level, buttons
+     * also assumes level column is prefixed with 'lvl ' - thus 'substring(4)' in case 2 below to remove that bit
+     */
+    private int findRow(GridLayout gl, String psElementName, int pnLevel) {
+    	final int numCols = 4;
+    	
+    	boolean bMatch = false;
+    	int index = 0;
+    	int nLevel = 0; 
+    	String sName = "";
+    	TextView v;
+    	while (!bMatch && index < gl.getChildCount() ) {
+    		switch (index % numCols) {
+    		case 0:	// Quantity - ignore
+	    		break;
+    		case 1: // Element name
+	    		v = (TextView) gl.getChildAt(index);
+	    		sName = v.getText().toString();
+	    		break;
+    		case 2: // Element Level
+	    		v = (TextView) gl.getChildAt(index);
+	    		nLevel = Integer.parseInt(v.getText().toString().substring(4));
+	    		break;
+    		case 3: // buttons. good time to see if we got a match
+	    		if (psElementName.equals(sName) && nLevel == pnLevel) bMatch = true;
+	    		break;
+    		}
+    		index++;
+    	}
+    	
+    	// if no match, return -1, otherwise return index of quantity textview
+    	int row;
+    	if (!bMatch) row = -1; else row = (index - numCols)/4;
+    	return row;
+    }
+    
     private void drawRow(GridLayout vwMainLayout, 
     		final ElementA poElementA, 
     		int pnTHLevel, 		 // current town hall level (to check if we're at max level)
@@ -296,8 +333,10 @@ public class MainActivity extends ActionBarActivity {
     	
     	int index = row*numCols;
     	
+    	Log.v(TAG, "drawRow: row " + row);
+    	
     	// quantity
-    	TextView tvQuantity;
+    	final TextView tvQuantity;
     	String sQty = String.valueOf(poElementA.getQuantity());
     	if (pbUpdate) {
     		tvQuantity = (TextView) vwMainLayout.getChildAt(index);
@@ -329,9 +368,9 @@ public class MainActivity extends ActionBarActivity {
     		tvLevel = (TextView) getLayoutInflater().inflate(R.layout.tv_template, vwMainLayout, false);
 	    	GridLayout.LayoutParams lp3 = new GridLayout.LayoutParams();
 	        lp3.setGravity(Gravity.CENTER_VERTICAL);
-	        tvLevel.setText("Lvl " + String.valueOf(poElementA.getLevel()));
 	    	vwMainLayout.addView(tvLevel, index, lp3);
     	}
+        tvLevel.setText("Lvl " + String.valueOf(poElementA.getLevel()));
     	index++;
 
         // check if we've hit max or min level
@@ -367,7 +406,7 @@ public class MainActivity extends ActionBarActivity {
         	btn1.setOnTouchListener(new RepeatListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					LevelChangeOnClickListener(row, numCols, true, poElementA);
+					LevelChangeOnClickListener(tvQuantity, numCols, true, poElementA.getElement());
 				}
 			}));
         	ll.addView(btn1, 0);	// add at index zero to make this the first button
@@ -379,7 +418,7 @@ public class MainActivity extends ActionBarActivity {
         	btn2.setOnTouchListener(new RepeatListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					LevelChangeOnClickListener(row, numCols, false, poElementA);
+					LevelChangeOnClickListener(tvQuantity, numCols, false, poElementA.getElement());
 				}
 			}));
         	ll.addView(btn2);
@@ -772,77 +811,72 @@ public class MainActivity extends ActionBarActivity {
     }
 
     // change the level of the selected item
-    // IMPORTANT: assuming the list is in alpha order by element name, then by element level
-    private void LevelChangeOnClickListener(int pnRow, int pnCols, boolean pbIncrement, ElementA poElementA) {
-		// do the actual change first
+    private void LevelChangeOnClickListener(View poView, int pnCols, boolean pbIncrement, Element poElement) {
+    	GridLayout gl = (GridLayout) this.findViewById(R.id.layoutMain);
         Player player = Globals.INSTANCE.getPlayer();
-    	long nElementID = poElementA.getElement().getId();
-    	PlayerElement oPlayerElement = player.getPlayerElement(nElementID,poElementA.getLevel());
+    	
+    	// get what row we're on
+    	int pnRow1 = (((ViewGroup) poView.getParent()).indexOfChild(poView)+1)/pnCols;
+    	
+    	// get selected row info
+    	TextView tvQty = (TextView) gl.getChildAt(pnRow1 * pnCols); 
+    	int nQty = Integer.parseInt(tvQty.getText().toString());
+    	TextView tvName = (TextView) gl.getChildAt(pnRow1 * pnCols+1); 
+    	String sName = tvName.getText().toString();
+    	TextView tvLevel = (TextView) gl.getChildAt(pnRow1 * pnCols+2); 
+    	int nLevel = Integer.parseInt(tvLevel.getText().toString().substring(4));
+    	ElementA oElementASrc = new ElementA(poElement, nLevel, nQty);
+    	
+    	// do the actual update
+    	PlayerElement oPlayerElement = player.getPlayerElement(poElement.getId(),nLevel);
     	if (oPlayerElement != null) player.incPlayerElementLevel(oPlayerElement, pbIncrement);
 
-    	// now update the UI
-    	GridLayout gl = (GridLayout) this.findViewById(R.id.layoutMain);
-    	
-    	// retrieve the surrounding element info
-    	TextView tvPrevQty = null; 
-    	int nPrevQty = 0;
-    	TextView tvPrevName = null; 
-    	String sPrevName = "";
-    	TextView tvPrevLevel = null; 
-    	int nPrevLevel = 0;
-    	if (pnRow > 0) {	// only do this if we're not on the first row
-    		tvPrevQty = (TextView) gl.getChildAt((pnRow-1) * pnCols); 
-    		nPrevQty = Integer.parseInt(tvPrevQty.getText().toString());
-    		tvPrevName = (TextView) gl.getChildAt((pnRow-1) * pnCols+1); 
-    		sPrevName = tvPrevName.getText().toString(); 
-    		tvPrevLevel = (TextView) gl.getChildAt((pnRow-1) * pnCols+2); 
-    		nPrevLevel = Integer.parseInt(tvPrevLevel.getText().toString().substring(4));
-    	}
-    	
-    	TextView tvQty = (TextView) gl.getChildAt(pnRow * pnCols); 
-    	int nQty = Integer.parseInt(tvQty.getText().toString());
-    	TextView tvName = (TextView) gl.getChildAt(pnRow * pnCols+1); 
-    	String sName = tvName.getText().toString();
-    	TextView tvLevel = (TextView) gl.getChildAt(pnRow * pnCols+2); 
-    	int nLevel = Integer.parseInt(tvLevel.getText().toString().substring(4));
-    	
-    	TextView tvNextQty = null; 
-    	int nNextQty = 0;
-    	TextView tvNextName = null; 
-    	String sNextName = "";
-    	TextView tvNextLevel = null; 
-    	int nNextLevel = 0;
-    	if (gl.getChildCount() > (pnRow+1)*pnCols) {	// only do this if we're before the last row
-    		tvNextQty = (TextView) gl.getChildAt((pnRow+1) * pnCols); 
-    		nNextQty = Integer.parseInt(tvNextQty.getText().toString());
-    		tvNextName = (TextView) gl.getChildAt((pnRow+1) * pnCols+1); 
-    		sNextName = tvNextName.getText().toString();
-    		tvNextLevel = (TextView) gl.getChildAt((pnRow+1) * pnCols+2); 
-    		nNextLevel = Integer.parseInt(tvNextLevel.getText().toString().substring(4));
-    	}
-    	
-    	// if we only had one of these before, remove the row (assuming increments of 1
-    	if (nQty == 1) {
-    		removeRow(gl, pnRow, pnCols);
-    	}
-    	
-    	// if we're going down, check if the previous row is what we're going to
-    	// if it is, just add to qty, otherwise create a new row
-    	if (!pbIncrement && pnRow > 0) {
-    		if (sPrevName.equals(sName) && nPrevLevel == nLevel-1) 
-    			tvPrevQty.setText(String.valueOf(nPrevQty+1));
-    		else
-    			drawRow(gl, poElementA, player.getTHLevel(), pnRow, pnCols, false);
-   		}
+    	// set new level
+    	int nDestLevel = nLevel;
+    	if (pbIncrement) nDestLevel++; else nDestLevel--;
 
-    	// if we're going up, check if the next row is what we're going to
-    	// if it is, just add to qty, otherwise create a new row
-    	if (pbIncrement && gl.getChildCount() > (pnRow+1)*pnCols) {
-    		if (sNextName.equals(sName) && nNextLevel == nLevel+1) 
-    			tvNextQty.setText(String.valueOf(nNextQty+1));
-    		else
-    			drawRow(gl, poElementA, player.getTHLevel(), pnRow+1, pnCols, false);
-   		}
+    	// get index of quantity field in destination row (if exists) and an ElementA instance
+    	int nDestRow = findRow(gl, sName, nDestLevel);
+    	boolean bDestExists = (nDestRow > -1);
+    	if (!bDestExists) {
+    		if (pbIncrement) nDestRow = pnRow1+1; else nDestRow = pnRow1;
+    	}
+
+    	// set destination row info
+    	int nDestQty = 1;
+    	if (bDestExists) {
+	    	TextView tvDestQty = (TextView) gl.getChildAt(nDestRow*4); 
+	    	nDestQty = Integer.parseInt(tvDestQty.getText().toString());
+    	}
+    	ElementA oElementADest = new ElementA(poElement, nDestLevel, nDestQty);
+    	
+		// [1] source quantity = 1, destination row exists
+    	if (nQty == 1 && bDestExists) {
+    		oElementADest.add(1);
+    		drawRow(gl, oElementADest, player.getTHLevel(), nDestRow, pnCols, true);
+    		removeRow(gl, pnRow1, pnCols);
+    	}
+    	
+		// [2] source quantity = 1, destination row doesn't exist
+    	else if (nQty == 1 && !bDestExists) {
+    		if (pbIncrement) oElementASrc.incLevel(); else oElementASrc.decLevel();
+    		drawRow(gl, oElementASrc, player.getTHLevel(), pnRow1, pnCols, true);
+    	}
+
+		// [3] source quantity > 1, destination row exists
+    	else if (nQty > 1 && bDestExists) {
+    		oElementASrc.add(-1);
+    		oElementADest.add(1);
+    		drawRow(gl, oElementASrc, player.getTHLevel(), pnRow1, pnCols, true);
+    		drawRow(gl, oElementADest, player.getTHLevel(), nDestRow, pnCols, true);
+    	}
+
+		// [4] increment, source quantity > 1, destination row doesn't exist
+    	else if (nQty > 1 && !bDestExists) {
+    		oElementASrc.add(-1);
+    		drawRow(gl, oElementASrc, player.getTHLevel(), pnRow1, pnCols, true);
+    		drawRow(gl, oElementADest, player.getTHLevel(), nDestRow, pnCols, false);
+    	}    	
     }
 
     private void initialSetup(View poView) {

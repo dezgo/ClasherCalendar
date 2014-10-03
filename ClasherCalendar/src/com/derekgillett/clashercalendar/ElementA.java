@@ -7,6 +7,15 @@ public class ElementA {
 	private boolean mbIsPlayerElement;
 	private long mnKey;
 	
+	// used when re-drawing row in update element levels view
+	public ElementA(Element poElement, int pnLevel, int pnQuantity) {
+		mnLevel = pnLevel;
+		mnQuantity = pnQuantity;
+		moElement = poElement;
+		mbIsPlayerElement = false;
+		mnKey = 0;
+	}
+	
 	public ElementA(Element poElement, int pnLevel, boolean pbIsPlayerElement, long pnKey) {
 		mnLevel = pnLevel;
 		mnQuantity = 1;
@@ -21,6 +30,14 @@ public class ElementA {
 	
 	public int getLevel() {
 		return mnLevel;
+	}
+	
+	public void incLevel() {
+		mnLevel++;
+	}
+	
+	public void decLevel() {
+		mnLevel--;
 	}
 	
 	public int getQuantity() {

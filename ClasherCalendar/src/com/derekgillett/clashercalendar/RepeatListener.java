@@ -40,7 +40,7 @@ public class RepeatListener implements OnTouchListener {
 
     //private final int stepDownSize = 5;
     //private final int minInterval = 10;    
-    //private int initialInterval = 300;
+    private int initialInterval = 300;
     private final OnClickListener clickListener;
     
     //private int normalInterval = 100;
@@ -83,8 +83,7 @@ public class RepeatListener implements OnTouchListener {
         switch (motionEvent.getAction()) {
         case MotionEvent.ACTION_DOWN:
             handler.removeCallbacks(handlerRunnable);
-            //handler.postDelayed(handlerRunnable, initialInterval);
-            handler.post(handlerRunnable);
+            handler.postDelayed(handlerRunnable, initialInterval);
             downView = view;
             clickListener.onClick(view);
             rect = new Rect(view.getLeft(), view.getTop(), view.getRight(),
