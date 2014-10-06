@@ -36,7 +36,7 @@ public class Utils {
 	
 	static public enum CategoryEnum {
 		Trap(5),
-		Troop(6),
+		Walls(6),
 		Defence(1),
 		Resource(2),
 		Army(3),

@@ -43,6 +43,7 @@
 	        android:src="@drawable/elixir"
 	        android:layout_toRightOf="@+id/tvUpgradeCostElixir" 
 	        android:layout_below="@+id/tvTitle"
+	        android:contentDescription="@string/cdIvUpgradeCostElixir"
    	        />
 	    
    	    <!--  had trouble getting margin to work. ended up using spacer instead -->
@@ -70,6 +71,7 @@
 	        android:src="@drawable/gold"
 	        android:layout_toRightOf="@+id/tvUpgradeCostGold" 
 	        android:layout_below="@+id/tvTitle"
+	        android:contentDescription="@string/cdIvUpgradeCostGold"
    	        />
 	    
    	    <!--  had trouble getting margin to work. ended up using spacer instead -->
@@ -97,6 +99,7 @@
 	        android:src="@drawable/dark_elixir"
 	        android:layout_toRightOf="@+id/tvUpgradeCostDarkElixir" 
 	        android:layout_below="@+id/tvTitle"
+	        android:contentDescription="@string/cdIvUpgradeCostDarkElixir"
    	        />
 	    
 	    <HorizontalScrollView 

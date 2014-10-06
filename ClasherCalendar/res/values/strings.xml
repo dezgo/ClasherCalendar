@@ -28,7 +28,10 @@
 	<string name="nav_resource">Resource Buildings</string>
 	<string name="nav_army">Army Buildings</string>
 	<string name="nav_other">Other Buildings</string>
-	<string name="nav_troops">Troops</string>
+	<string name="nav_walls">Walls</string>
 	<string name="nav_trap">Traps</string>
 	<string name="existing_players">Loading existing players, please wait....</string>
+	<string name="cdIvUpgradeCostElixir">Elixir Icon</string>
+	<string name="cdIvUpgradeCostGold">Gold Icon</string>
+	<string name="cdIvUpgradeCostDarkElixir">Dark Elixir Icon</string>
 </resources>

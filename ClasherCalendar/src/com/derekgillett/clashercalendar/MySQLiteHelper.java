@@ -46,6 +46,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	Category oCategoryArmy = new Category(database, "Army");
 	Category oCategoryOther = new Category(database, "Other");
 	Category oCategoryTrap = new Category(database, "Trap");
+	Category oCategoryWall = new Category(database, "Wall");
 
 	database.execSQL(ClasherDBContract.ClasherElement.SQL_DROP_TABLE);
 	database.execSQL(ClasherDBContract.ClasherElement.SQL_CREATE_TABLE);
@@ -236,7 +237,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	new THElement(database, 9, oElement, 2);
 	new THElement(database, 10, oElement, 3);
 
-	oElement = new Element(database, "Wall", oCategoryDefence, oCostTypeGold);
+	oElement = new Element(database, "Wall", oCategoryWall, oCostTypeGold);
 	new ElementData(database, oElement, 1, 300, 200, 0, 2);
 	new ElementData(database, oElement, 2, 500, 1000, 0, 2);
 	new ElementData(database, oElement, 3, 700, 5000, 0, 3);

@@ -57,8 +57,8 @@ public class MainActivity extends ActionBarActivity {
     private boolean mbResource = true;
     private boolean mbArmy = true;
     private boolean mbOther = true;
-    private boolean mbTroops = true;
     private boolean mbTrap = true;
+    private boolean mbWalls = true;
     
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -134,12 +134,12 @@ public class MainActivity extends ActionBarActivity {
         chkView = (CheckBox) this.findViewById(R.id.chkResource);
         chkView.setOnCheckedChangeListener(new NavCheckboxChangeListener());
         chkView.setChecked(this.mbResource);
-        chkView = (CheckBox) this.findViewById(R.id.chkTroops);
-        chkView.setOnCheckedChangeListener(new NavCheckboxChangeListener());
-        chkView.setChecked(this.mbTroops);
         chkView = (CheckBox) this.findViewById(R.id.chkTrap);
         chkView.setOnCheckedChangeListener(new NavCheckboxChangeListener());
         chkView.setChecked(this.mbTrap);
+        chkView = (CheckBox) this.findViewById(R.id.chkWalls);
+        chkView.setOnCheckedChangeListener(new NavCheckboxChangeListener());
+        chkView.setChecked(this.mbWalls);
 	}
 	
 	private class NavCheckboxChangeListener implements CheckBox.OnCheckedChangeListener {
@@ -167,8 +167,8 @@ public class MainActivity extends ActionBarActivity {
 				case R.id.chkResource:
 					mbResource = isChecked;
 					break;
-				case R.id.chkTroops:
-					mbTroops = isChecked;
+				case R.id.chkWalls:
+					mbWalls = isChecked;
 					break;
 				case R.id.chkTrap:
 					mbTrap = isChecked;
@@ -656,6 +656,7 @@ public class MainActivity extends ActionBarActivity {
             if (oElement.getCategory().getID() == Utils.CategoryEnum.Other.getId() && !this.mbOther) bExclude = true;
             if (oElement.getCategory().getID() == Utils.CategoryEnum.Resource.getId() && !this.mbResource) bExclude = true;
             if (oElement.getCategory().getID() == Utils.CategoryEnum.Trap.getId() && !this.mbTrap) bExclude = true;
+            if (oElement.getCategory().getID() == Utils.CategoryEnum.Walls.getId() && !this.mbWalls) bExclude = true;
             
             // now if the item is excluded, update that in the players global var
             oPlayer.setExclude(oElementA, bExclude);

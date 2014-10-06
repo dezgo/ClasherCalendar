@@ -135,7 +135,21 @@
 		    android:text="@string/nav_army"
 		    android:textSize="18sp"
 		    />
-	    
+	
+  	   	<CheckBox 
+		    android:id="@+id/chkWalls"
+		    android:layout_width="wrap_content"
+		    android:layout_height="48dp"
+		    />
+		
+		<TextView 
+		    android:id="@+id/txtWalls"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textSize="18sp"
+		    android:text="@string/nav_walls"
+		    />
+			    
 	   	<CheckBox 
 		    android:id="@+id/chkOther"
 		    android:layout_width="wrap_content"
@@ -148,21 +162,6 @@
 		    android:layout_height="wrap_content"
 		    android:text="@string/nav_other"
 		    android:textSize="18sp"
-		    />
-	    
-	
-  	   	<CheckBox 
-		    android:id="@+id/chkTroops"
-		    android:layout_width="wrap_content"
-		    android:layout_height="48dp"
-		    />
-		
-		<TextView 
-		    android:id="@+id/txtTroops"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:textSize="18sp"
-		    android:text="@string/nav_troops"
 		    />
 	
 	</GridLayout>
