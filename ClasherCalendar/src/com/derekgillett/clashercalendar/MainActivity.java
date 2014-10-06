@@ -476,7 +476,8 @@ public class MainActivity extends ActionBarActivity {
         player.moveToFirstA();
         int row=0;
     	while (!player.isAfterLastA()) {
-    		drawRow(vwMainLayout, player.getElementA(), player.getTHLevel(), row++, false);
+    		if (!player.getElementA().getElement().getName().equals(ClasherDBContract.TOWNHALL_NAME))
+    			drawRow(vwMainLayout, player.getElementA(), player.getTHLevel(), row++, false);
         	
             // move to next element in aggregated array
         	player.moveToNextA();
