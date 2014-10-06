@@ -35,8 +35,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
-	@SuppressWarnings("unused")
 	private final static String TAG = "MainActivity";
+	
+	private final static int LEVEL_PREFIX_LEN = 4;
+	private final static int NUM_COLUMNS = 4;
 	
 	// holds list of all textviews showing the countdown times
 	@SuppressLint("UseSparseArrays")
@@ -277,30 +279,27 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
     private void removeRow(GridLayout vwMainLayout, 
-		int row, 	         // row number (zero-based) to add/update
-		int numCols) { 		 // number of column displayed
+		int row) { 	         // row number (zero-based) to add/update
     
     	// note: go backwards, or the index will change when we remove an item
-    	int index = row*numCols;
-    	for (int i=0; i<numCols; i++) {
+    	int index = row*NUM_COLUMNS;
+    	for (int i=0; i<NUM_COLUMNS; i++) {
     		vwMainLayout.removeViewAt(index);
     	}
     }
     
     /* returns the row number in the update building item levels list that matches the given element and level
-     * assumes 4 columns - qty, name, level, buttons
-     * also assumes level column is prefixed with 'lvl ' - thus 'substring(4)' in case 2 below to remove that bit
+     * assumes 5 columns - qty, name, level, buttons
+     * also assumes level column is prefixed with 'lvl ' - thus 'substring(LEVEL_PREFIX_LEN)' in case 2 below to remove that bit
      */
     private int findRow(GridLayout gl, String psElementName, int pnLevel) {
-    	final int numCols = 4;
-    	
     	boolean bMatch = false;
     	int index = 0;
     	int nLevel = 0; 
     	String sName = "";
     	TextView v;
     	while (!bMatch && index < gl.getChildCount() ) {
-    		switch (index % numCols) {
+    		switch (index % NUM_COLUMNS) {
     		case 0:	// Quantity - ignore
 	    		break;
     		case 1: // Element name
@@ -309,7 +308,7 @@ public class MainActivity extends ActionBarActivity {
 	    		break;
     		case 2: // Element Level
 	    		v = (TextView) gl.getChildAt(index);
-	    		nLevel = Integer.parseInt(v.getText().toString().substring(4));
+	    		nLevel = Integer.parseInt(v.getText().toString().substring(LEVEL_PREFIX_LEN));
 	    		break;
     		case 3: // buttons. good time to see if we got a match
 	    		if (psElementName.equals(sName) && nLevel == pnLevel) bMatch = true;
@@ -320,7 +319,7 @@ public class MainActivity extends ActionBarActivity {
     	
     	// if no match, return -1, otherwise return index of quantity textview
     	int row;
-    	if (!bMatch) row = -1; else row = (index - numCols)/4;
+    	if (!bMatch) row = -1; else row = (index - NUM_COLUMNS)/NUM_COLUMNS;
     	return row;
     }
     
@@ -328,12 +327,11 @@ public class MainActivity extends ActionBarActivity {
     		final ElementA poElementA, 
     		int pnTHLevel, 		 // current town hall level (to check if we're at max level)
     		final int row,       // row number (zero-based) to add/update
-    		final int numCols, 		 // number of column displayed
     		boolean pbUpdate) {  // update the row, or append?
     	
-    	int index = row*numCols;
+    	int index = row*NUM_COLUMNS;
     	
-    	Log.v(TAG, "drawRow: row " + row);
+    	if (Utils.DEBUG) Log.v(TAG, "drawRow: row " + row);
     	
     	// quantity
     	final TextView tvQuantity;
@@ -391,59 +389,66 @@ public class MainActivity extends ActionBarActivity {
         if (pbUpdate) {
         	for (int nBtnIndex=ll.getChildCount()-1; nBtnIndex >= 0; nBtnIndex--) {
         		Button btn = (Button) ll.getChildAt(nBtnIndex);
-        		if (btn.getText().equals("  +  ")) {
-        			if (bDrawInc) bDrawInc = false; else ll.removeViewAt(nBtnIndex);
+        		if (btn.getTag().equals("+")) {
+        	    	if (bDrawInc)
+        	    		btn.setVisibility(View.VISIBLE);
+        	    	else
+        	    		btn.setVisibility(View.INVISIBLE);
         		}
-        		if (btn.getText().equals("  -  ")) {
-        			if (bDrawDec) bDrawDec = false; else ll.removeViewAt(nBtnIndex);
+        		if (btn.getTag().equals("-")) {
+        	    	if (bDrawDec)
+        	    		btn.setVisibility(View.VISIBLE);
+        	    	else
+        	    		btn.setVisibility(View.INVISIBLE);
         		}
         	}
         }
 
-        if (bDrawInc) {
-        	Button btn1 = (Button) getLayoutInflater().inflate(R.layout.btn_template, ll, false);
-        	btn1.setText("  +  ");
-        	btn1.setOnTouchListener(new RepeatListener(new OnClickListener() {
+        else {
+	    	Button btn1 = (Button) getLayoutInflater().inflate(R.layout.btn_template, ll, false);
+	    	btn1.setText("  +  ");
+	    	btn1.setTag("+");
+	    	btn1.setOnTouchListener(new RepeatListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					LevelChangeOnClickListener(tvQuantity, numCols, true, poElementA.getElement());
+					LevelChangeOnClickListener(tvQuantity, true, poElementA.getElement());
 				}
 			}));
-        	ll.addView(btn1, 0);	// add at index zero to make this the first button
-        }
-
-        if (bDrawDec) {
-        	Button btn2 = (Button) getLayoutInflater().inflate(R.layout.btn_template, ll, false);
-        	btn2.setText("  -  ");
-        	btn2.setOnTouchListener(new RepeatListener(new OnClickListener() {
+	    	if (!bDrawInc)
+	    		btn1.setVisibility(View.INVISIBLE);
+	    	ll.addView(btn1, 0);	// add at index zero to make this the first button
+	
+	    	Button btn2 = (Button) getLayoutInflater().inflate(R.layout.btn_template, ll, false);
+	    	btn2.setText("  -  ");
+	    	btn2.setTag("-");
+	    	btn2.setOnTouchListener(new RepeatListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					LevelChangeOnClickListener(tvQuantity, numCols, false, poElementA.getElement());
+					LevelChangeOnClickListener(tvQuantity, false, poElementA.getElement());
 				}
 			}));
-        	ll.addView(btn2);
+	    	if (!bDrawDec)
+	    		btn2.setVisibility(View.INVISIBLE);
+	    	ll.addView(btn2);
+	        
+	        vwMainLayout.addView(ll, index);
         }
-        
-        if (!pbUpdate) vwMainLayout.addView(ll, index);
 
         // last element, so no need to increment index. 
         // remember to add that in if adding more columns though
     }
 
 	private void GetElements(View poParent, GridLayout vwMainLayout) {
-		final int numCols = 4;
-		
         // found situations where vwMainLayout was null. definitely get outta here if
         // that happens
         if (vwMainLayout == null) return;
         
+        // this is a full re-draw (normally just done once the first time this view is created)
         // clear out previous stuff first
-        //TODO: don't do this, very inefficient
-        // work out another 
         vwMainLayout.removeAllViews();
         
         // update column count - it might have been changed by viewing the dashboard
-        vwMainLayout.setColumnCount(numCols);
+        vwMainLayout.setColumnCount(NUM_COLUMNS);
 
         // get player elements, and check it's not null
         Player player = Globals.INSTANCE.getPlayer();
@@ -471,7 +476,7 @@ public class MainActivity extends ActionBarActivity {
         player.moveToFirstA();
         int row=0;
     	while (!player.isAfterLastA()) {
-    		drawRow(vwMainLayout, player.getElementA(), player.getTHLevel(), row++, numCols, false);
+    		drawRow(vwMainLayout, player.getElementA(), player.getTHLevel(), row++, false);
         	
             // move to next element in aggregated array
         	player.moveToNextA();
@@ -761,18 +766,24 @@ public class MainActivity extends ActionBarActivity {
         TextView tv_upgrade_time = (TextView) poParent.findViewById(R.id.tvUpgradeTime);
     	tv_upgrade_time.setText(Utils.Time_ValToText(oPlayer.getUpgradeTimeMax()));    	
     	
-    	// show total upgrade cost 
+    	// show total upgrade cost - elixir
     	int nUpgradeCost = oPlayer.getUpgradeCostMax(Utils.CostTypeEnum.Elixir.getId());
     	String sCost = NumberFormat.getInstance().format(nUpgradeCost);
     	TextView tv_upgrade_cost_elixir = (TextView) poParent.findViewById(R.id.tvUpgradeCostElixir);
     	tv_upgrade_cost_elixir.setText(sCost);
 
-    	// show total upgrade cost 
+    	// show total upgrade cost - gold
     	nUpgradeCost = oPlayer.getUpgradeCostMax(Utils.CostTypeEnum.Gold.getId());
     	sCost = NumberFormat.getInstance().format(nUpgradeCost);
     	TextView tv_upgrade_cost_gold = (TextView) poParent.findViewById(R.id.tvUpgradeCostGold);
     	tv_upgrade_cost_gold.setText(sCost);
-    }
+
+    	// show total upgrade cost - dark elixir
+    	nUpgradeCost = oPlayer.getUpgradeCostMax(Utils.CostTypeEnum.DarkElixir.getId());
+    	sCost = NumberFormat.getInstance().format(nUpgradeCost);
+    	TextView tv_upgrade_cost_dark_elixir = (TextView) poParent.findViewById(R.id.tvUpgradeCostDarkElixir);
+    	tv_upgrade_cost_dark_elixir.setText(sCost);
+	}
     
     private void onTouchHandler(View arg0, PlayerElement poPlayerElement) {
 //    	switch (arg1.getAction()) {
@@ -811,20 +822,26 @@ public class MainActivity extends ActionBarActivity {
     }
 
     // change the level of the selected item
-    private void LevelChangeOnClickListener(View poView, int pnCols, boolean pbIncrement, Element poElement) {
+    private void LevelChangeOnClickListener(View poView, boolean pbIncrement, Element poElement) {
     	GridLayout gl = (GridLayout) this.findViewById(R.id.layoutMain);
         Player player = Globals.INSTANCE.getPlayer();
     	
+        // check this view has a parent. if it doesn't just cancel the event 
+        // (the view we're clicking has probably been removed)
+        ViewGroup vg = (ViewGroup) poView.getParent();
+        if (vg == null) return;
+        
     	// get what row we're on
-    	int pnRow1 = (((ViewGroup) poView.getParent()).indexOfChild(poView)+1)/pnCols;
+        int index = vg.indexOfChild(poView);
+    	int pnRow1 = (index+1)/NUM_COLUMNS;
     	
     	// get selected row info
-    	TextView tvQty = (TextView) gl.getChildAt(pnRow1 * pnCols); 
+    	TextView tvQty = (TextView) gl.getChildAt(pnRow1 * NUM_COLUMNS); 
     	int nQty = Integer.parseInt(tvQty.getText().toString());
-    	TextView tvName = (TextView) gl.getChildAt(pnRow1 * pnCols+1); 
+    	TextView tvName = (TextView) gl.getChildAt(pnRow1 * NUM_COLUMNS+1); 
     	String sName = tvName.getText().toString();
-    	TextView tvLevel = (TextView) gl.getChildAt(pnRow1 * pnCols+2); 
-    	int nLevel = Integer.parseInt(tvLevel.getText().toString().substring(4));
+    	TextView tvLevel = (TextView) gl.getChildAt(pnRow1 * NUM_COLUMNS+2); 
+    	int nLevel = Integer.parseInt(tvLevel.getText().toString().substring(LEVEL_PREFIX_LEN));
     	ElementA oElementASrc = new ElementA(poElement, nLevel, nQty);
     	
     	// do the actual update
@@ -845,7 +862,7 @@ public class MainActivity extends ActionBarActivity {
     	// set destination row info
     	int nDestQty = 1;
     	if (bDestExists) {
-	    	TextView tvDestQty = (TextView) gl.getChildAt(nDestRow*4); 
+	    	TextView tvDestQty = (TextView) gl.getChildAt(nDestRow*NUM_COLUMNS); 
 	    	nDestQty = Integer.parseInt(tvDestQty.getText().toString());
     	}
     	ElementA oElementADest = new ElementA(poElement, nDestLevel, nDestQty);
@@ -853,29 +870,29 @@ public class MainActivity extends ActionBarActivity {
 		// [1] source quantity = 1, destination row exists
     	if (nQty == 1 && bDestExists) {
     		oElementADest.add(1);
-    		drawRow(gl, oElementADest, player.getTHLevel(), nDestRow, pnCols, true);
-    		removeRow(gl, pnRow1, pnCols);
+    		drawRow(gl, oElementADest, player.getTHLevel(), nDestRow, true);
+    		removeRow(gl, pnRow1);
     	}
     	
 		// [2] source quantity = 1, destination row doesn't exist
     	else if (nQty == 1 && !bDestExists) {
-    		if (pbIncrement) oElementASrc.incLevel(); else oElementASrc.decLevel();
-    		drawRow(gl, oElementASrc, player.getTHLevel(), pnRow1, pnCols, true);
+    		//if (pbIncrement) oElementASrc.incLevel(); else oElementASrc.decLevel();
+    		drawRow(gl, oElementADest, player.getTHLevel(), pnRow1, true);
     	}
 
 		// [3] source quantity > 1, destination row exists
     	else if (nQty > 1 && bDestExists) {
     		oElementASrc.add(-1);
     		oElementADest.add(1);
-    		drawRow(gl, oElementASrc, player.getTHLevel(), pnRow1, pnCols, true);
-    		drawRow(gl, oElementADest, player.getTHLevel(), nDestRow, pnCols, true);
+    		drawRow(gl, oElementASrc, player.getTHLevel(), pnRow1, true);
+    		drawRow(gl, oElementADest, player.getTHLevel(), nDestRow, true);
     	}
 
 		// [4] increment, source quantity > 1, destination row doesn't exist
     	else if (nQty > 1 && !bDestExists) {
     		oElementASrc.add(-1);
-    		drawRow(gl, oElementASrc, player.getTHLevel(), pnRow1, pnCols, true);
-    		drawRow(gl, oElementADest, player.getTHLevel(), nDestRow, pnCols, false);
+    		drawRow(gl, oElementASrc, player.getTHLevel(), pnRow1, true);
+    		drawRow(gl, oElementADest, player.getTHLevel(), nDestRow, false);
     	}    	
     }
 

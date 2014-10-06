@@ -51,7 +51,7 @@ public class PlayerActions extends TestCase {
 	}
 	
 	public void testOrderByName() {
-		moPlayer.sortByName(true);
+		moPlayer.sortByBuilding();
 	}
 	
 	public void testIsMax() {

@@ -4,7 +4,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.derekgillett.clashercalendar.ClasherDBContract;
-import com.derekgillett.clashercalendar.ElementA;
 import com.derekgillett.clashercalendar.Element;
 import com.derekgillett.clashercalendar.MySQLiteHelper;
 import com.derekgillett.clashercalendar.Player;

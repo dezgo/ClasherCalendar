@@ -118,13 +118,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	//defence
 	oElement = new Element(database, "Air Defence", oCategoryDefence, oCostTypeGold);
 	new ElementData(database, oElement, 1, 800, 22500, 18000, 4);
-	new ElementData(database, oElement, 2, 860, 22500, 86400, 4);
-	new ElementData(database, oElement, 3, 900, 22500, 259200, 5);
-	new ElementData(database, oElement, 4, 940, 22500, 432000, 6);
-	new ElementData(database, oElement, 5, 990, 22500, 518400, 7);
-	new ElementData(database, oElement, 6, 1040, 22500, 691200, 8);
-	new ElementData(database, oElement, 7, 1100, 22500, 864000, 9);
-	new ElementData(database, oElement, 8, 1160, 22500, 1036800, 10);
+	new ElementData(database, oElement, 2, 860, 90500, 86400, 4);
+	new ElementData(database, oElement, 3, 900, 270000, 259200, 5);
+	new ElementData(database, oElement, 4, 940, 540000, 432000, 6);
+	new ElementData(database, oElement, 5, 990, 1080000, 518400, 7);
+	new ElementData(database, oElement, 6, 1040, 2160000, 691200, 8);
+	new ElementData(database, oElement, 7, 1100, 4320000, 864000, 9);
+	new ElementData(database, oElement, 8, 1160, 7560000, 1036800, 10);
 	new THElement(database, 4, oElement, 1);
 	new THElement(database, 5, oElement, 1);
 	new THElement(database, 6, oElement, 1);
