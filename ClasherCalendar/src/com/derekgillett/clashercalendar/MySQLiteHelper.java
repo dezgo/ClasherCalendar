@@ -33,10 +33,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     // Cost Types
 	database.execSQL(ClasherDBContract.ClasherCostType.SQL_DROP_TABLE);
 	database.execSQL(ClasherDBContract.ClasherCostType.SQL_CREATE_TABLE);
-	CostType oCostTypeGold = new CostType(database, 1, "Gold");
-	CostType oCostTypeElixir = new CostType(database, 2, "Elixir");
-	CostType oCostTypeDarkElixir = new CostType(database, 3, "Dark Elixir");
-	CostType oCostTypeGems = new CostType(database, 4, "Gems");
+	CostType oCostTypeGold = new CostType(database, Utils.CostTypeEnum.Gold.getId(), "Gold");
+	CostType oCostTypeElixir = new CostType(database, Utils.CostTypeEnum.Elixir.getId(), "Elixir");
+	CostType oCostTypeDarkElixir = new CostType(database, Utils.CostTypeEnum.DarkElixir.getId(), "Dark Elixir");
+	CostType oCostTypeGems = new CostType(database, Utils.CostTypeEnum.Gems.getId(), "Gems");
 	
 	// Categories
 	database.execSQL(ClasherDBContract.ClasherCategory.SQL_DROP_TABLE);
