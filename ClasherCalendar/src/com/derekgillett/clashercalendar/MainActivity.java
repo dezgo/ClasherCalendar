@@ -25,7 +25,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.GridLayout;
@@ -92,10 +91,10 @@ public class MainActivity extends ActionBarActivity {
 	    		startActivity(intent);
 	    		return true;
 	        case R.id.action_fix_levels:
-	        	this.GetElements(findViewById(R.id.rlMain), (GridLayout) this.findViewById(R.id.layoutMain));
+	        	this.GetElements();
 	        	return true;
 	        case R.id.action_dashboard:
-	        	this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) this.findViewById(R.id.layoutMain));
+	        	this.GetElements_Dashboard();
 	        	return true;
 	        case R.id.action_inc_th_level:
 	        	Globals.INSTANCE.getPlayer().incTHLevel();
@@ -214,7 +213,7 @@ public class MainActivity extends ActionBarActivity {
                 getActionBar().setTitle(mTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
                 if (findViewById(R.id.layoutMain) != null) {
-                	GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) findViewById(R.id.layoutMain));
+                	GetElements_Dashboard();
                 }
             }
 
@@ -323,11 +322,13 @@ public class MainActivity extends ActionBarActivity {
     	return row;
     }
     
+    // when updating building levels, draw a single row
     private void drawRow(GridLayout vwMainLayout, 
     		final ElementA poElementA, 
     		int pnTHLevel, 		 // current town hall level (to check if we're at max level)
     		final int row,       // row number (zero-based) to add/update
-    		boolean pbUpdate) {  // update the row, or append?
+    		boolean pbUpdate,    // update the row, or append?
+    		boolean pbUpdateCostTime) {   // update cost / time in header?
     	
     	int index = row*NUM_COLUMNS;
     	
@@ -388,62 +389,72 @@ public class MainActivity extends ActionBarActivity {
         // tricky bit to save adding and removing buttons unnecessarily
         if (pbUpdate) {
         	for (int nBtnIndex=ll.getChildCount()-1; nBtnIndex >= 0; nBtnIndex--) {
-        		Button btn = (Button) ll.getChildAt(nBtnIndex);
-        		if (btn.getTag().equals("+")) {
+        		ImageView iv = (ImageView) ll.getChildAt(nBtnIndex);
+        		if (iv.getTag().equals("+")) {
         	    	if (bDrawInc)
-        	    		btn.setVisibility(View.VISIBLE);
+        	    		iv.setVisibility(View.VISIBLE);
         	    	else
-        	    		btn.setVisibility(View.INVISIBLE);
+        	    		iv.setVisibility(View.INVISIBLE);
         		}
-        		if (btn.getTag().equals("-")) {
+        		if (iv.getTag().equals("-")) {
         	    	if (bDrawDec)
-        	    		btn.setVisibility(View.VISIBLE);
+        	    		iv.setVisibility(View.VISIBLE);
         	    	else
-        	    		btn.setVisibility(View.INVISIBLE);
+        	    		iv.setVisibility(View.INVISIBLE);
         		}
         	}
         }
 
         else {
-	    	Button btn1 = (Button) getLayoutInflater().inflate(R.layout.btn_template, ll, false);
-	    	btn1.setText("  +  ");
-	    	btn1.setTag("+");
-	    	btn1.setOnTouchListener(new RepeatListener(new OnClickListener() {
+        	ImageView ivInc = (ImageView) getLayoutInflater().inflate(R.layout.img_template,  ll, false);
+    		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ivInc.getLayoutParams());
+    		float margin = this.getResources().getDisplayMetrics().density * 10;
+    		lp.setMargins(Math.round(margin), 0, Math.round(margin), 0);
+    		ivInc.setLayoutParams(lp);
+        	ivInc.setImageResource(R.drawable.up_arrow);
+	    	ivInc.setTag("+");
+	    	ivInc.setOnTouchListener(new RepeatListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					LevelChangeOnClickListener(tvQuantity, true, poElementA.getElement());
 				}
 			}));
 	    	if (!bDrawInc)
-	    		btn1.setVisibility(View.INVISIBLE);
-	    	ll.addView(btn1, 0);	// add at index zero to make this the first button
+	    		ivInc.setVisibility(View.INVISIBLE);
+	    	ll.addView(ivInc, 0);	// add at index zero to make this the first button
 	
-	    	Button btn2 = (Button) getLayoutInflater().inflate(R.layout.btn_template, ll, false);
-	    	btn2.setText("  -  ");
-	    	btn2.setTag("-");
-	    	btn2.setOnTouchListener(new RepeatListener(new OnClickListener() {
+        	ImageView ivDec = (ImageView) getLayoutInflater().inflate(R.layout.img_template,  ll, false);
+    		ivDec.setLayoutParams(lp);
+        	ivDec.setImageResource(R.drawable.down_arrow);
+	    	ivDec.setTag("-");
+	    	ivDec.setOnTouchListener(new RepeatListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					LevelChangeOnClickListener(tvQuantity, false, poElementA.getElement());
 				}
 			}));
 	    	if (!bDrawDec)
-	    		btn2.setVisibility(View.INVISIBLE);
-	    	ll.addView(btn2);
+	    		ivDec.setVisibility(View.INVISIBLE);
+	    	ll.addView(ivDec);
 	        
 	        vwMainLayout.addView(ll, index);
         }
 
         // last element, so no need to increment index. 
         // remember to add that in if adding more columns though
-    }
-
-	private void GetElements(View poParent, GridLayout vwMainLayout) {
-        // found situations where vwMainLayout was null. definitely get outta here if
-        // that happens
-        if (vwMainLayout == null) return;
         
-        // this is a full re-draw (normally just done once the first time this view is created)
+        // finally, updating build time / cost
+        if (pbUpdateCostTime) {
+		    Player oPlayer = Globals.INSTANCE.getPlayer();
+		    displayUpgradeCost(oPlayer, poElementA.getElement().getCostType());
+		    displayUpgradeTime(oPlayer);
+		}
+	}
+
+	private void GetElements() {
+		GridLayout vwMainLayout = (GridLayout) findViewById(R.id.layoutMain);
+
+		// this is a full re-draw (normally just done once the first time this view is created)
         // clear out previous stuff first
         vwMainLayout.removeAllViews();
         
@@ -453,6 +464,10 @@ public class MainActivity extends ActionBarActivity {
         // get player elements, and check it's not null
         Player player = Globals.INSTANCE.getPlayer();
         junit.framework.Assert.assertNotNull("MyApplication.getPlayerElements() global variable null!", player);
+        
+        // sort by building name
+        player.sortByBuilding();
+        
 /*
     	TextView tv_title = (TextView) getLayoutInflater().inflate(R.layout.tv_template, null);
     	tv_title.setText( R.string.grid_title1);
@@ -477,19 +492,20 @@ public class MainActivity extends ActionBarActivity {
         int row=0;
     	while (!player.isAfterLastA()) {
     		if (!player.getElementA().getElement().getName().equals(ClasherDBContract.TOWNHALL_NAME))
-    			drawRow(vwMainLayout, player.getElementA(), player.getTHLevel(), row++, false);
+    			drawRow(vwMainLayout, player.getElementA(), player.getTHLevel(), row++, false, false);
         	
             // move to next element in aggregated array
         	player.moveToNextA();
     	}
 
     	// show total upgrade time remaining (do this at the end after we've filtered items)
-        TextView tv_upgrade_time = (TextView) poParent.findViewById(R.id.tvUpgradeTime);
-    	tv_upgrade_time.setText(Utils.Time_ValToText(player.getUpgradeTimeMax()));    	
+    	displayUpgradeTime(player);
+    	displayUpgradeCost(player, null);
     }
     
-	private void GetElements_Dashboard(View poParent, GridLayout vwMainLayout) {
-        GridLayout.LayoutParams lp;
+	private void GetElements_Dashboard() {
+		GridLayout vwMainLayout = (GridLayout) findViewById(R.id.layoutMain);
+		GridLayout.LayoutParams lp;
 
         // unsure if this could happen, but wanted to cover it off just in case
         if (vwMainLayout == null) {
@@ -527,7 +543,7 @@ public class MainActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				oPlayer.sortByQty();
 				ivOrderQty.setImageResource(oPlayer.getSortArrowRes(oPlayer.getSortQty()));
-				MainActivity.this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) findViewById(R.id.layoutMain));
+				MainActivity.this.GetElements_Dashboard();
 			}
 		});
     	
@@ -548,7 +564,7 @@ public class MainActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				oPlayer.sortByBuilding();
 				ivOrderBuilding.setImageResource(oPlayer.getSortArrowRes(oPlayer.getSortBuilding()));
-				MainActivity.this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) findViewById(R.id.layoutMain));
+				MainActivity.this.GetElements_Dashboard();
 			}
 		});
 
@@ -569,7 +585,7 @@ public class MainActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				oPlayer.sortByLevel();
 				ivOrderLevel.setImageResource(oPlayer.getSortArrowRes(oPlayer.getSortLevel()));
-				MainActivity.this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) findViewById(R.id.layoutMain));
+				MainActivity.this.GetElements_Dashboard();
 			}
 		});
 
@@ -591,7 +607,7 @@ public class MainActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				oPlayer.sortByMaxLevel();
 				ivOrderMaxLevel.setImageResource(oPlayer.getSortArrowRes(oPlayer.getSortMaxLevel()));
-				MainActivity.this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) findViewById(R.id.layoutMain));
+				MainActivity.this.GetElements_Dashboard();
 			}
 		});
 
@@ -612,7 +628,7 @@ public class MainActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				oPlayer.sortByCost();
 				ivOrderCost.setImageResource(oPlayer.getSortArrowRes(oPlayer.getSortCost()));
-				MainActivity.this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) findViewById(R.id.layoutMain));
+				MainActivity.this.GetElements_Dashboard();
 			}
 		});
 
@@ -634,7 +650,7 @@ public class MainActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				oPlayer.sortByBuildTime();
 				ivOrderBuildTime.setImageResource(oPlayer.getSortArrowRes(oPlayer.getSortBuildTime()));
-				MainActivity.this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) findViewById(R.id.layoutMain));
+				MainActivity.this.GetElements_Dashboard();
 			}
 		});
 
@@ -765,29 +781,47 @@ public class MainActivity extends ActionBarActivity {
     	}
 
     	// show total upgrade time remaining (do this at the end after we've filtered items)
-        TextView tv_upgrade_time = (TextView) poParent.findViewById(R.id.tvUpgradeTime);
+        TextView tv_upgrade_time = (TextView) findViewById(R.id.tvUpgradeTime);
     	tv_upgrade_time.setText(Utils.Time_ValToText(oPlayer.getUpgradeTimeMax()));    	
     	
-    	// show total upgrade cost - elixir
-    	int nUpgradeCost = oPlayer.getUpgradeCostMax(Utils.CostTypeEnum.Elixir.getId());
-    	String sCost = NumberFormat.getInstance().format(nUpgradeCost);
-    	TextView tv_upgrade_cost_elixir = (TextView) poParent.findViewById(R.id.tvUpgradeCostElixir);
-    	tv_upgrade_cost_elixir.setText(sCost);
+    	displayUpgradeCost(oPlayer, null);
+	}
 
+	// updates time to complete upgrades fields at top of dashboard
+	private void displayUpgradeTime(Player poPlayer) {
+        TextView tv_upgrade_time = (TextView) findViewById(R.id.tvUpgradeTime);
+    	tv_upgrade_time.setText(Utils.Time_ValToText(poPlayer.getUpgradeTimeMax()));    	
+    }
+    
+	// update cost values at top of dashboard
+	private void displayUpgradeCost(Player poPlayer, CostType poCostType) {
+    	// show total upgrade cost - elixir
+		if (poCostType == null || poCostType.getID() == Utils.CostTypeEnum.Elixir.getId()) {
+	    	int nUpgradeCost = poPlayer.getUpgradeCostMax(Utils.CostTypeEnum.Elixir.getId());
+	    	String sCost = NumberFormat.getInstance().format(nUpgradeCost);
+	    	TextView tv_upgrade_cost_elixir = (TextView) findViewById(R.id.tvUpgradeCostElixir);
+	    	tv_upgrade_cost_elixir.setText(sCost);
+
+		}
+		
     	// show total upgrade cost - gold
-    	nUpgradeCost = oPlayer.getUpgradeCostMax(Utils.CostTypeEnum.Gold.getId());
-    	sCost = NumberFormat.getInstance().format(nUpgradeCost);
-    	TextView tv_upgrade_cost_gold = (TextView) poParent.findViewById(R.id.tvUpgradeCostGold);
-    	tv_upgrade_cost_gold.setText(sCost);
+		if (poCostType == null || poCostType.getID() == Utils.CostTypeEnum.Gold.getId()) {
+	    	int nUpgradeCost = poPlayer.getUpgradeCostMax(Utils.CostTypeEnum.Gold.getId());
+	    	String sCost = NumberFormat.getInstance().format(nUpgradeCost);
+	    	TextView tv_upgrade_cost_gold = (TextView) findViewById(R.id.tvUpgradeCostGold);
+	    	tv_upgrade_cost_gold.setText(sCost);
+		}
 
     	// show total upgrade cost - dark elixir
-    	nUpgradeCost = oPlayer.getUpgradeCostMax(Utils.CostTypeEnum.DarkElixir.getId());
-    	sCost = NumberFormat.getInstance().format(nUpgradeCost);
-    	TextView tv_upgrade_cost_dark_elixir = (TextView) poParent.findViewById(R.id.tvUpgradeCostDarkElixir);
-    	tv_upgrade_cost_dark_elixir.setText(sCost);
+		if (poCostType == null || poCostType.getID() == Utils.CostTypeEnum.DarkElixir.getId()) {
+	    	int nUpgradeCost = poPlayer.getUpgradeCostMax(Utils.CostTypeEnum.DarkElixir.getId());
+	    	String sCost = NumberFormat.getInstance().format(nUpgradeCost);
+	    	TextView tv_upgrade_cost_dark_elixir = (TextView) findViewById(R.id.tvUpgradeCostDarkElixir);
+	    	tv_upgrade_cost_dark_elixir.setText(sCost);
+		}
 	}
-    
-    private void onTouchHandler(View arg0, PlayerElement poPlayerElement) {
+
+	private void onTouchHandler(View arg0, PlayerElement poPlayerElement) {
 //    	switch (arg1.getAction()) {
 //			case MotionEvent.ACTION_DOWN:
 //				break;
@@ -801,7 +835,7 @@ public class MainActivity extends ActionBarActivity {
     		moItemUpgrades.put(ItemUpgrade.getKey(poPlayerElement), oItemUpgrade);
     		Player player = Globals.INSTANCE.getPlayer();
     		player.forceRepopulate();
-    		this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) findViewById(R.id.layoutMain));
+    		this.GetElements_Dashboard();
 	    }
     }
     
@@ -820,7 +854,7 @@ public class MainActivity extends ActionBarActivity {
     	
     	// and redraw
     	oPlayer.forceRepopulate();
-    	GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) findViewById(R.id.layoutMain));
+    	GetElements_Dashboard();
     }
 
     // change the level of the selected item
@@ -872,29 +906,29 @@ public class MainActivity extends ActionBarActivity {
 		// [1] source quantity = 1, destination row exists
     	if (nQty == 1 && bDestExists) {
     		oElementADest.add(1);
-    		drawRow(gl, oElementADest, player.getTHLevel(), nDestRow, true);
+    		drawRow(gl, oElementADest, player.getTHLevel(), nDestRow, true, true);
     		removeRow(gl, pnRow1);
     	}
     	
 		// [2] source quantity = 1, destination row doesn't exist
     	else if (nQty == 1 && !bDestExists) {
     		//if (pbIncrement) oElementASrc.incLevel(); else oElementASrc.decLevel();
-    		drawRow(gl, oElementADest, player.getTHLevel(), pnRow1, true);
+    		drawRow(gl, oElementADest, player.getTHLevel(), pnRow1, true, true);
     	}
 
 		// [3] source quantity > 1, destination row exists
     	else if (nQty > 1 && bDestExists) {
     		oElementASrc.add(-1);
     		oElementADest.add(1);
-    		drawRow(gl, oElementASrc, player.getTHLevel(), pnRow1, true);
-    		drawRow(gl, oElementADest, player.getTHLevel(), nDestRow, true);
+    		drawRow(gl, oElementASrc, player.getTHLevel(), pnRow1, true, false);
+    		drawRow(gl, oElementADest, player.getTHLevel(), nDestRow, true, true);
     	}
 
 		// [4] increment, source quantity > 1, destination row doesn't exist
     	else if (nQty > 1 && !bDestExists) {
     		oElementASrc.add(-1);
-    		drawRow(gl, oElementASrc, player.getTHLevel(), pnRow1, true);
-    		drawRow(gl, oElementADest, player.getTHLevel(), nDestRow, false);
+    		drawRow(gl, oElementASrc, player.getTHLevel(), pnRow1, true, false);
+    		drawRow(gl, oElementADest, player.getTHLevel(), nDestRow, false, true);
     	}    	
     }
 
@@ -905,17 +939,18 @@ public class MainActivity extends ActionBarActivity {
         tvTitle.setText(player.getVillageName() + "'s Village (Townhall " + player.getTHLevel() + ")");
         
         // show total upgrade time remaining
-        TextView tv_upgrade_time = (TextView) poView.findViewById(R.id.tvUpgradeTime);
-    	tv_upgrade_time.setText(Utils.Time_ValToText(player.getUpgradeTimeMax()));
-    	
+        displayUpgradeTime(player);
+
     	// then show elements
-    	GetElements_Dashboard(poView, (GridLayout) poView.findViewById(R.id.layoutMain));
+    	GetElements_Dashboard();
     }
     
     /**
      * Fragment that appears in the "content_frame"
      */
     public class ElementFragment extends Fragment {
+    	View moRootView;
+    	
         public ElementFragment() {
             // Empty constructor required for fragment subclasses
         }
@@ -923,10 +958,15 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.activity_main, container, false);
-
-            initialSetup(rootView);
-            return rootView;
+            moRootView = inflater.inflate(R.layout.activity_main, container, false);
+            return moRootView;
+        }
+        
+        // do the initial setup here to be sure the fragment has been inflated
+        @Override
+        public void onActivityCreated(Bundle poBundle) {
+        	super.onActivityCreated(poBundle);
+            initialSetup(moRootView);
         }
     }
 }
