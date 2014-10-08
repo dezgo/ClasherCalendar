@@ -34,4 +34,10 @@
 	<string name="cdIvUpgradeCostElixir">Elixir Icon</string>
 	<string name="cdIvUpgradeCostGold">Gold Icon</string>
 	<string name="cdIvUpgradeCostDarkElixir">Dark Elixir Icon</string>
+	<string name="quit">Exit</string>
+	<string name="really_quit">Are you sure you want to exit?</string>
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
+	<string name="pref_confirm_exit">Confirm to Exit</string>
+	<string name="pref_confirm_exit_summ">Prompt before exiting the application</string>
 </resources>

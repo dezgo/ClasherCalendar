@@ -508,7 +508,7 @@ public class Player {
         		Element oElement = thElement.getElement();
         		
         		// if this is the town hall, set it to current level
-        		if (oElement.getName().equals(ClasherDBContract.TOWNHALL_NAME))
+        		if (oElement.getName().equals(Constants.TOWNHALL_NAME))
         			nLevel = mnTHLevel;
         		
         		// if this is a new element, make it level 0

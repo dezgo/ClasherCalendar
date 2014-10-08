@@ -1,10 +1,10 @@
-package com.derekgillett.clashercalendar;
+package com.derekgillett.clashercalendar.settings;
 
-import java.util.List;
+import com.derekgillett.clashercalendar.R;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.widget.Button;
+import android.preference.PreferenceFragment;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -17,7 +17,7 @@ import android.widget.Button;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends PreferenceFragment  {
 	/**
 	 * Determines whether to always show the simplified settings UI, where
 	 * settings are presented in a single list. When false, settings are shown
@@ -25,24 +25,8 @@ public class SettingsActivity extends PreferenceActivity {
 	 * shown on tablets.
 	 */
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		// Add a button to the header list.
-        if (hasHeaders()) {
-            Button button = new Button(this);
-            button.setText("Some action");
-            setListFooter(button);
-        }
+		addPreferencesFromResource(R.xml.pref_general);
 	}
-	
-	   /**
-     * Populate the activity with the top-level headers.
-     */
-    @Override
-    public void onBuildHeaders(List<Header> target) {
-        loadHeadersFromResource(R.xml.pref_headers, target);
-    }
-
-    
 }

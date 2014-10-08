@@ -3,12 +3,18 @@ package com.derekgillett.clashercalendar;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.derekgillett.clashercalendar.settings.ClasherSettings;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -21,8 +27,38 @@ import android.widget.Toast;
 
 public class StartActivity extends ActionBarActivity {
 	private SQLiteDatabase moDB;
+	
+	private final ClasherSettings moSettings = new ClasherSettings();
 
-	@Override
+	/**
+     * http://stackoverflow.com/questions/2257963/android-how-to-show-dialog-to-confirm-user-wishes-to-exit-activity
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        //Handle the back button
+        if(moSettings.isConfirmExit() && keyCode == KeyEvent.KEYCODE_BACK && isTaskRoot()) {
+            //Ask the user if they want to quit
+            new AlertDialog.Builder(new ContextThemeWrapper(this, moSettings.getDialogTheme()))
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setTitle(R.string.quit)
+            .setMessage(R.string.really_quit)
+            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    //Stop the activity
+                    finish();    
+                }
+            })
+            .setNegativeButton(R.string.no, null)
+            .show();
+
+            return true;
+        }
+        else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+    
+    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    // Inflate the menu items for use in the action bar
 	    MenuInflater inflater = getMenuInflater();
@@ -33,6 +69,7 @@ public class StartActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		moSettings.loadClasherPreferences(this.getApplicationContext());
 		setContentView(R.layout.activity_start);
 
 		createTHSpinner();
@@ -95,16 +132,6 @@ public class StartActivity extends ActionBarActivity {
 					GoToMain_(true);
 				}
 			});
-			/* 
-			// show delete button when long click to remove player
-			button.setOnLongClickListener(new View.OnLongClickListener() {
-				
-				@Override
-				public boolean onLongClick(View v) {
-					// TODO Auto-generated method stub
-					return false;
-				}
-			});*/
 			ll.addView(button);
 			players.moveNext();
 		}

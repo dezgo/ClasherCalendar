@@ -3,6 +3,8 @@ package com.derekgillett.clashercalendar;
 import java.text.NumberFormat;
 import java.util.HashMap;
 
+import com.derekgillett.clashercalendar.settings.SettingsActivity;
+
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -491,7 +493,7 @@ public class MainActivity extends ActionBarActivity {
         player.moveToFirstA();
         int row=0;
     	while (!player.isAfterLastA()) {
-    		if (!player.getElementA().getElement().getName().equals(ClasherDBContract.TOWNHALL_NAME))
+    		if (!player.getElementA().getElement().getName().equals(Constants.TOWNHALL_NAME))
     			drawRow(vwMainLayout, player.getElementA(), player.getTHLevel(), row++, false, false);
         	
             // move to next element in aggregated array

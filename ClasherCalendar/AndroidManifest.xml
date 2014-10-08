@@ -37,7 +37,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.derekgillett.clashercalendar.settings.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
     </application>
