@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.derekgillett.clashercalendar.ClasherDBContract;
+import com.derekgillett.clashercalendar.Constants;
 import com.derekgillett.clashercalendar.Element;
 import com.derekgillett.clashercalendar.MySQLiteHelper;
 import com.derekgillett.clashercalendar.Player;
@@ -40,7 +41,7 @@ public class PlayerTest extends TestCase {
 				{"Elixir Storage", "0", "" },
 				{"Gold Mine", "0", "" },
 				{"Gold Storage", "0", "" },
-				{ClasherDBContract.TOWNHALL_NAME, "1", "" }
+				{Constants.TOWNHALL_NAME, "1", "" }
 		};
 		
 		CreatePlayer(1, "Dezgoville TH1", elements);
@@ -86,7 +87,7 @@ public class PlayerTest extends TestCase {
 				{"Wall", "0", "" },
 				{"Wall", "0", "" },
 				{"Wall", "0", "" },
-				{ClasherDBContract.TOWNHALL_NAME, "2", "" },
+				{Constants.TOWNHALL_NAME, "2", "" },
 		};
 
 		CreatePlayer(2, "Dezgoville TH2", elements);
@@ -115,7 +116,7 @@ public class PlayerTest extends TestCase {
 				{"Gold Storage", "3", "" },
 				{"Laboratory", "0", "" },
 				{"Mortar", "0", "" },
-				{ClasherDBContract.TOWNHALL_NAME, "3", "" },
+				{Constants.TOWNHALL_NAME, "3", "" },
 				{"Wall", "2", "" },
 				{"Wall", "2", "" },
 				{"Wall", "2", "" },
@@ -201,7 +202,7 @@ public class PlayerTest extends TestCase {
 				{"Mortar", "1", ""},
 				{"Spring Trap", "0", ""},
 				{"Spring Trap", "0", ""},
-				{ClasherDBContract.TOWNHALL_NAME, "4", ""},
+				{Constants.TOWNHALL_NAME, "4", ""},
 				{"Wall", "3", "" },
 				{"Wall", "3", "" },
 				{"Wall", "3", "" },
@@ -323,7 +324,7 @@ public class PlayerTest extends TestCase {
 				{"Spell Factory", "0", ""} ,
 				{"Spring Trap", "0", ""} ,
 				{"Spring Trap", "0", ""} ,
-				{ClasherDBContract.TOWNHALL_NAME, "5", ""} ,
+				{Constants.TOWNHALL_NAME, "5", ""} ,
 				{"Wizard Tower", "0", ""} ,
 
 				{"Wall", "4", "" },
@@ -481,7 +482,7 @@ public class PlayerTest extends TestCase {
 				{"Spring Trap", "0", ""},
 				{"Spring Trap", "0", ""},
 				{"Spring Trap", "0", ""},
-				{ClasherDBContract.TOWNHALL_NAME, "6", ""},
+				{Constants.TOWNHALL_NAME, "6", ""},
 				{"Wizard Tower", "0", ""},
 
 				{"Wall", "5", "" },
@@ -677,7 +678,7 @@ public class PlayerTest extends TestCase {
 				{"Spring Trap", "0", ""},
 				{"Spring Trap", "0", ""},
 				{"Spring Trap", "0", ""},
-				{ClasherDBContract.TOWNHALL_NAME, "7", ""},
+				{Constants.TOWNHALL_NAME, "7", ""},
 				{"Wizard Tower", "3", ""},
 				{"Wizard Tower", "3", ""},
 
@@ -937,7 +938,7 @@ public class PlayerTest extends TestCase {
 				{"Spring Trap", "0", ""},
 				{"Spring Trap", "0", ""},
 				{"Spring Trap", "0", ""},
-				{ClasherDBContract.TOWNHALL_NAME, "8", ""},
+				{Constants.TOWNHALL_NAME, "8", ""},
 				{"Wizard Tower", "4", ""},
 				{"Wizard Tower", "4", ""},
 				{"Wizard Tower", "0", ""},
@@ -1258,7 +1259,7 @@ public class PlayerTest extends TestCase {
 				{"Spring Trap", "0", ""},
 				{"Spring Trap", "0", ""},
 				{"Spring Trap", "0", ""},
-				{ClasherDBContract.TOWNHALL_NAME, "9", ""},
+				{Constants.TOWNHALL_NAME, "9", ""},
 				{"Wizard Tower", "6", ""},
 				{"Wizard Tower", "6", ""},
 				{"Wizard Tower", "6", ""},
@@ -1617,7 +1618,7 @@ public class PlayerTest extends TestCase {
 				{"Spring Trap", "0", ""},
 				{"Spring Trap", "0", ""},
 				{"Spring Trap", "0", ""},
-				{ClasherDBContract.TOWNHALL_NAME, "10", ""},
+				{Constants.TOWNHALL_NAME, "10", ""},
 				{"Wizard Tower", "7", ""},
 				{"Wizard Tower", "7", ""},
 				{"Wizard Tower", "7", ""},

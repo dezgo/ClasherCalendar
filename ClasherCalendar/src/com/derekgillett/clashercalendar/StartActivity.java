@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.derekgillett.clashercalendar.settings.ClasherSettings;
+import com.derekgillett.clashercalendar.settings.SettingsActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -17,7 +18,9 @@ import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -64,6 +67,22 @@ public class StartActivity extends ActionBarActivity {
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.start, menu);
 	    return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle presses on the action bar items
+	    switch (item.getItemId()) {
+	        case R.id.action_settings:
+	        	ViewGroup vg = (ViewGroup) findViewById(android.R.id.content);
+	        	vg.removeAllViews();
+	        	getFragmentManager().beginTransaction()
+	        		.replace(android.R.id.content, new SettingsActivity())
+	        		.commit();
+	    		return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 	
 	@Override

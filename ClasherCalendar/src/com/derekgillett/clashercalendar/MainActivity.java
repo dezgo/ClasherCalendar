@@ -13,7 +13,6 @@ import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.NavUtils;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -86,21 +85,27 @@ public class MainActivity extends ActionBarActivity {
 	            deletePlayer();
 	            return true;
 	        case R.id.home:
-	        	NavUtils.navigateUpFromSameTask(this);
+//	        	NavUtils.navigateUpFromSameTask(this);
+	    		intent = new Intent(this, StartActivity.class);
+	    		startActivity(intent);
 	        	return true;
 	        case R.id.action_settings:
-	    		intent = new Intent(this, SettingsActivity.class);
-	    		startActivity(intent);
+	        	ViewGroup vg = (ViewGroup) findViewById(android.R.id.content);
+	        	vg.removeAllViews();
+	        	getFragmentManager().beginTransaction()
+	        		.replace(android.R.id.content, new SettingsActivity())
+	        		.commit();
 	    		return true;
 	        case R.id.action_fix_levels:
 	        	this.GetElements();
 	        	return true;
 	        case R.id.action_dashboard:
-	        	this.GetElements_Dashboard();
+	    		intent = new Intent(this, MainActivity.class);
+	    		startActivity(intent);
 	        	return true;
 	        case R.id.action_inc_th_level:
 	        	Globals.INSTANCE.getPlayer().incTHLevel();
-	        	this.initialSetup(findViewById(R.id.rlMain));
+	        	this.initialSetup(findViewById(R.id.layoutMain));
 //	        	this.GetElements_Dashboard(findViewById(R.id.rlMain), (GridLayout) this.findViewById(R.id.layoutMain));
 	        	return true;
 	        case R.id.action_home:
