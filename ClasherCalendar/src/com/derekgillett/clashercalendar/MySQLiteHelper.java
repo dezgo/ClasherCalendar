@@ -115,6 +115,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	new THElement(database, 8, oElement, 6);
 	new THElement(database, 9, oElement, 6);
 	new THElement(database, 10, oElement, 6);
+	
+	oElement = new Element(database, "Skeleton Trap", oCategoryTrap, oCostTypeGold);
+	new ElementData(database, oElement, 1, 0,6000, 0, 8);
+	new ElementData(database, oElement, 2, 0,600000, 21600, 8);
+	new ElementData(database, oElement, 3, 0,1300000, 86400, 9);
+	new THElement(database, 8, oElement, 2);
+	new THElement(database, 9, oElement, 2);
 
 	//defence
 	oElement = new Element(database, "Air Defence", oCategoryDefence, oCostTypeGold);
@@ -209,9 +216,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	new THElement(database, 5, oElement, 1);
 	new THElement(database, 6, oElement, 2);
 	new THElement(database, 7, oElement, 3);
-	new THElement(database, 8, oElement, 3);
-	new THElement(database, 9, oElement, 3);
-	new THElement(database, 10, oElement, 3);
+	new THElement(database, 8, oElement, 4);
+	new THElement(database, 9, oElement, 4);
+	new THElement(database, 10, oElement, 4);
 
 	oElement = new Element(database, "Wizard Tower", oCategoryDefence, oCostTypeGold);
 	new ElementData(database, oElement, 1, 620, 180000,43200,5);

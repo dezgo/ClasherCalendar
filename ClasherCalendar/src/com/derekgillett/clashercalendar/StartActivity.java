@@ -78,6 +78,7 @@ public class StartActivity extends ActionBarActivity {
 	        	vg.removeAllViews();
 	        	getFragmentManager().beginTransaction()
 	        		.replace(android.R.id.content, new SettingsActivity())
+	        		.addToBackStack("Settings")
 	        		.commit();
 	    		return true;
 	        default:
