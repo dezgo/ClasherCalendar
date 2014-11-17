@@ -122,6 +122,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	new ElementData(database, oElement, 3, 0,1300000, 86400, 9);
 	new THElement(database, 8, oElement, 2);
 	new THElement(database, 9, oElement, 2);
+	new THElement(database, 10, oElement, 3);
 
 	//defence
 	oElement = new Element(database, "Air Defence", oCategoryDefence, oCostTypeGold);
